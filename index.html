@@ -3,78 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DinguerieAI</title>
+    <title>Dinguerie</title>
     <style>
-        body {
+        /* Reset and base styles */
+        * {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            background: #000;
+            overflow-x: hidden;
+        }
+
+        /* Canvas for particle effects */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Hero section with neon text animation */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h1 {
+            font-size: 10rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5rem;
+            color: #fff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 80px #0ff,
+                0 0 120px #0ff,
+                0 0 200px #0ff;
+            animation: neon-pulse 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes neon-pulse {
+            from {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #0ff,
+                    0 0 40px #0ff;
+            }
+            to {
+                text-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 40px #0ff,
+                    0 0 80px #0ff,
+                    0 0 120px #0ff,
+                    0 0 200px #0ff,
+                    0 0 300px #0ff;
+            }
+        }
+        .hero p {
+            font-size: 2rem;
+            margin-top: 1rem;
+            opacity: 0.8;
+            animation: fade-in 2s ease-in;
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 0.8; }
+        }
+
+        /* Parallax sections */
+        .section {
+            height: 100vh;
+            padding: 5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        .about {
+            background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%230099ff" fill-opacity="0.2" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,245.3C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E') no-repeat center center;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .contact {
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            background-attachment: fixed;
+        }
+        .section h2 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 1s ease-out;
+        }
+        .section p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section.visible h2 {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* 3D Cube effect in contact section */
+        .cube-container {
+            perspective: 1000px;
+            margin: 2rem auto;
+            width: 200px;
+            height: 200px;
+        }
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate-cube 10s infinite linear;
+        }
+        .cube-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #fff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            font-size: 2rem;
+            color: #000;
         }
-
-        .container {
-            text-align: center;
-            max-width: 800px;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-        }
-
-        .container:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        h1 {
-            font-size: 4em;
-            margin-bottom: 0.5em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        p {
-            font-size: 1.5em;
-            margin-bottom: 1em;
-            animation: fadeIn 2s ease-in-out 0.5s;
-            opacity: 0;
-            animation-fill-mode: forwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.8;
-            animation: fadeIn 2s ease-in-out 1s;
-            animation-fill-mode: forwards;
+        .front  { transform: translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .right  { transform: rotateY(90deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .top    { transform: rotateX(90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+        @keyframes rotate-cube {
+            0% { transform: rotateX(0) rotateY(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>DinguerieAI</h1>
-        <p>Unlocking the future of artificial intelligence</p>
-        <p class="subtitle">Innovative solutions powered by cutting-edge AI technology</p>
-    </div>
+    <canvas id="particle-canvas"></canvas>
+
+    <section class="hero">
+        <h1>Dinguerie</h1>
+        <p>Welcome to the world of madness and innovation.</p>
+    </section>
+
+    <section class="section about">
+        <h2>About Us</h2>
+        <p>Dinguerie is all about pushing boundaries with crazy ideas and cutting-edge technology. Experience the thrill of the unexpected.</p>
+    </section>
+
+    <section class="section contact">
+        <h2>Contact</h2>
+        <p>Get in touch: contact@dinguerie.com</p>
+        <div class="cube-container">
+            <div class="cube">
+                <div class="cube-face front">Front</div>
+                <div class="cube-face back">Back</div>
+                <div class="cube-face right">Right</div>
+                <div class="cube-face left">Left</div>
+                <div class="cube-face top">Top</div>
+                <div class="cube-face bottom">Bottom</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Particle system on canvas
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const numParticles = 200;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            // Connect particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - dist / 100})`;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Scroll animations for sections
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(section => observer.observe(section));
+
+        // Mouse interaction for particles
+        canvas.addEventListener('mousemove', e => {
+            particles.push(new Particle(e.clientX, e.clientY));
+            if (particles.length > numParticles + 50) particles.shift();
+        });
+    </script>
 </body>
 </html>
