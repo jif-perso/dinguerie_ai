@@ -78,10 +78,10 @@
         isolation: isolate;
         overflow: hidden;
         background:
-          linear-gradient(90deg, rgba(16, 15, 12, 0.038) 1px, transparent 1px),
-          linear-gradient(0deg, rgba(16, 15, 12, 0.038) 1px, transparent 1px),
-          radial-gradient(circle at 50% 56%, var(--paper-hot), var(--paper) 58%, #d6cbbb 100%);
-        background-size: 34px 34px, 34px 34px, 100% 100%;
+          linear-gradient(90deg, rgba(16, 15, 12, 0.028) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(16, 15, 12, 0.028) 1px, transparent 1px),
+          radial-gradient(circle at 50% 52%, var(--paper-hot), var(--paper) 58%, #d6cbbb 100%);
+        background-size: 36px 36px, 36px 36px, 100% 100%;
       }
 
       #scene {
@@ -90,8 +90,12 @@
         z-index: 1;
         width: 100%;
         height: 100%;
-        cursor: crosshair;
+        cursor: grab;
         touch-action: none;
+      }
+
+      #scene.is-dragging {
+        cursor: grabbing;
       }
 
       .chrome {
@@ -136,7 +140,7 @@
         min-width: 28rem;
         padding: 0.55rem 0.78rem;
         border: 1px solid var(--line);
-        background: rgba(243, 238, 228, 0.9);
+        background: rgba(255, 250, 240, 0.86);
         text-align: center;
       }
 
@@ -158,7 +162,7 @@
         gap: 1px;
         border: 1px solid var(--line);
         background: var(--line);
-        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
+        box-shadow: 9px 9px 0 rgba(16, 15, 12, 0.075);
       }
 
       .cell {
@@ -218,7 +222,7 @@
         min-height: 2.45rem;
         padding: 0.55rem 0.75rem;
         border: 1px solid var(--line-strong);
-        background: rgba(243, 238, 228, 0.9);
+        background: rgba(255, 250, 240, 0.9);
         font-family: var(--mono);
         font-size: 0.64rem;
         font-weight: 850;
@@ -295,7 +299,7 @@
 
       <header class="chrome">
         <a class="brand" href="#top">dinguerie</a>
-        <div class="formula">click two points; green stays on the surface, red cuts through space</div>
+        <div class="formula">straight on the map can be longer on the surface</div>
         <div class="readout" id="status">select two points</div>
       </header>
 
@@ -310,18 +314,18 @@
           <strong id="surfaceLength">0.00</strong>
         </div>
         <div class="cell">
-          <span>straight chord</span>
-          <strong id="chordLength">0.00</strong>
+          <span>2d-straight path</span>
+          <strong id="straightLength">0.00</strong>
         </div>
         <div class="cell">
-          <span>extra distance</span>
-          <strong id="extraLength">0%</strong>
+          <span>distance saved</span>
+          <strong id="savedLength">0%</strong>
         </div>
       </section>
 
       <p class="caption">
         <strong>Click any two points.</strong>
-        The green route is an A* geodesic over the surface mesh. The red line ignores the manifold.
+        Orange is the line you would draw on a flat map, lifted onto the surface. Green finds the shorter walk.
       </p>
     </main>
 
@@ -331,8 +335,8 @@
       const canvas = document.querySelector("#scene");
       const statusLabel = document.querySelector("#status");
       const surfaceLengthLabel = document.querySelector("#surfaceLength");
-      const chordLengthLabel = document.querySelector("#chordLength");
-      const extraLengthLabel = document.querySelector("#extraLength");
+      const straightLengthLabel = document.querySelector("#straightLength");
+      const savedLengthLabel = document.querySelector("#savedLength");
       const resetButton = document.querySelector("#reset");
       const newSurfaceButton = document.querySelector("#newSurface");
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -347,26 +351,49 @@
       const up = new THREE.Vector3(0, 1, 0);
       const selected = [];
       const markers = [];
-      let terrainSeed = 4.9;
+      const surfaceVariants = [
+        { seed: 4.9, from: [22, 42], to: [60, 26] },
+        { seed: 8.11, from: [26, 26], to: [64, 42] },
+        { seed: 11.32, from: [26, 26], to: [60, 50] },
+        { seed: 14.53, from: [26, 34], to: [64, 50] },
+        { seed: 17.74, from: [26, 50], to: [64, 34] },
+        { seed: 20.95, from: [26, 30], to: [64, 46] }
+      ];
+      let surfaceVariant = 0;
+      let terrainSeed = surfaceVariants[surfaceVariant].seed;
+      let terrainParams = makeTerrainParams(terrainSeed);
       let heights = [];
       let vertices = [];
       let surfaceMesh;
       let wireMesh;
+      let contourMesh;
       let pathObject;
-      let chordObject;
-      let traveler;
+      let straightObject;
       let pathPoints = [];
       let pathLength = 0;
-      let chordLength = 0;
+      let straightLength = 0;
       let reveal = 1;
       let last = 0;
       let targetYaw = -0.52;
       let yaw = -0.52;
       let targetTilt = 0.78;
       let tilt = 0.78;
+      let targetRadius = 15.6;
+      let radius = 15.6;
+      const drag = {
+        active: false,
+        moved: false,
+        pointerId: null,
+        startX: 0,
+        startY: 0,
+        startYaw: 0,
+        startTilt: 0
+      };
 
       scene.fog = new THREE.Fog(0xf3eee4, 16, 35);
       camera.position.set(0, 6.2, 13.2);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.setClearColor(0xf3eee4, 0);
 
       const ambient = new THREE.HemisphereLight(0xfffaf0, 0x6c665b, 2.5);
       scene.add(ambient);
@@ -385,18 +412,53 @@
       floor.position.y = -2.4;
       scene.add(floor);
 
+      function makeTerrainParams(seed) {
+        const angle = seed * 1.173;
+        const normal = {
+          x: Math.cos(angle) * 0.92,
+          z: Math.sin(angle) * 0.92
+        };
+        const tangent = { x: -normal.z, z: normal.x };
+        return {
+          seed,
+          normal,
+          tangent,
+          wallHeight: 4.4 + 1.4 * (0.5 + 0.5 * Math.sin(seed * 1.7)),
+          wallWidth: 1 + 0.8 * (0.5 + 0.5 * Math.cos(seed * 1.23)),
+          gateOffset: -3.2 + 6.4 * (0.5 + 0.5 * Math.sin(seed * 0.91)),
+          gateWidth: 0.55 + 0.55 * (0.5 + 0.5 * Math.cos(seed * 1.43)),
+          bowlA: {
+            x: -3.8 + 1.4 * Math.sin(seed * 0.61),
+            z: -1.2 + 2.8 * Math.cos(seed * 0.47),
+            amp: -0.8 - 0.45 * (0.5 + 0.5 * Math.sin(seed * 1.9))
+          },
+          bowlB: {
+            x: 3.6 + 1.3 * Math.cos(seed * 0.74),
+            z: 1.4 + 2.5 * Math.sin(seed * 0.52),
+            amp: -0.7 - 0.35 * (0.5 + 0.5 * Math.cos(seed * 2.1))
+          },
+          spike: {
+            x: 1.2 + 3.2 * Math.sin(seed * 0.83),
+            z: -2 + 3.1 * Math.cos(seed * 0.67),
+            amp: 0.75 + 0.95 * (0.5 + 0.5 * Math.sin(seed * 1.31))
+          }
+        };
+      }
+
       function terrain(x, z) {
-        const s = terrainSeed;
-        const ridgeDistance = x + z * 0.22;
-        const ridgeEnvelope = Math.exp(-(ridgeDistance ** 2) * 1.55);
-        const edgePass = 0.18 + 0.82 * (1 - Math.exp(-((Math.abs(z) - 5.65) ** 2) * 0.82));
-        const wall = 5.4 * ridgeEnvelope * edgePass;
-        const westBowl = -1.05 * Math.exp(-((x + 3.8) ** 2 + (z + 0.2) ** 2) * 0.18);
-        const eastBowl = -0.85 * Math.exp(-((x - 3.9) ** 2 + (z - 0.1) ** 2) * 0.19);
-        const saddle = 0.82 * Math.sin(x * 0.62 + s) * Math.cos(z * 0.5 - s * 0.2);
-        const rib = 0.44 * Math.sin((x - z) * 1.18 + s * 1.4);
-        const cap = 1.25 * Math.exp(-((x - 1.3) ** 2 + (z + 3.4) ** 2) * 0.42);
-        return wall + westBowl + eastBowl + saddle + rib + cap - 0.85;
+        const p = terrainParams;
+        const along = x * p.tangent.x + z * p.tangent.z;
+        const across = x * p.normal.x + z * p.normal.z;
+        const gate = 0.16 + 0.84 * (1 - Math.exp(-((along - p.gateOffset) ** 2) * p.gateWidth));
+        const wall = p.wallHeight * Math.exp(-(across ** 2) * p.wallWidth) * gate;
+        const bowlA = p.bowlA.amp * Math.exp(-((x - p.bowlA.x) ** 2 + (z - p.bowlA.z) ** 2) * 0.18);
+        const bowlB = p.bowlB.amp * Math.exp(-((x - p.bowlB.x) ** 2 + (z - p.bowlB.z) ** 2) * 0.2);
+        const saddle = 0.74
+          * Math.sin(x * (0.48 + 0.1 * Math.sin(p.seed)) + p.seed)
+          * Math.cos(z * (0.42 + 0.12 * Math.cos(p.seed * 0.8)) - p.seed * 0.3);
+        const rib = 0.42 * Math.sin((x * p.tangent.x + z * p.tangent.z) * 1.32 + p.seed * 1.4);
+        const spike = p.spike.amp * Math.exp(-((x - p.spike.x) ** 2 + (z - p.spike.z) ** 2) * 0.38);
+        return wall + bowlA + bowlB + saddle + rib + spike - 0.75;
       }
 
       function index(i, j) {
@@ -460,7 +522,7 @@
         geometry.computeVertexNormals();
         const material = new THREE.MeshStandardMaterial({
           vertexColors: true,
-          roughness: 0.78,
+          roughness: 0.92,
           metalness: 0,
           side: THREE.DoubleSide
         });
@@ -481,9 +543,63 @@
         }
         wireMesh = new THREE.LineSegments(
           new THREE.WireframeGeometry(geometry),
-          new THREE.LineBasicMaterial({ color: 0x100f0c, transparent: true, opacity: 0.12 })
+          new THREE.LineBasicMaterial({ color: 0x100f0c, transparent: true, opacity: 0.07 })
         );
         scene.add(wireMesh);
+        makeContourLines();
+      }
+
+      function contourPoint(a, b, level) {
+        const ha = heights[a];
+        const hb = heights[b];
+        const delta = hb - ha;
+        if (Math.abs(delta) < 0.0001) return null;
+        const t = clamp((level - ha) / delta, 0, 1);
+        return vertices[a].clone().lerp(vertices[b], t).addScaledVector(up, 0.035);
+      }
+
+      function makeContourLines() {
+        if (contourMesh) disposeObject(contourMesh);
+        const positions = [];
+        const levels = [];
+        for (let level = -1.25; level <= 5.9; level += 0.42) levels.push(level);
+
+        for (let j = 0; j < grid - 1; j += 1) {
+          for (let i = 0; i < grid - 1; i += 1) {
+            const a = index(i, j);
+            const b = index(i + 1, j);
+            const c = index(i + 1, j + 1);
+            const d = index(i, j + 1);
+
+            levels.forEach((level) => {
+              const hits = [];
+              [[a, b], [b, c], [c, d], [d, a]].forEach(([from, to]) => {
+                const low = Math.min(heights[from], heights[to]);
+                const high = Math.max(heights[from], heights[to]);
+                if (level <= low || level > high) return;
+                const point = contourPoint(from, to, level);
+                if (point) hits.push(point);
+              });
+
+              for (let h = 1; h < hits.length; h += 2) {
+                positions.push(hits[h - 1].x, hits[h - 1].y, hits[h - 1].z);
+                positions.push(hits[h].x, hits[h].y, hits[h].z);
+              }
+            });
+          }
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        const material = new THREE.LineBasicMaterial({
+          color: 0x100f0c,
+          transparent: true,
+          opacity: 0.135,
+          depthWrite: false
+        });
+        contourMesh = new THREE.LineSegments(geometry, material);
+        contourMesh.renderOrder = 1;
+        scene.add(contourMesh);
       }
 
       function nearestGridId(point) {
@@ -571,6 +687,20 @@
         return total;
       }
 
+      function projectedStraightPath(start, goal) {
+        const from = vertices[start];
+        const to = vertices[goal];
+        const points = [];
+        const samples = 150;
+        for (let step = 0; step <= samples; step += 1) {
+          const t = step / samples;
+          const x = from.x + (to.x - from.x) * t;
+          const z = from.z + (to.z - from.z) * t;
+          points.push(new THREE.Vector3(x, terrain(x, z), z).addScaledVector(up, 0.18));
+        }
+        return points;
+      }
+
       function disposeObject(object) {
         if (!object) return;
         scene.remove(object);
@@ -583,7 +713,7 @@
         });
       }
 
-      function tube(points, color, radius, opacity = 1) {
+      function tube(points, color, radius, opacity = 1, depthTest = true, renderOrder = 2) {
         const curve = points.length === 2
           ? new THREE.LineCurve3(points[0], points[1])
           : new THREE.CatmullRomCurve3(points, false, "centripetal", 0.35);
@@ -591,31 +721,43 @@
         const material = new THREE.MeshStandardMaterial({
           color,
           emissive: color,
-          emissiveIntensity: 0.24,
+          emissiveIntensity: 0.18,
           roughness: 0.45,
           transparent: opacity < 1,
-          opacity
+          opacity,
+          depthTest,
+          depthWrite: depthTest
         });
-        return new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.renderOrder = renderOrder;
+        return mesh;
       }
 
       function marker(point, color, label) {
         const group = new THREE.Group();
         const sphere = new THREE.Mesh(
           new THREE.SphereGeometry(0.16, 24, 16),
-          new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.2, roughness: 0.35 })
+          new THREE.MeshStandardMaterial({
+            color,
+            emissive: color,
+            emissiveIntensity: 0.2,
+            roughness: 0.35,
+            depthTest: false,
+            depthWrite: false
+          })
         );
         sphere.position.copy(point).addScaledVector(up, 0.22);
         group.add(sphere);
 
         const ring = new THREE.Mesh(
           new THREE.TorusGeometry(0.28, 0.018, 8, 48),
-          new THREE.MeshBasicMaterial({ color: 0x100f0c })
+          new THREE.MeshBasicMaterial({ color: 0x100f0c, depthTest: false, depthWrite: false })
         );
         ring.rotation.x = Math.PI / 2;
         ring.position.copy(point).addScaledVector(up, 0.08);
         group.add(ring);
         group.userData.label = label;
+        group.renderOrder = 5;
         return group;
       }
 
@@ -631,56 +773,100 @@
 
       function computeAndDraw() {
         disposeObject(pathObject);
-        disposeObject(chordObject);
+        disposeObject(straightObject);
         pathObject = undefined;
-        chordObject = undefined;
+        straightObject = undefined;
         pathPoints = [];
 
         updateMarkers();
         if (selected.length < 2) {
           statusLabel.textContent = selected.length ? "select end point" : "select two points";
           surfaceLengthLabel.textContent = "0.00";
-          chordLengthLabel.textContent = "0.00";
-          extraLengthLabel.textContent = "0%";
+          straightLengthLabel.textContent = "0.00";
+          savedLengthLabel.textContent = "0%";
           return;
         }
 
         const nodePath = shortestPath(selected[0], selected[1]);
-        pathPoints = nodePath.map((id) => pointForIndex(id).addScaledVector(up, 0.12));
+        pathPoints = nodePath.map((id) => pointForIndex(id).addScaledVector(up, 0.22));
+        const straightPoints = projectedStraightPath(selected[0], selected[1]);
         pathLength = pathDistance(pathPoints);
-        chordLength = vertices[selected[0]].distanceTo(vertices[selected[1]]);
-        const extra = Math.max(0, (pathLength / Math.max(chordLength, 0.001) - 1) * 100);
-        const chordPoints = [
-          pointForIndex(selected[0]).addScaledVector(up, 0.22),
-          pointForIndex(selected[1]).addScaledVector(up, 0.22)
-        ];
+        straightLength = pathDistance(straightPoints);
+        const saved = (straightLength / Math.max(pathLength, 0.001) - 1) * 100;
 
-        chordObject = tube(chordPoints, 0xff4f35, 0.035, 0.62);
-        pathObject = tube(pathPoints, 0xbaff39, 0.065, 1);
-        scene.add(chordObject, pathObject);
+        straightObject = tube(straightPoints, 0xff4f35, 0.045, 0.7, false, 3);
+        pathObject = tube(pathPoints, 0xbaff39, 0.068, 1, false, 4);
+        scene.add(straightObject, pathObject);
         reveal = 0;
         statusLabel.textContent = `computed ${nodePath.length} mesh nodes`;
         surfaceLengthLabel.textContent = pathLength.toFixed(2);
-        chordLengthLabel.textContent = chordLength.toFixed(2);
-        extraLengthLabel.textContent = `${extra.toFixed(0)}%`;
+        straightLengthLabel.textContent = straightLength.toFixed(2);
+        savedLengthLabel.textContent = `${saved.toFixed(0)}%`;
       }
 
       function placeDefaultPath() {
+        const variant = surfaceVariants[surfaceVariant];
         selected.length = 0;
-        selected.push(index(18, 44), index(70, 44));
+        selected.push(index(variant.from[0], variant.from[1]), index(variant.to[0], variant.to[1]));
         computeAndDraw();
       }
 
-      function clickSurface(event) {
+      function selectSurfaceAt(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
-        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(pointer, camera);
         const hit = raycaster.intersectObject(surfaceMesh, false)[0];
         if (!hit) return;
         if (selected.length === 2) selected.length = 0;
         selected.push(nearestGridId(hit.point));
         computeAndDraw();
+      }
+
+      function beginDrag(event) {
+        if (event.button !== undefined && event.button !== 0) return;
+        drag.active = true;
+        drag.moved = false;
+        drag.pointerId = event.pointerId;
+        drag.startX = event.clientX;
+        drag.startY = event.clientY;
+        drag.startYaw = targetYaw;
+        drag.startTilt = targetTilt;
+        canvas.classList.add("is-dragging");
+        canvas.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      }
+
+      function moveDrag(event) {
+        if (!drag.active || event.pointerId !== drag.pointerId) return;
+        const dx = event.clientX - drag.startX;
+        const dy = event.clientY - drag.startY;
+        if (Math.hypot(dx, dy) > 4) drag.moved = true;
+        targetYaw = drag.startYaw - dx * 0.006;
+        targetTilt = clamp(drag.startTilt + dy * 0.004, 0.25, 1.12);
+        event.preventDefault();
+      }
+
+      function endDrag(event) {
+        if (!drag.active || event.pointerId !== drag.pointerId) return;
+        const wasClick = !drag.moved;
+        drag.active = false;
+        canvas.classList.remove("is-dragging");
+        if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+        if (wasClick) selectSurfaceAt(event.clientX, event.clientY);
+        event.preventDefault();
+      }
+
+      function cancelDrag(event) {
+        if (!drag.active || event.pointerId !== drag.pointerId) return;
+        drag.active = false;
+        canvas.classList.remove("is-dragging");
+        if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+      }
+
+      function zoomCamera(event) {
+        targetRadius = clamp(targetRadius + event.deltaY * 0.012, 11.5, 22);
+        event.preventDefault();
       }
 
       function resize() {
@@ -693,7 +879,6 @@
       }
 
       function updateCamera() {
-        const radius = 15.6;
         camera.position.set(
           Math.sin(yaw) * radius,
           6 + Math.sin(tilt) * 3.8,
@@ -707,27 +892,15 @@
         last = now;
         yaw += (targetYaw - yaw) * 0.05;
         tilt += (targetTilt - tilt) * 0.05;
+        radius += (targetRadius - radius) * 0.06;
         updateCamera();
 
         if (pathObject) {
           reveal = Math.min(1, reveal + dt * 0.9);
-          pathObject.material.emissiveIntensity = 0.22 + Math.sin(now * 0.004) * 0.08;
-        }
-        if (traveler && pathPoints.length) {
-          const t = (now * 0.00008) % 1;
-          const id = Math.min(pathPoints.length - 1, Math.floor(t * (pathPoints.length - 1)));
-          traveler.position.copy(pathPoints[id]).addScaledVector(up, 0.2);
+          pathObject.material.emissiveIntensity = 0.18 + Math.sin(now * 0.004) * 0.045;
         }
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
-      }
-
-      function addTraveler() {
-        traveler = new THREE.Mesh(
-          new THREE.SphereGeometry(0.12, 18, 12),
-          new THREE.MeshStandardMaterial({ color: 0x100f0c, emissive: 0xbaff39, emissiveIntensity: 0.35 })
-        );
-        scene.add(traveler);
       }
 
       function reset() {
@@ -736,28 +909,29 @@
       }
 
       function newSurface() {
-        terrainSeed += 2.37;
+        surfaceVariant = (surfaceVariant + 1) % surfaceVariants.length;
+        terrainSeed = surfaceVariants[surfaceVariant].seed;
+        terrainParams = makeTerrainParams(terrainSeed);
         disposeObject(pathObject);
-        disposeObject(chordObject);
+        disposeObject(straightObject);
+        pathObject = undefined;
+        straightObject = undefined;
         markers.forEach((item) => disposeObject(item));
         selected.length = 0;
         makeSurface();
         placeDefaultPath();
       }
 
-      canvas.addEventListener("click", clickSurface);
-      canvas.addEventListener("pointermove", (event) => {
-        const x = event.clientX / Math.max(window.innerWidth, 1) - 0.5;
-        const y = event.clientY / Math.max(window.innerHeight, 1) - 0.5;
-        targetYaw = -0.52 + x * 0.48;
-        targetTilt = 0.78 + y * 0.18;
-      }, { passive: true });
+      canvas.addEventListener("pointerdown", beginDrag);
+      canvas.addEventListener("pointermove", moveDrag);
+      canvas.addEventListener("pointerup", endDrag);
+      canvas.addEventListener("pointercancel", cancelDrag);
+      canvas.addEventListener("wheel", zoomCamera, { passive: false });
       window.addEventListener("resize", resize);
       resetButton.addEventListener("click", reset);
       newSurfaceButton.addEventListener("click", newSurface);
 
       makeSurface();
-      addTraveler();
       placeDefaultPath();
       resize();
       updateCamera();
