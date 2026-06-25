@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="dinguerie is an immersive hyperbolic space.">
+    <meta name="description" content="dinguerie is an impossible non-Euclidean observatory.">
     <meta name="theme-color" content="#f3eee4">
     <meta property="og:title" content="dinguerie">
-    <meta property="og:description" content="An immersive hyperbolic space.">
+    <meta property="og:description" content="An impossible non-Euclidean observatory.">
     <meta property="og:type" content="website">
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M12 34C22 15 42 49 52 30' fill='none' stroke='%23baff39' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Cpath d='M13 49V25Q13 13 25 13t12 12v24M32 49V25q0-12 10-12t10 12v24' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M12 38C24 23 39 52 52 31' fill='none' stroke='%23baff39' stroke-width='5'/%3E%3C/svg%3E"
     >
     <title>dinguerie</title>
     <style>
@@ -19,9 +19,9 @@
         --paper: #f3eee4;
         --paper-hot: #fffaf0;
         --ink: #100f0c;
-        --soft: #6e665c;
+        --soft: #6d655a;
         --line: rgba(16, 15, 12, 0.18);
-        --line-strong: rgba(16, 15, 12, 0.44);
+        --line-strong: rgba(16, 15, 12, 0.42);
         --blue: #2454ff;
         --red: #ff4f35;
         --green: #baff39;
@@ -66,15 +66,15 @@
         outline-offset: 4px;
       }
 
-      .space {
+      .observatory {
         position: fixed;
         inset: 0;
         isolation: isolate;
         overflow: hidden;
         background:
-          linear-gradient(90deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
-          linear-gradient(0deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
-          radial-gradient(circle at 50% 52%, var(--paper-hot), var(--paper) 56%, #d7ccbd 100%);
+          linear-gradient(90deg, rgba(16, 15, 12, 0.038) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(16, 15, 12, 0.038) 1px, transparent 1px),
+          radial-gradient(circle at 50% 58%, var(--paper-hot), var(--paper) 58%, #d7ccbd 100%);
         background-size: 34px 34px, 34px 34px, 100% 100%;
       }
 
@@ -89,72 +89,95 @@
       }
 
       .stage path,
+      .stage rect,
       .stage circle,
-      .stage text,
-      .stage line {
+      .stage line,
+      .stage text {
         vector-effect: non-scaling-stroke;
       }
 
-      .disk {
-        fill: rgba(255, 250, 240, 0.34);
-        stroke: rgba(16, 15, 12, 0.88);
-        stroke-width: 2.6;
+      .wall {
+        fill: rgba(255, 250, 240, 0.38);
+        stroke: rgba(16, 15, 12, 0.2);
+        stroke-width: 1;
       }
 
-      .echo {
-        fill: none;
-        stroke: rgba(16, 15, 12, 0.12);
-        stroke-width: 1.15;
+      .floor-line,
+      .wall-line {
+        stroke: rgba(16, 15, 12, 0.14);
+        stroke-width: 1;
       }
 
-      .tile {
-        stroke: rgba(16, 15, 12, 0.12);
-        stroke-width: 0.72;
-      }
-
-      .mesh {
-        fill: none;
-        stroke: rgba(16, 15, 12, 0.23);
-        stroke-width: 1.05;
-      }
-
-      .mesh-hot {
-        stroke: rgba(36, 84, 255, 0.55);
+      .wall-line-strong {
+        stroke: rgba(16, 15, 12, 0.28);
         stroke-width: 1.35;
       }
 
-      .triangle-fill {
-        fill: rgba(186, 255, 57, 0.23);
-        stroke: none;
+      .portal-fill {
+        fill: rgba(255, 250, 240, 0.8);
       }
 
-      .triangle-edge {
+      .portal-skin {
+        stroke: rgba(16, 15, 12, 0.22);
+        stroke-width: 0.9;
+      }
+
+      .portal-depth {
+        fill: none;
+        stroke: rgba(16, 15, 12, 0.18);
+        stroke-width: 1;
+      }
+
+      .portal-frame {
+        fill: none;
+        stroke-linejoin: round;
+        stroke-width: 4;
+      }
+
+      .portal-active {
+        stroke-width: 7;
+      }
+
+      .beam-shadow {
         fill: none;
         stroke: var(--ink);
         stroke-linecap: square;
         stroke-linejoin: round;
-        stroke-width: 2.6;
+        stroke-width: 9;
+        stroke-opacity: 0.16;
       }
 
-      .triangle-edge-blue {
-        stroke: var(--blue);
+      .beam {
+        fill: none;
+        stroke-linecap: square;
+        stroke-linejoin: round;
+        stroke-width: 4;
+        stroke-dasharray: 10 10;
+        animation: pulse 1.2s linear infinite;
       }
 
-      .triangle-edge-red {
-        stroke: var(--red);
+      .beam-thin {
+        stroke-width: 2;
+        stroke-opacity: 0.55;
       }
 
-      .observer {
+      .gate-dot {
+        fill: var(--paper-hot);
+        stroke: var(--ink);
+        stroke-width: 2;
+      }
+
+      .you {
         fill: var(--green);
         stroke: var(--ink);
         stroke-width: 2.2;
       }
 
-      .observer-ring {
+      .you-ring {
         fill: none;
         stroke: var(--ink);
-        stroke-dasharray: 4 7;
-        stroke-width: 1.3;
+        stroke-dasharray: 3 7;
+        stroke-width: 1.2;
       }
 
       .label {
@@ -168,19 +191,19 @@
         text-transform: uppercase;
       }
 
-      .horizon-label {
-        fill: rgba(16, 15, 12, 0.54);
-        font-family: var(--mono);
-        font-size: 12px;
-        font-weight: 850;
-        text-transform: uppercase;
+      .ghost-label {
+        fill: rgba(16, 15, 12, 0.28);
+        font-family: var(--serif);
+        font-size: 116px;
+        font-weight: 500;
       }
 
-      .wordmark {
-        fill: rgba(16, 15, 12, 0.075);
-        font-family: var(--serif);
-        font-size: 120px;
-        font-weight: 500;
+      .micro-label {
+        fill: rgba(16, 15, 12, 0.62);
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 900;
+        text-transform: uppercase;
       }
 
       .chrome {
@@ -222,7 +245,7 @@
 
       .formula {
         justify-self: center;
-        min-width: 26rem;
+        min-width: 27rem;
         padding: 0.55rem 0.78rem;
         border: 1px solid var(--line);
         background: rgba(243, 238, 228, 0.9);
@@ -238,25 +261,35 @@
 
       .caption {
         position: fixed;
-        left: 50%;
+        right: 1.25rem;
         bottom: 1.05rem;
         z-index: 4;
-        display: grid;
-        gap: 0.34rem;
-        width: min(48rem, calc(100vw - 2rem));
-        translate: -50% 0;
+        width: min(36rem, calc(100vw - 2.5rem));
         color: rgba(16, 15, 12, 0.72);
         font-family: var(--mono);
         font-size: 0.66rem;
         font-weight: 850;
         line-height: 1.35;
-        text-align: center;
+        text-align: right;
         text-transform: uppercase;
         pointer-events: none;
       }
 
       .caption strong {
+        display: block;
         color: var(--ink);
+      }
+
+      @keyframes pulse {
+        to {
+          stroke-dashoffset: -20;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .beam {
+          animation: none;
+        }
       }
 
       @media (max-width: 820px) {
@@ -269,98 +302,75 @@
           display: none;
         }
 
-        .caption {
-          bottom: 0.85rem;
-          width: calc(100vw - 1.7rem);
-          font-size: 0.6rem;
-        }
-
         .readout {
           font-size: 0.66rem;
+        }
+
+        .caption {
+          right: 0.85rem;
+          bottom: 0.85rem;
+          width: min(24rem, calc(100vw - 1.7rem));
+          font-size: 0.6rem;
         }
       }
 
       @media (max-width: 560px) {
-        .stage {
-          top: 12vh;
-          left: -10vw;
-          width: 120vw;
-          height: 62vh;
-          bottom: auto;
-        }
-
         .readout {
           display: none;
         }
 
         .caption {
-          right: 0.85rem;
+          right: auto;
           left: 0.85rem;
-          width: min(22rem, 88vw);
-          translate: 0;
           text-align: left;
-          overflow-wrap: anywhere;
         }
       }
     </style>
   </head>
   <body>
-    <main class="space" id="top" aria-label="dinguerie hyperbolic space">
-      <svg class="stage" id="stage" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Hyperbolic cathedral">
-        <defs>
-          <clipPath id="diskClip">
-            <circle cx="600" cy="455" r="398"></circle>
-          </clipPath>
-        </defs>
-        <circle class="echo" cx="600" cy="455" r="456"></circle>
-        <circle class="echo" cx="600" cy="455" r="428"></circle>
-        <circle class="disk" cx="600" cy="455" r="398"></circle>
-        <g clip-path="url(#diskClip)">
-          <g id="tiles"></g>
-          <g id="mesh"></g>
-          <text class="wordmark" x="600" y="492" text-anchor="middle">dinguerie</text>
-          <g id="triangleFill"></g>
-          <g id="triangleEdges"></g>
-        </g>
-        <circle class="disk" cx="600" cy="455" r="398" fill="none"></circle>
-        <g id="observerLayer"></g>
-        <text class="horizon-label" x="600" y="68" text-anchor="middle">the rim is not a wall, it is infinity</text>
+    <main class="observatory" id="top" aria-label="dinguerie impossible observatory">
+      <svg class="stage" id="stage" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Non-Euclidean observatory with paired portals">
+        <defs id="defs"></defs>
+        <g id="architecture"></g>
+        <text class="ghost-label" x="600" y="520" text-anchor="middle">dinguerie</text>
+        <g id="portals"></g>
+        <g id="beams"></g>
+        <g id="markers"></g>
       </svg>
 
       <header class="chrome">
         <a class="brand" href="#top">dinguerie</a>
-        <div class="formula">equal rooms shrink toward the edge because distance is exploding</div>
-        <div class="readout" id="readout">depth 0.00 / angle sum 61 deg</div>
+        <div class="formula">paired doorways make one continuous room impossible to flatten</div>
+        <div class="readout" id="readout">gate A to A'</div>
       </header>
 
       <p class="caption">
-        <strong>Move to walk.</strong>
-        Equal rooms shrink toward infinity. The bright triangle proves the geometry changed: its angles add to less than 180 deg.
+        <strong>Move to aim the route.</strong>
+        A straight walk enters one doorway and exits its twin somewhere else. That tear in the floor plan is the non-Euclidean move.
       </p>
     </main>
 
     <script>
       (() => {
         const NS = "http://www.w3.org/2000/svg";
-        const CENTER = { x: 600, y: 455 };
-        const RADIUS = 398;
-        const TAU = Math.PI * 2;
         const stage = document.querySelector("#stage");
-        const tilesGroup = document.querySelector("#tiles");
-        const meshGroup = document.querySelector("#mesh");
-        const triangleFill = document.querySelector("#triangleFill");
-        const triangleEdges = document.querySelector("#triangleEdges");
-        const observerLayer = document.querySelector("#observerLayer");
+        const defs = document.querySelector("#defs");
+        const architecture = document.querySelector("#architecture");
+        const portalsGroup = document.querySelector("#portals");
+        const beamsGroup = document.querySelector("#beams");
+        const markersGroup = document.querySelector("#markers");
         const readout = document.querySelector("#readout");
-        const palette = ["#2454ff", "#ff4f35", "#38d0aa", "#d4a321", "#7e69ff", "#baff39"];
-        const radialCount = 36;
-        const ringDepths = [0, 0.42, 0.82, 1.22, 1.66, 2.14, 2.7, 3.36, 4.18, 5.24, 6.6];
-        const triangleWorld = [
-          { re: -0.72, im: 0.42 },
-          { re: 0.66, im: 0.48 },
-          { re: 0.2, im: -0.55 }
+        const observer = { x: 600, y: 720 };
+        const portals = [
+          { id: "a", label: "A", pair: 1, x: 95, y: 240, w: 205, h: 430, color: "#2454ff" },
+          { id: "ap", label: "A'", pair: 0, x: 880, y: 190, w: 235, h: 470, color: "#2454ff" },
+          { id: "b", label: "B", pair: 3, x: 445, y: 86, w: 310, h: 330, color: "#ff4f35" },
+          { id: "bp", label: "B'", pair: 2, x: 475, y: 535, w: 250, h: 310, color: "#ff4f35" },
+          { id: "c", label: "C", pair: 5, x: 330, y: 460, w: 165, h: 255, color: "#d4a321" },
+          { id: "cp", label: "C'", pair: 4, x: 742, y: 438, w: 165, h: 255, color: "#d4a321" }
         ];
-        let observer = { re: 0.18, im: -0.08 };
+        let target = { x: 930, y: 270 };
+        let activeIndex = 1;
         let scheduled = false;
 
         function createSvg(name, attrs = {}) {
@@ -369,259 +379,193 @@
           return element;
         }
 
-        function clamp(value, min, max) {
-          return Math.max(min, Math.min(max, value));
-        }
-
-        function abs2(z) {
-          return z.re * z.re + z.im * z.im;
-        }
-
-        function sub(a, b) {
-          return { re: a.re - b.re, im: a.im - b.im };
-        }
-
-        function mul(a, b) {
-          return {
-            re: a.re * b.re - a.im * b.im,
-            im: a.re * b.im + a.im * b.re
-          };
-        }
-
-        function div(a, b) {
-          const denominator = abs2(b) || 1e-9;
-          return {
-            re: (a.re * b.re + a.im * b.im) / denominator,
-            im: (a.im * b.re - a.re * b.im) / denominator
-          };
-        }
-
-        function atanh(value) {
-          const x = clamp(value, -0.999999, 0.999999);
-          return 0.5 * Math.log((1 + x) / (1 - x));
-        }
-
-        function radiusAt(depth) {
-          return Math.tanh(depth / 2);
-        }
-
-        function polar(radius, angle) {
-          return { re: Math.cos(angle) * radius, im: Math.sin(angle) * radius };
-        }
-
-        function transport(z) {
-          const conjugate = { re: observer.re, im: -observer.im };
-          return div(sub(z, observer), sub({ re: 1, im: 0 }, mul(conjugate, z)));
-        }
-
-        function toScreen(z) {
-          return {
-            x: CENTER.x + z.re * RADIUS,
-            y: CENTER.y - z.im * RADIUS
-          };
-        }
-
-        function pathFrom(points, close = false) {
-          if (!points.length) return "";
-          const d = points
-            .map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
-            .join(" ");
-          return close ? `${d}Z` : d;
-        }
-
-        function screenPath(points, close = false) {
-          return pathFrom(points.map((point) => toScreen(transport(point))), close);
-        }
-
-        function geodesicSamples(a, b, count = 44) {
-          const determinant = a.re * b.im - a.im * b.re;
-          if (Math.abs(determinant) < 1e-5) {
-            const points = [];
-            for (let i = 0; i <= count; i += 1) {
-              const t = i / count;
-              points.push({
-                re: a.re + (b.re - a.re) * t,
-                im: a.im + (b.im - a.im) * t
-              });
-            }
-            return points;
-          }
-
-          const rhsA = (abs2(a) + 1) / 2;
-          const rhsB = (abs2(b) + 1) / 2;
-          const center = {
-            re: (rhsA * b.im - a.im * rhsB) / determinant,
-            im: (a.re * rhsB - rhsA * b.re) / determinant
-          };
-          const circleRadius = Math.sqrt(Math.max(abs2(center) - 1, 0));
-          const start = Math.atan2(a.im - center.im, a.re - center.re);
-          const end = Math.atan2(b.im - center.im, b.re - center.re);
-          let delta = ((end - start + Math.PI) % TAU + TAU) % TAU - Math.PI;
-          const middle = {
-            re: center.re + Math.cos(start + delta / 2) * circleRadius,
-            im: center.im + Math.sin(start + delta / 2) * circleRadius
-          };
-          if (abs2(middle) > 1.0001) delta += delta > 0 ? -TAU : TAU;
-
-          const points = [];
-          for (let i = 0; i <= count; i += 1) {
-            const angle = start + delta * i / count;
-            points.push({
-              re: center.re + Math.cos(angle) * circleRadius,
-              im: center.im + Math.sin(angle) * circleRadius
-            });
-          }
-          return points;
-        }
-
-        function hyperbolicDistance(a, b) {
-          const denominator = Math.max((1 - abs2(a)) * (1 - abs2(b)), 1e-9);
-          const value = 1 + 2 * abs2(sub(a, b)) / denominator;
-          return Math.acosh(Math.max(1, value));
-        }
-
-        function hyperbolicAngles(points) {
-          const sideA = hyperbolicDistance(points[1], points[2]);
-          const sideB = hyperbolicDistance(points[0], points[2]);
-          const sideC = hyperbolicDistance(points[0], points[1]);
-          const angle = (opposite, adjacentA, adjacentB) => {
-            const denominator = Math.sinh(adjacentA) * Math.sinh(adjacentB);
-            const value = (Math.cosh(adjacentA) * Math.cosh(adjacentB) - Math.cosh(opposite)) / denominator;
-            return Math.acos(clamp(value, -1, 1));
-          };
+        function archPath(portal, inset = 0) {
+          const x = portal.x + inset;
+          const y = portal.y + inset;
+          const w = portal.w - inset * 2;
+          const h = portal.h - inset * 2;
+          const crown = y + w * 0.5;
           return [
-            angle(sideA, sideB, sideC),
-            angle(sideB, sideA, sideC),
-            angle(sideC, sideA, sideB)
-          ];
+            `M${x.toFixed(2)} ${portal.y + portal.h - inset}`,
+            `L${x.toFixed(2)} ${crown.toFixed(2)}`,
+            `Q${x.toFixed(2)} ${y.toFixed(2)} ${(x + w / 2).toFixed(2)} ${y.toFixed(2)}`,
+            `Q${(x + w).toFixed(2)} ${y.toFixed(2)} ${(x + w).toFixed(2)} ${crown.toFixed(2)}`,
+            `L${(x + w).toFixed(2)} ${(portal.y + portal.h - inset).toFixed(2)}Z`
+          ].join(" ");
         }
 
-        function triangleAngleSum() {
-          return hyperbolicAngles(triangleWorld).reduce((total, angle) => total + angle, 0) * 180 / Math.PI;
+        function center(portal) {
+          return { x: portal.x + portal.w / 2, y: portal.y + portal.h * 0.56 };
         }
 
-        function tilePath(innerDepth, outerDepth, startAngle, endAngle) {
-          const innerRadius = radiusAt(innerDepth);
-          const outerRadius = radiusAt(outerDepth);
-          const steps = 3;
-          const points = [];
-          for (let i = 0; i <= steps; i += 1) {
-            points.push(polar(outerRadius, startAngle + (endAngle - startAngle) * i / steps));
-          }
-          for (let i = steps; i >= 0; i -= 1) {
-            points.push(polar(innerRadius, startAngle + (endAngle - startAngle) * i / steps));
-          }
-          return screenPath(points, true);
+        function distance(a, b) {
+          return Math.hypot(a.x - b.x, a.y - b.y);
         }
 
-        function renderTiles() {
+        function normalize(vector) {
+          const length = Math.hypot(vector.x, vector.y) || 1;
+          return { x: vector.x / length, y: vector.y / length };
+        }
+
+        function curvePath(a, b, bend = 0) {
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const length = Math.hypot(dx, dy) || 1;
+          const nx = -dy / length;
+          const ny = dx / length;
+          const c1 = { x: a.x + dx * 0.34 + nx * bend, y: a.y + dy * 0.34 + ny * bend };
+          const c2 = { x: a.x + dx * 0.72 + nx * bend, y: a.y + dy * 0.72 + ny * bend };
+          return `M${a.x.toFixed(2)} ${a.y.toFixed(2)}C${c1.x.toFixed(2)} ${c1.y.toFixed(2)} ${c2.x.toFixed(2)} ${c2.y.toFixed(2)} ${b.x.toFixed(2)} ${b.y.toFixed(2)}`;
+        }
+
+        function drawArchitecture() {
           const fragment = document.createDocumentFragment();
-          for (let ring = 0; ring < ringDepths.length - 1; ring += 1) {
-            const inner = ringDepths[ring];
-            const outer = ringDepths[ring + 1];
-            const offset = ring % 2 ? Math.PI / radialCount : 0;
-            for (let segment = 0; segment < radialCount; segment += 1) {
-              const start = offset + segment * TAU / radialCount;
-              const end = offset + (segment + 1) * TAU / radialCount;
-              const color = palette[(ring + segment) % palette.length];
-              const opacity = ring < 3 ? 0.18 : 0.1;
-              fragment.append(createSvg("path", {
-                class: "tile",
-                d: tilePath(inner, outer, start, end),
-                fill: color,
-                "fill-opacity": opacity.toFixed(2)
-              }));
-            }
-          }
-          tilesGroup.replaceChildren(fragment);
-        }
-
-        function renderMesh() {
-          const fragment = document.createDocumentFragment();
-          for (let ring = 1; ring < ringDepths.length; ring += 1) {
-            const radius = radiusAt(ringDepths[ring]);
-            const points = [];
-            const count = 100;
-            for (let i = 0; i <= count; i += 1) points.push(polar(radius, i * TAU / count));
-            fragment.append(createSvg("path", {
-              class: ring === 5 ? "mesh mesh-hot" : "mesh",
-              d: screenPath(points)
-            }));
-          }
-
-          for (let i = 0; i < radialCount; i += 1) {
-            if (i % 2 && i % 3) continue;
-            const angle = i * TAU / radialCount;
-            const points = ringDepths.map((depth) => polar(radiusAt(depth), angle));
-            fragment.append(createSvg("path", {
-              class: i % 6 === 0 ? "mesh mesh-hot" : "mesh",
-              d: screenPath(points)
-            }));
-          }
-          meshGroup.replaceChildren(fragment);
-        }
-
-        function renderTriangle() {
-          const sides = [
-            geodesicSamples(triangleWorld[0], triangleWorld[1], 46),
-            geodesicSamples(triangleWorld[1], triangleWorld[2], 46),
-            geodesicSamples(triangleWorld[2], triangleWorld[0], 46)
-          ];
-          const skin = sides[0].concat(sides[1].slice(1), sides[2].slice(1));
-          triangleFill.replaceChildren(createSvg("path", {
-            class: "triangle-fill",
-            d: screenPath(skin, true)
+          fragment.append(createSvg("path", {
+            class: "wall",
+            d: "M0 0H1200V900H0Z"
           }));
-          triangleEdges.replaceChildren(
-            createSvg("path", { class: "triangle-edge triangle-edge-blue", d: screenPath(sides[0]) }),
-            createSvg("path", { class: "triangle-edge triangle-edge-red", d: screenPath(sides[1]) }),
-            createSvg("path", { class: "triangle-edge", d: screenPath(sides[2]) })
-          );
+
+          for (let i = 0; i <= 14; i += 1) {
+            const y = 150 + i * 48;
+            fragment.append(createSvg("line", { class: i % 4 ? "floor-line" : "wall-line-strong", x1: 0, y1: y, x2: 1200, y2: y }));
+          }
+
+          [90, 190, 300, 430, 600, 770, 900, 1010, 1110].forEach((x, index) => {
+            fragment.append(createSvg("path", {
+              class: index % 2 ? "floor-line" : "wall-line-strong",
+              d: `M${x} 900L${600 + (x - 600) * 0.28} 120`
+            }));
+          });
+
+          for (let i = 0; i < 9; i += 1) {
+            const y = 610 + i * 34;
+            fragment.append(createSvg("path", {
+              class: "floor-line",
+              d: `M${120 + i * 38} ${y}H${1080 - i * 38}`
+            }));
+          }
+
+          architecture.replaceChildren(fragment);
         }
 
-        function renderObserver() {
-          observerLayer.replaceChildren(
-            createSvg("circle", {
-              class: "observer-ring",
-              cx: CENTER.x,
-              cy: CENTER.y,
-              r: 28
-            }),
-            createSvg("circle", {
-              class: "observer",
-              cx: CENTER.x,
-              cy: CENTER.y,
-              r: 9
-            }),
-            createSvg("text", {
+        function portalInterior(group, portal, active) {
+          const id = `clip-${portal.id}`;
+          defs.append(createSvg("clipPath", { id }));
+          defs.lastChild.append(createSvg("path", { d: archPath(portal, 8) }));
+
+          const inside = createSvg("g", { "clip-path": `url(#${id})` });
+          inside.append(createSvg("path", { class: "portal-fill", d: archPath(portal, 8) }));
+          for (let i = 0; i < 7; i += 1) {
+            const inset = 18 + i * 17;
+            if (portal.w - inset * 2 <= 14 || portal.h - inset * 2 <= 26) continue;
+            inside.append(createSvg("path", {
+              class: "portal-depth",
+              d: archPath(portal, inset),
+              stroke: portal.color,
+              "stroke-opacity": active ? "0.42" : "0.2"
+            }));
+          }
+
+          for (let i = 0; i < 9; i += 1) {
+            const x = portal.x + 14 + i * portal.w / 8;
+            inside.append(createSvg("line", {
+              class: "portal-skin",
+              x1: x,
+              y1: portal.y + 8,
+              x2: portal.x + portal.w / 2,
+              y2: portal.y + portal.h - 8
+            }));
+          }
+
+          group.append(inside);
+        }
+
+        function drawPortals() {
+          defs.replaceChildren();
+          const fragment = document.createDocumentFragment();
+          portals.forEach((portal, index) => {
+            const active = index === activeIndex || index === portals[activeIndex].pair;
+            const group = createSvg("g", {});
+            portalInterior(group, portal, active);
+            group.append(createSvg("path", {
+              class: active ? "portal-frame portal-active" : "portal-frame",
+              d: archPath(portal),
+              stroke: portal.color
+            }));
+            group.append(createSvg("path", {
+              class: "portal-depth",
+              d: archPath(portal, 11),
+              stroke: "#100f0c",
+              "stroke-opacity": active ? "0.48" : "0.24"
+            }));
+            const c = center(portal);
+            group.append(createSvg("text", {
               class: "label",
-              x: CENTER.x + 18,
-              y: CENTER.y - 16
-            })
-          );
-          observerLayer.lastChild.textContent = "you";
-
-          const trianglePoint = toScreen(transport(triangleWorld[0]));
-          observerLayer.append(createSvg("text", {
-            class: "label",
-            x: trianglePoint.x + 12,
-            y: trianglePoint.y - 12
-          }));
-          observerLayer.lastChild.textContent = `angle sum ${triangleAngleSum().toFixed(0)} deg`;
+              x: c.x - 12,
+              y: portal.y + portal.h + 24
+            }));
+            group.lastChild.textContent = portal.label;
+            fragment.append(group);
+          });
+          portalsGroup.replaceChildren(fragment);
         }
 
-        function updateReadout() {
-          const depth = 2 * atanh(Math.hypot(observer.re, observer.im));
-          const angleSum = triangleAngleSum();
-          readout.textContent = `depth ${depth.toFixed(2)} / angle sum ${angleSum.toFixed(0)} deg`;
+        function drawBeams() {
+          const active = portals[activeIndex];
+          const paired = portals[active.pair];
+          const entry = center(active);
+          const exit = center(paired);
+          const aim = normalize({ x: target.x - entry.x, y: target.y - entry.y });
+          const exitEnd = {
+            x: exit.x + aim.x * 310,
+            y: exit.y + aim.y * 310
+          };
+          const bounce = portals[(active.pair + 2) % portals.length];
+          const bounceTarget = center(bounce);
+          const routeOne = curvePath(observer, entry, -52);
+          const routeTwo = curvePath(exit, exitEnd, 42);
+          const routeThree = curvePath(exitEnd, bounceTarget, -36);
+          const color = active.color;
+
+          beamsGroup.replaceChildren(
+            createSvg("path", { class: "beam-shadow", d: routeOne }),
+            createSvg("path", { class: "beam-shadow", d: routeTwo }),
+            createSvg("path", { class: "beam-shadow", d: routeThree }),
+            createSvg("path", { class: "beam", d: routeOne, stroke: color }),
+            createSvg("path", { class: "beam", d: routeTwo, stroke: color }),
+            createSvg("path", { class: "beam beam-thin", d: routeThree, stroke: "#100f0c" })
+          );
+
+          markersGroup.replaceChildren(
+            createSvg("circle", { class: "you-ring", cx: observer.x, cy: observer.y, r: 29 }),
+            createSvg("circle", { class: "you", cx: observer.x, cy: observer.y, r: 9 }),
+            createSvg("text", { class: "label", x: observer.x + 18, y: observer.y - 16 }),
+            createSvg("circle", { class: "gate-dot", cx: entry.x, cy: entry.y, r: 8 }),
+            createSvg("circle", { class: "gate-dot", cx: exit.x, cy: exit.y, r: 8 }),
+            createSvg("text", { class: "micro-label", x: (entry.x + exit.x) / 2, y: Math.min(entry.y, exit.y) - 22, "text-anchor": "middle" })
+          );
+          markersGroup.children[2].textContent = "you";
+          markersGroup.lastChild.textContent = `${active.label} and ${paired.label} are the same doorway`;
+          readout.textContent = `gate ${active.label} to ${paired.label}`;
+        }
+
+        function nearestPortal(point) {
+          let nearest = 0;
+          let best = Infinity;
+          portals.forEach((portal, index) => {
+            const d = distance(point, center(portal));
+            if (d < best) {
+              best = d;
+              nearest = index;
+            }
+          });
+          return nearest;
         }
 
         function render() {
-          renderTiles();
-          renderMesh();
-          renderTriangle();
-          renderObserver();
-          updateReadout();
+          activeIndex = nearestPortal(target);
+          drawPortals();
+          drawBeams();
           scheduled = false;
         }
 
@@ -631,38 +575,27 @@
           requestAnimationFrame(render);
         }
 
-        function pointFromEvent(event) {
+        function pointerToSvg(event) {
           const matrix = stage.getScreenCTM();
-          if (!matrix) return observer;
+          if (!matrix) return target;
           const point = stage.createSVGPoint();
           point.x = event.clientX;
           point.y = event.clientY;
-          const local = point.matrixTransform(matrix.inverse());
-          const raw = {
-            re: (local.x - CENTER.x) / RADIUS,
-            im: (CENTER.y - local.y) / RADIUS
-          };
-          const magnitude = Math.hypot(raw.re, raw.im);
-          if (magnitude > 0.82) {
-            return {
-              re: raw.re / magnitude * 0.82,
-              im: raw.im / magnitude * 0.82
-            };
-          }
-          return raw;
+          return point.matrixTransform(matrix.inverse());
         }
 
         stage.addEventListener("pointermove", (event) => {
-          observer = pointFromEvent(event);
+          target = pointerToSvg(event);
           scheduleRender();
         }, { passive: true });
 
         stage.addEventListener("pointerdown", (event) => {
-          observer = pointFromEvent(event);
+          target = pointerToSvg(event);
           scheduleRender();
         }, { passive: true });
 
         window.addEventListener("resize", scheduleRender);
+        drawArchitecture();
         render();
       })();
     </script>
