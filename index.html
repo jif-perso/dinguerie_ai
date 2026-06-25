@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="dinguerie is a living Mobius chamber.">
+    <meta name="description" content="dinguerie is an immersive hyperbolic space.">
     <meta name="theme-color" content="#f3eee4">
     <meta property="og:title" content="dinguerie">
-    <meta property="og:description" content="A living Mobius chamber.">
+    <meta property="og:description" content="An immersive hyperbolic space.">
     <meta property="og:type" content="website">
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M18 40C26 20 39 44 46 24' fill='none' stroke='%23c8ff45' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M12 34C22 15 42 49 52 30' fill='none' stroke='%23baff39' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E"
     >
     <title>dinguerie</title>
     <style>
@@ -19,16 +19,15 @@
         --paper: #f3eee4;
         --paper-hot: #fffaf0;
         --ink: #100f0c;
-        --soft: #746b60;
+        --soft: #6e665c;
         --line: rgba(16, 15, 12, 0.18);
-        --line-strong: rgba(16, 15, 12, 0.42);
+        --line-strong: rgba(16, 15, 12, 0.44);
         --blue: #2454ff;
         --red: #ff4f35;
         --green: #baff39;
         --mint: #38d0aa;
         --gold: #d4a321;
         --violet: #7e69ff;
-        --accent: var(--blue);
         --mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
         --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         --serif: Georgia, "Times New Roman", serif;
@@ -52,19 +51,9 @@
         text-rendering: optimizeLegibility;
       }
 
-      button,
       a {
+        color: inherit;
         font: inherit;
-      }
-
-      button {
-        border: 0;
-        color: inherit;
-        cursor: pointer;
-      }
-
-      a {
-        color: inherit;
       }
 
       ::selection {
@@ -73,19 +62,20 @@
       }
 
       :focus-visible {
-        outline: 3px solid var(--accent);
+        outline: 3px solid var(--green);
         outline-offset: 4px;
       }
 
-      .chamber {
+      .space {
         position: fixed;
         inset: 0;
         isolation: isolate;
+        overflow: hidden;
         background:
           linear-gradient(90deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
           linear-gradient(0deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
-          radial-gradient(circle at 50% 52%, var(--paper-hot), var(--paper) 58%, #d8cfc0 100%);
-        background-size: 36px 36px, 36px 36px, 100% 100%;
+          radial-gradient(circle at 50% 52%, var(--paper-hot), var(--paper) 56%, #d7ccbd 100%);
+        background-size: 34px 34px, 34px 34px, 100% 100%;
       }
 
       .stage {
@@ -95,36 +85,119 @@
         width: 100%;
         height: 100%;
         cursor: crosshair;
+        touch-action: none;
       }
 
-      .grain {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        opacity: 0.22;
-        pointer-events: none;
-        background-image:
-          linear-gradient(rgba(16, 15, 12, 0.045) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(16, 15, 12, 0.045) 1px, transparent 1px);
-        background-size: 9px 9px;
-        mask-image: radial-gradient(circle at 50% 50%, black 0%, black 42%, transparent 86%);
+      .stage path,
+      .stage circle,
+      .stage text,
+      .stage line {
+        vector-effect: non-scaling-stroke;
+      }
+
+      .disk {
+        fill: rgba(255, 250, 240, 0.34);
+        stroke: rgba(16, 15, 12, 0.88);
+        stroke-width: 2.6;
+      }
+
+      .echo {
+        fill: none;
+        stroke: rgba(16, 15, 12, 0.12);
+        stroke-width: 1.15;
+      }
+
+      .tile {
+        stroke: rgba(16, 15, 12, 0.12);
+        stroke-width: 0.72;
+      }
+
+      .mesh {
+        fill: none;
+        stroke: rgba(16, 15, 12, 0.23);
+        stroke-width: 1.05;
+      }
+
+      .mesh-hot {
+        stroke: rgba(36, 84, 255, 0.55);
+        stroke-width: 1.35;
+      }
+
+      .triangle-fill {
+        fill: rgba(186, 255, 57, 0.23);
+        stroke: none;
+      }
+
+      .triangle-edge {
+        fill: none;
+        stroke: var(--ink);
+        stroke-linecap: square;
+        stroke-linejoin: round;
+        stroke-width: 2.6;
+      }
+
+      .triangle-edge-blue {
+        stroke: var(--blue);
+      }
+
+      .triangle-edge-red {
+        stroke: var(--red);
+      }
+
+      .observer {
+        fill: var(--green);
+        stroke: var(--ink);
+        stroke-width: 2.2;
+      }
+
+      .observer-ring {
+        fill: none;
+        stroke: var(--ink);
+        stroke-dasharray: 4 7;
+        stroke-width: 1.3;
+      }
+
+      .label {
+        fill: var(--ink);
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 900;
+        paint-order: stroke;
+        stroke: var(--paper);
+        stroke-width: 5px;
+        text-transform: uppercase;
+      }
+
+      .horizon-label {
+        fill: rgba(16, 15, 12, 0.54);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .wordmark {
+        fill: rgba(16, 15, 12, 0.075);
+        font-family: var(--serif);
+        font-size: 120px;
+        font-weight: 500;
       }
 
       .chrome {
         position: fixed;
         inset: 0 0 auto;
-        z-index: 5;
+        z-index: 4;
         display: grid;
         grid-template-columns: 1fr auto 1fr;
-        align-items: center;
         gap: 1rem;
-        padding: 1rem 1.3rem;
+        align-items: center;
+        padding: 1rem 1.25rem;
         pointer-events: none;
       }
 
       .brand,
       .formula,
-      .readout-top {
+      .readout {
         pointer-events: auto;
         font-family: var(--mono);
         font-size: 0.72rem;
@@ -133,7 +206,6 @@
 
       .brand {
         justify-self: start;
-        color: var(--ink);
         text-decoration: none;
       }
 
@@ -142,7 +214,7 @@
         width: 0.72rem;
         height: 0.72rem;
         margin-right: 0.62rem;
-        background: var(--accent);
+        background: var(--green);
         box-shadow: inset 0 0 0 2px var(--ink);
         content: "";
         vertical-align: -0.08rem;
@@ -150,494 +222,406 @@
 
       .formula {
         justify-self: center;
-        min-width: 22rem;
-        padding: 0.54rem 0.8rem;
+        min-width: 26rem;
+        padding: 0.55rem 0.78rem;
         border: 1px solid var(--line);
-        background: rgba(243, 238, 228, 0.84);
+        background: rgba(243, 238, 228, 0.9);
         text-align: center;
       }
 
-      .readout-top {
+      .readout {
         justify-self: end;
         color: var(--soft);
+        text-align: right;
         text-transform: uppercase;
-      }
-
-      .watermark {
-        position: fixed;
-        inset: 0;
-        z-index: 3;
-        display: grid;
-        place-items: center;
-        pointer-events: none;
-      }
-
-      h1 {
-        margin: 0;
-        color: rgba(16, 15, 12, 0.11);
-        font-family: var(--serif);
-        font-size: 9.5rem;
-        font-weight: 500;
-        line-height: 0.9;
-      }
-
-      .panel {
-        position: fixed;
-        inset: auto auto 1.15rem 1.3rem;
-        z-index: 5;
-        display: grid;
-        width: min(28rem, calc(100vw - 2.6rem));
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1px;
-        border: 1px solid var(--line);
-        background: var(--line);
-        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
-      }
-
-      .cell {
-        min-height: 5rem;
-        padding: 0.78rem;
-        background: rgba(243, 238, 228, 0.9);
-      }
-
-      .cell-wide {
-        grid-column: 1 / -1;
-      }
-
-      .cell span {
-        display: block;
-        color: var(--soft);
-        font-family: var(--mono);
-        font-size: 0.62rem;
-        font-weight: 850;
-        text-transform: uppercase;
-      }
-
-      .cell strong {
-        display: block;
-        margin-top: 0.74rem;
-        color: var(--ink);
-        font-family: var(--mono);
-        font-size: 0.88rem;
-        font-weight: 850;
-        line-height: 1.25;
-      }
-
-      .legend {
-        position: fixed;
-        inset: auto 1.3rem 1.15rem auto;
-        z-index: 5;
-        display: grid;
-        gap: 1px;
-        width: min(23rem, calc(100vw - 2.6rem));
-        border: 1px solid var(--line);
-        background: var(--line);
-        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
-      }
-
-      .legend-row {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 0.7rem;
-        align-items: center;
-        min-height: 3rem;
-        padding: 0.68rem 0.78rem;
-        background: rgba(243, 238, 228, 0.9);
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        font-weight: 850;
-      }
-
-      .swatch {
-        width: 0.8rem;
-        height: 0.8rem;
-        background: var(--swatch);
-        box-shadow: inset 0 0 0 1px var(--ink);
-      }
-
-      .actions {
-        position: fixed;
-        top: 4.8rem;
-        right: 1.3rem;
-        z-index: 5;
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .action {
-        min-height: 2.55rem;
-        padding: 0.55rem 0.8rem;
-        border: 1px solid var(--line-strong);
-        background: rgba(243, 238, 228, 0.88);
-        color: var(--ink);
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        font-weight: 850;
-        text-transform: uppercase;
-      }
-
-      .action:hover {
-        background: var(--paper-hot);
       }
 
       .caption {
         position: fixed;
         left: 50%;
-        bottom: 1.85rem;
-        z-index: 5;
+        bottom: 1.05rem;
+        z-index: 4;
+        display: grid;
+        gap: 0.34rem;
+        width: min(48rem, calc(100vw - 2rem));
         translate: -50% 0;
-        width: min(35rem, calc(100vw - 2rem));
         color: rgba(16, 15, 12, 0.72);
         font-family: var(--mono);
         font-size: 0.66rem;
-        font-weight: 820;
+        font-weight: 850;
         line-height: 1.35;
         text-align: center;
         text-transform: uppercase;
         pointer-events: none;
       }
 
-      @media (max-width: 920px) {
+      .caption strong {
+        color: var(--ink);
+      }
+
+      @media (max-width: 820px) {
         .chrome {
           grid-template-columns: 1fr auto;
+          padding: 0.85rem;
         }
 
         .formula {
           display: none;
         }
 
-        h1 {
-          font-size: 6rem;
-        }
-
         .caption {
-          display: none;
+          bottom: 0.85rem;
+          width: calc(100vw - 1.7rem);
+          font-size: 0.6rem;
         }
 
-        .legend {
-          top: 4.8rem;
-          right: 1rem;
-          bottom: auto;
+        .readout {
+          font-size: 0.66rem;
         }
       }
 
-      @media (max-width: 620px) {
-        .chrome {
-          padding: 0.85rem;
+      @media (max-width: 560px) {
+        .stage {
+          top: 12vh;
+          left: -10vw;
+          width: 120vw;
+          height: 62vh;
+          bottom: auto;
         }
 
-        .readout-top {
+        .readout {
           display: none;
         }
 
-        h1 {
-          font-size: 3.8rem;
-        }
-
-        .actions {
-          top: auto;
+        .caption {
           right: 0.85rem;
-          bottom: 0.85rem;
-        }
-
-        .panel {
-          inset: auto auto 0.85rem 0.85rem;
-          width: calc(100vw - 8rem);
-          grid-template-columns: 1fr;
-        }
-
-        .cell {
-          min-height: 3.4rem;
-          padding: 0.58rem;
-        }
-
-        .cell strong {
-          margin-top: 0.38rem;
-          font-size: 0.76rem;
-        }
-
-        .legend {
-          display: none;
+          left: 0.85rem;
+          width: min(22rem, 88vw);
+          translate: 0;
+          text-align: left;
+          overflow-wrap: anywhere;
         }
       }
     </style>
   </head>
   <body>
-    <main class="chamber" id="top" aria-label="dinguerie Mobius chamber">
-      <svg class="stage" id="stage" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mobius transformation of a grid">
-        <g id="base-grid"></g>
-        <circle id="unit-circle" cx="500" cy="500" r="315" fill="none" stroke="rgba(16,15,12,0.3)" stroke-width="1.5"></circle>
-        <g id="curves"></g>
-        <g id="trail"></g>
-        <g id="pins"></g>
-        <g id="points"></g>
+    <main class="space" id="top" aria-label="dinguerie hyperbolic space">
+      <svg class="stage" id="stage" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Hyperbolic cathedral">
+        <defs>
+          <clipPath id="diskClip">
+            <circle cx="600" cy="455" r="398"></circle>
+          </clipPath>
+        </defs>
+        <circle class="echo" cx="600" cy="455" r="456"></circle>
+        <circle class="echo" cx="600" cy="455" r="428"></circle>
+        <circle class="disk" cx="600" cy="455" r="398"></circle>
+        <g clip-path="url(#diskClip)">
+          <g id="tiles"></g>
+          <g id="mesh"></g>
+          <text class="wordmark" x="600" y="492" text-anchor="middle">dinguerie</text>
+          <g id="triangleFill"></g>
+          <g id="triangleEdges"></g>
+        </g>
+        <circle class="disk" cx="600" cy="455" r="398" fill="none"></circle>
+        <g id="observerLayer"></g>
+        <text class="horizon-label" x="600" y="68" text-anchor="middle">the rim is not a wall, it is infinity</text>
       </svg>
-      <div class="grain" aria-hidden="true"></div>
 
       <header class="chrome">
         <a class="brand" href="#top">dinguerie</a>
-        <div class="formula">M_a(z) = (z - a) / (1 - conj(a)z)</div>
-        <div class="readout-top" id="status">conformal</div>
+        <div class="formula">equal rooms shrink toward the edge because distance is exploding</div>
+        <div class="readout" id="readout">depth 0.00 / angle sum 61 deg</div>
       </header>
 
-      <div class="watermark" aria-hidden="true">
-        <h1>dinguerie</h1>
-      </div>
-
-      <div class="actions">
-        <button class="action" type="button" id="freeze">freeze</button>
-        <button class="action" type="button" id="reset">reset</button>
-      </div>
-
-      <section class="panel" aria-label="Mobius readings">
-        <div class="cell">
-          <span>parameter a</span>
-          <strong id="param">0.000 + 0.000i</strong>
-        </div>
-        <div class="cell">
-          <span>modulus</span>
-          <strong id="modulus">0.000</strong>
-        </div>
-        <div class="cell cell-wide">
-          <span>invariant</span>
-          <strong id="invariant">circles and lines remain circles and lines</strong>
-        </div>
-      </section>
-
-      <section class="legend" aria-label="Legend">
-        <div class="legend-row"><i class="swatch" style="--swatch: #2454ff"></i><span>vertical family under M_a</span></div>
-        <div class="legend-row"><i class="swatch" style="--swatch: #ff4f35"></i><span>horizontal family under M_a</span></div>
-        <div class="legend-row"><i class="swatch" style="--swatch: #38d0aa"></i><span>image of the origin and pointer</span></div>
-      </section>
-
-      <p class="caption">move through the disk. click to pin a transformation.</p>
+      <p class="caption">
+        <strong>Move to walk.</strong>
+        Equal rooms shrink toward infinity. The bright triangle proves the geometry changed: its angles add to less than 180 deg.
+      </p>
     </main>
 
     <script>
       (() => {
-        const root = document.documentElement;
-        const svg = document.querySelector("#stage");
-        const baseGrid = document.querySelector("#base-grid");
-        const curves = document.querySelector("#curves");
-        const trailGroup = document.querySelector("#trail");
-        const pinsGroup = document.querySelector("#pins");
-        const pointsGroup = document.querySelector("#points");
-        const paramLabel = document.querySelector("#param");
-        const modulusLabel = document.querySelector("#modulus");
-        const invariantLabel = document.querySelector("#invariant");
-        const status = document.querySelector("#status");
-        const freezeButton = document.querySelector("#freeze");
-        const resetButton = document.querySelector("#reset");
-        const colors = ["#2454ff", "#ff4f35", "#38d0aa", "#7e69ff", "#d4a321"];
-        const lines = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8];
-        const samples = 38;
-        let a = { re: 0.28, im: -0.16 };
-        let target = { re: 0.28, im: -0.16 };
-        let frozen = false;
-        let pins = [];
-        let trail = [];
+        const NS = "http://www.w3.org/2000/svg";
+        const CENTER = { x: 600, y: 455 };
+        const RADIUS = 398;
+        const TAU = Math.PI * 2;
+        const stage = document.querySelector("#stage");
+        const tilesGroup = document.querySelector("#tiles");
+        const meshGroup = document.querySelector("#mesh");
+        const triangleFill = document.querySelector("#triangleFill");
+        const triangleEdges = document.querySelector("#triangleEdges");
+        const observerLayer = document.querySelector("#observerLayer");
+        const readout = document.querySelector("#readout");
+        const palette = ["#2454ff", "#ff4f35", "#38d0aa", "#d4a321", "#7e69ff", "#baff39"];
+        const radialCount = 36;
+        const ringDepths = [0, 0.42, 0.82, 1.22, 1.66, 2.14, 2.7, 3.36, 4.18, 5.24, 6.6];
+        const triangleWorld = [
+          { re: -0.72, im: 0.42 },
+          { re: 0.66, im: 0.48 },
+          { re: 0.2, im: -0.55 }
+        ];
+        let observer = { re: 0.18, im: -0.08 };
         let scheduled = false;
 
         function createSvg(name, attrs = {}) {
-          const element = document.createElementNS("http://www.w3.org/2000/svg", name);
+          const element = document.createElementNS(NS, name);
           Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
           return element;
         }
 
-        function formatComplex(z) {
-          const re = Math.abs(z.re) < 0.001 ? 0 : z.re;
-          const im = Math.abs(z.im) < 0.001 ? 0 : z.im;
-          const sign = im < 0 ? "-" : "+";
-          return `${re.toFixed(3)} ${sign} ${Math.abs(im).toFixed(3)}i`;
+        function clamp(value, min, max) {
+          return Math.max(min, Math.min(max, value));
         }
 
-        function add(aValue, bValue) {
-          return { re: aValue.re + bValue.re, im: aValue.im + bValue.im };
+        function abs2(z) {
+          return z.re * z.re + z.im * z.im;
         }
 
-        function sub(aValue, bValue) {
-          return { re: aValue.re - bValue.re, im: aValue.im - bValue.im };
+        function sub(a, b) {
+          return { re: a.re - b.re, im: a.im - b.im };
         }
 
-        function mul(aValue, bValue) {
+        function mul(a, b) {
           return {
-            re: aValue.re * bValue.re - aValue.im * bValue.im,
-            im: aValue.re * bValue.im + aValue.im * bValue.re
+            re: a.re * b.re - a.im * b.im,
+            im: a.re * b.im + a.im * b.re
           };
         }
 
-        function div(aValue, bValue) {
-          const d = bValue.re * bValue.re + bValue.im * bValue.im || 1e-9;
+        function div(a, b) {
+          const denominator = abs2(b) || 1e-9;
           return {
-            re: (aValue.re * bValue.re + aValue.im * bValue.im) / d,
-            im: (aValue.im * bValue.re - aValue.re * bValue.im) / d
+            re: (a.re * b.re + a.im * b.im) / denominator,
+            im: (a.im * b.re - a.re * b.im) / denominator
           };
         }
 
-        function mobius(z) {
-          const conjugate = { re: a.re, im: -a.im };
-          return div(sub(z, a), sub({ re: 1, im: 0 }, mul(conjugate, z)));
+        function atanh(value) {
+          const x = clamp(value, -0.999999, 0.999999);
+          return 0.5 * Math.log((1 + x) / (1 - x));
+        }
+
+        function radiusAt(depth) {
+          return Math.tanh(depth / 2);
+        }
+
+        function polar(radius, angle) {
+          return { re: Math.cos(angle) * radius, im: Math.sin(angle) * radius };
+        }
+
+        function transport(z) {
+          const conjugate = { re: observer.re, im: -observer.im };
+          return div(sub(z, observer), sub({ re: 1, im: 0 }, mul(conjugate, z)));
         }
 
         function toScreen(z) {
           return {
-            x: 500 + z.re * 315,
-            y: 500 - z.im * 315
+            x: CENTER.x + z.re * RADIUS,
+            y: CENTER.y - z.im * RADIUS
           };
         }
 
-        function pathFrom(points) {
-          return points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(" ");
+        function pathFrom(points, close = false) {
+          if (!points.length) return "";
+          const d = points
+            .map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+            .join(" ");
+          return close ? `${d}Z` : d;
         }
 
-        function buildBaseGrid() {
-          baseGrid.replaceChildren();
-          lines.forEach((value) => {
-            const v = createSvg("line", {
-              x1: 500 + value * 315,
-              y1: 185,
-              x2: 500 + value * 315,
-              y2: 815,
-              stroke: "rgba(16,15,12,0.12)",
-              "stroke-width": "1"
-            });
-            const h = createSvg("line", {
-              x1: 185,
-              y1: 500 - value * 315,
-              x2: 815,
-              y2: 500 - value * 315,
-              stroke: "rgba(16,15,12,0.12)",
-              "stroke-width": "1"
-            });
-            baseGrid.append(v, h);
-          });
-          baseGrid.append(createSvg("line", { x1: 120, y1: 500, x2: 880, y2: 500, stroke: "rgba(16,15,12,0.32)", "stroke-width": "1.4" }));
-          baseGrid.append(createSvg("line", { x1: 500, y1: 120, x2: 500, y2: 880, stroke: "rgba(16,15,12,0.32)", "stroke-width": "1.4" }));
+        function screenPath(points, close = false) {
+          return pathFrom(points.map((point) => toScreen(transport(point))), close);
         }
 
-        function transformedLine(kind, value) {
+        function geodesicSamples(a, b, count = 44) {
+          const determinant = a.re * b.im - a.im * b.re;
+          if (Math.abs(determinant) < 1e-5) {
+            const points = [];
+            for (let i = 0; i <= count; i += 1) {
+              const t = i / count;
+              points.push({
+                re: a.re + (b.re - a.re) * t,
+                im: a.im + (b.im - a.im) * t
+              });
+            }
+            return points;
+          }
+
+          const rhsA = (abs2(a) + 1) / 2;
+          const rhsB = (abs2(b) + 1) / 2;
+          const center = {
+            re: (rhsA * b.im - a.im * rhsB) / determinant,
+            im: (a.re * rhsB - rhsA * b.re) / determinant
+          };
+          const circleRadius = Math.sqrt(Math.max(abs2(center) - 1, 0));
+          const start = Math.atan2(a.im - center.im, a.re - center.re);
+          const end = Math.atan2(b.im - center.im, b.re - center.re);
+          let delta = ((end - start + Math.PI) % TAU + TAU) % TAU - Math.PI;
+          const middle = {
+            re: center.re + Math.cos(start + delta / 2) * circleRadius,
+            im: center.im + Math.sin(start + delta / 2) * circleRadius
+          };
+          if (abs2(middle) > 1.0001) delta += delta > 0 ? -TAU : TAU;
+
           const points = [];
-          for (let i = 0; i < samples; i += 1) {
-            const t = -0.96 + i * (1.92 / (samples - 1));
-            const z = kind === "vertical" ? { re: value, im: t } : { re: t, im: value };
-            if (z.re * z.re + z.im * z.im > 0.98) continue;
-            points.push(toScreen(mobius(z)));
+          for (let i = 0; i <= count; i += 1) {
+            const angle = start + delta * i / count;
+            points.push({
+              re: center.re + Math.cos(angle) * circleRadius,
+              im: center.im + Math.sin(angle) * circleRadius
+            });
           }
           return points;
         }
 
-        function drawCurves() {
-          curves.replaceChildren();
-          lines.forEach((value, index) => {
-            const vertical = transformedLine("vertical", value);
-            const horizontal = transformedLine("horizontal", value);
-            if (vertical.length > 2) {
-              curves.append(createSvg("path", {
-                d: pathFrom(vertical),
-                fill: "none",
-                stroke: colors[index % colors.length],
-                "stroke-width": value === 0 ? "2.2" : "1.25",
-                "stroke-opacity": value === 0 ? "0.78" : "0.42"
-              }));
-            }
-            if (horizontal.length > 2) {
-              curves.append(createSvg("path", {
-                d: pathFrom(horizontal),
-                fill: "none",
-                stroke: colors[(index + 1) % colors.length],
-                "stroke-width": value === 0 ? "2.2" : "1.25",
-                "stroke-opacity": value === 0 ? "0.78" : "0.42"
-              }));
-            }
-          });
+        function hyperbolicDistance(a, b) {
+          const denominator = Math.max((1 - abs2(a)) * (1 - abs2(b)), 1e-9);
+          const value = 1 + 2 * abs2(sub(a, b)) / denominator;
+          return Math.acosh(Math.max(1, value));
         }
 
-        function drawPoints() {
-          pointsGroup.replaceChildren();
-          const origin = toScreen(mobius({ re: 0, im: 0 }));
-          const parameter = toScreen(a);
-          const inverse = toScreen({ re: -a.re, im: -a.im });
-          [
-            [origin, "#38d0aa", 9],
-            [parameter, "#2454ff", 7],
-            [inverse, "#ff4f35", 7]
-          ].forEach(([point, color, radius]) => {
-            pointsGroup.append(createSvg("circle", {
-              cx: point.x,
-              cy: point.y,
-              r: radius,
-              fill: color,
-              stroke: "#100f0c",
-              "stroke-width": "1.6"
-            }));
-            pointsGroup.append(createSvg("circle", {
-              cx: point.x,
-              cy: point.y,
-              r: radius + 14,
-              fill: "none",
-              stroke: color,
-              "stroke-width": "1.2",
-              "stroke-opacity": "0.36"
-            }));
-          });
+        function hyperbolicAngles(points) {
+          const sideA = hyperbolicDistance(points[1], points[2]);
+          const sideB = hyperbolicDistance(points[0], points[2]);
+          const sideC = hyperbolicDistance(points[0], points[1]);
+          const angle = (opposite, adjacentA, adjacentB) => {
+            const denominator = Math.sinh(adjacentA) * Math.sinh(adjacentB);
+            const value = (Math.cosh(adjacentA) * Math.cosh(adjacentB) - Math.cosh(opposite)) / denominator;
+            return Math.acos(clamp(value, -1, 1));
+          };
+          return [
+            angle(sideA, sideB, sideC),
+            angle(sideB, sideA, sideC),
+            angle(sideC, sideA, sideB)
+          ];
         }
 
-        function drawTrail() {
-          trailGroup.replaceChildren();
-          if (trail.length < 2) return;
-          trailGroup.append(createSvg("path", {
-            d: pathFrom(trail.map(toScreen)),
-            fill: "none",
-            stroke: "#100f0c",
-            "stroke-width": "1.4",
-            "stroke-opacity": "0.32",
-            "stroke-dasharray": "2 8"
+        function triangleAngleSum() {
+          return hyperbolicAngles(triangleWorld).reduce((total, angle) => total + angle, 0) * 180 / Math.PI;
+        }
+
+        function tilePath(innerDepth, outerDepth, startAngle, endAngle) {
+          const innerRadius = radiusAt(innerDepth);
+          const outerRadius = radiusAt(outerDepth);
+          const steps = 3;
+          const points = [];
+          for (let i = 0; i <= steps; i += 1) {
+            points.push(polar(outerRadius, startAngle + (endAngle - startAngle) * i / steps));
+          }
+          for (let i = steps; i >= 0; i -= 1) {
+            points.push(polar(innerRadius, startAngle + (endAngle - startAngle) * i / steps));
+          }
+          return screenPath(points, true);
+        }
+
+        function renderTiles() {
+          const fragment = document.createDocumentFragment();
+          for (let ring = 0; ring < ringDepths.length - 1; ring += 1) {
+            const inner = ringDepths[ring];
+            const outer = ringDepths[ring + 1];
+            const offset = ring % 2 ? Math.PI / radialCount : 0;
+            for (let segment = 0; segment < radialCount; segment += 1) {
+              const start = offset + segment * TAU / radialCount;
+              const end = offset + (segment + 1) * TAU / radialCount;
+              const color = palette[(ring + segment) % palette.length];
+              const opacity = ring < 3 ? 0.18 : 0.1;
+              fragment.append(createSvg("path", {
+                class: "tile",
+                d: tilePath(inner, outer, start, end),
+                fill: color,
+                "fill-opacity": opacity.toFixed(2)
+              }));
+            }
+          }
+          tilesGroup.replaceChildren(fragment);
+        }
+
+        function renderMesh() {
+          const fragment = document.createDocumentFragment();
+          for (let ring = 1; ring < ringDepths.length; ring += 1) {
+            const radius = radiusAt(ringDepths[ring]);
+            const points = [];
+            const count = 100;
+            for (let i = 0; i <= count; i += 1) points.push(polar(radius, i * TAU / count));
+            fragment.append(createSvg("path", {
+              class: ring === 5 ? "mesh mesh-hot" : "mesh",
+              d: screenPath(points)
+            }));
+          }
+
+          for (let i = 0; i < radialCount; i += 1) {
+            if (i % 2 && i % 3) continue;
+            const angle = i * TAU / radialCount;
+            const points = ringDepths.map((depth) => polar(radiusAt(depth), angle));
+            fragment.append(createSvg("path", {
+              class: i % 6 === 0 ? "mesh mesh-hot" : "mesh",
+              d: screenPath(points)
+            }));
+          }
+          meshGroup.replaceChildren(fragment);
+        }
+
+        function renderTriangle() {
+          const sides = [
+            geodesicSamples(triangleWorld[0], triangleWorld[1], 46),
+            geodesicSamples(triangleWorld[1], triangleWorld[2], 46),
+            geodesicSamples(triangleWorld[2], triangleWorld[0], 46)
+          ];
+          const skin = sides[0].concat(sides[1].slice(1), sides[2].slice(1));
+          triangleFill.replaceChildren(createSvg("path", {
+            class: "triangle-fill",
+            d: screenPath(skin, true)
           }));
+          triangleEdges.replaceChildren(
+            createSvg("path", { class: "triangle-edge triangle-edge-blue", d: screenPath(sides[0]) }),
+            createSvg("path", { class: "triangle-edge triangle-edge-red", d: screenPath(sides[1]) }),
+            createSvg("path", { class: "triangle-edge", d: screenPath(sides[2]) })
+          );
         }
 
-        function drawPins() {
-          pinsGroup.replaceChildren();
-          pins.forEach((pin) => {
-            const point = toScreen(pin);
-            pinsGroup.append(createSvg("circle", {
-              cx: point.x,
-              cy: point.y,
-              r: 15,
-              fill: "none",
-              stroke: "#100f0c",
-              "stroke-width": "1.4",
-              "stroke-opacity": "0.45"
-            }));
-            pinsGroup.append(createSvg("rect", {
-              x: point.x - 4,
-              y: point.y - 4,
-              width: 8,
-              height: 8,
-              fill: "#baff39",
-              stroke: "#100f0c",
-              "stroke-width": "1"
-            }));
-          });
+        function renderObserver() {
+          observerLayer.replaceChildren(
+            createSvg("circle", {
+              class: "observer-ring",
+              cx: CENTER.x,
+              cy: CENTER.y,
+              r: 28
+            }),
+            createSvg("circle", {
+              class: "observer",
+              cx: CENTER.x,
+              cy: CENTER.y,
+              r: 9
+            }),
+            createSvg("text", {
+              class: "label",
+              x: CENTER.x + 18,
+              y: CENTER.y - 16
+            })
+          );
+          observerLayer.lastChild.textContent = "you";
+
+          const trianglePoint = toScreen(transport(triangleWorld[0]));
+          observerLayer.append(createSvg("text", {
+            class: "label",
+            x: trianglePoint.x + 12,
+            y: trianglePoint.y - 12
+          }));
+          observerLayer.lastChild.textContent = `angle sum ${triangleAngleSum().toFixed(0)} deg`;
         }
 
-        function updateReadouts() {
-          const modulus = Math.hypot(a.re, a.im);
-          paramLabel.textContent = formatComplex(a);
-          modulusLabel.textContent = modulus.toFixed(3);
-          invariantLabel.textContent = modulus > 0.72 ? "near the boundary, the grid folds hard but keeps angles" : "circles and lines remain circles and lines";
-          status.textContent = frozen ? "frozen" : "conformal";
-          root.style.setProperty("--accent", colors[Math.min(colors.length - 1, Math.floor(modulus * colors.length))]);
+        function updateReadout() {
+          const depth = 2 * atanh(Math.hypot(observer.re, observer.im));
+          const angleSum = triangleAngleSum();
+          readout.textContent = `depth ${depth.toFixed(2)} / angle sum ${angleSum.toFixed(0)} deg`;
         }
 
         function render() {
-          a = { re: target.re, im: target.im };
-          trail.push({ re: a.re, im: a.im });
-          while (trail.length > 80) trail.shift();
-          drawCurves();
-          drawTrail();
-          drawPins();
-          drawPoints();
-          updateReadouts();
+          renderTiles();
+          renderMesh();
+          renderTriangle();
+          renderObserver();
+          updateReadout();
           scheduled = false;
         }
 
@@ -647,47 +631,38 @@
           requestAnimationFrame(render);
         }
 
-        function eventToParameter(event) {
-          const bounds = svg.getBoundingClientRect();
-          const x = (event.clientX - bounds.left) / bounds.width;
-          const y = (event.clientY - bounds.top) / bounds.height;
-          const re = (x - 0.5) * 1.62;
-          const im = (0.5 - y) * 1.62;
-          const magnitude = Math.hypot(re, im);
-          if (magnitude > 0.86) {
-            return { re: re / magnitude * 0.86, im: im / magnitude * 0.86 };
+        function pointFromEvent(event) {
+          const matrix = stage.getScreenCTM();
+          if (!matrix) return observer;
+          const point = stage.createSVGPoint();
+          point.x = event.clientX;
+          point.y = event.clientY;
+          const local = point.matrixTransform(matrix.inverse());
+          const raw = {
+            re: (local.x - CENTER.x) / RADIUS,
+            im: (CENTER.y - local.y) / RADIUS
+          };
+          const magnitude = Math.hypot(raw.re, raw.im);
+          if (magnitude > 0.82) {
+            return {
+              re: raw.re / magnitude * 0.82,
+              im: raw.im / magnitude * 0.82
+            };
           }
-          return { re, im };
+          return raw;
         }
 
-        svg.addEventListener("pointermove", (event) => {
-          if (frozen) return;
-          target = eventToParameter(event);
+        stage.addEventListener("pointermove", (event) => {
+          observer = pointFromEvent(event);
           scheduleRender();
         }, { passive: true });
 
-        svg.addEventListener("click", (event) => {
-          pins.push({ re: a.re, im: a.im });
-          while (pins.length > 7) pins.shift();
+        stage.addEventListener("pointerdown", (event) => {
+          observer = pointFromEvent(event);
           scheduleRender();
         }, { passive: true });
 
-        freezeButton.addEventListener("click", () => {
-          frozen = !frozen;
-          freezeButton.textContent = frozen ? "move" : "freeze";
-          scheduleRender();
-        });
-
-        resetButton.addEventListener("click", () => {
-          pins = [];
-          trail = [];
-          target = { re: 0.28, im: -0.16 };
-          frozen = false;
-          freezeButton.textContent = "freeze";
-          scheduleRender();
-        });
-
-        buildBaseGrid();
+        window.addEventListener("resize", scheduleRender);
         render();
       })();
     </script>
