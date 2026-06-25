@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="dinguerie is a living field instrument.">
+    <meta name="description" content="dinguerie is a living complex-plane study.">
     <meta name="theme-color" content="#f3eee4">
     <meta property="og:title" content="dinguerie">
-    <meta property="og:description" content="A living field instrument.">
+    <meta property="og:description" content="A living complex-plane study.">
     <meta property="og:type" content="website">
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M14 32h36M32 14v36' stroke='%23c8ff45' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Cpath d='M12 32h40M32 12v40' stroke='%23f3eee4' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23c8ff45' stroke-width='4'/%3E%3C/svg%3E"
     >
     <title>dinguerie</title>
     <style>
@@ -19,7 +19,7 @@
         --paper: #f3eee4;
         --paper-hot: #fffaf0;
         --ink: #100f0c;
-        --soft: #766d61;
+        --soft: #756d62;
         --line: rgba(16, 15, 12, 0.18);
         --line-strong: rgba(16, 15, 12, 0.38);
         --blue: #2454ff;
@@ -82,18 +82,18 @@
         outline-offset: 4px;
       }
 
-      .instrument {
+      .plane {
         position: fixed;
         inset: 0;
         isolation: isolate;
         background:
           linear-gradient(90deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
           linear-gradient(0deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
-          radial-gradient(circle at 50% 48%, var(--paper-hot), var(--paper) 52%, #d8cfc0 100%);
-        background-size: 34px 34px, 34px 34px, 100% 100%;
+          radial-gradient(circle at 50% 50%, var(--paper-hot), var(--paper) 56%, #d8cfc0 100%);
+        background-size: 36px 36px, 36px 36px, 100% 100%;
       }
 
-      #field {
+      #phase {
         position: absolute;
         inset: 0;
         z-index: 1;
@@ -102,61 +102,35 @@
         cursor: crosshair;
       }
 
-      .plate {
+      .grain {
         position: absolute;
-        inset: 5.2rem 4.2rem 5.8rem;
+        inset: 0;
         z-index: 2;
-        border: 1px solid var(--line);
+        opacity: 0.32;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(16, 15, 12, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(16, 15, 12, 0.045) 1px, transparent 1px);
+        background-size: 9px 9px;
+        mask-image: radial-gradient(circle at 50% 50%, black 0%, black 38%, transparent 84%);
+      }
+
+      .title {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        display: grid;
+        place-items: center;
         pointer-events: none;
       }
 
-      .plate::before,
-      .plate::after {
-        position: absolute;
-        content: "";
-      }
-
-      .plate::before {
-        inset: 50% 0 auto;
-        border-top: 1px solid rgba(36, 84, 255, 0.22);
-      }
-
-      .plate::after {
-        inset: 0 auto 0 50%;
-        border-left: 1px solid rgba(36, 84, 255, 0.18);
-      }
-
-      .coil {
-        position: absolute;
-        z-index: 2;
-        width: 12rem;
-        aspect-ratio: 1;
-        border: 1px solid rgba(16, 15, 12, 0.14);
-        border-radius: 50%;
-        pointer-events: none;
-      }
-
-      .coil::before,
-      .coil::after {
-        position: absolute;
-        inset: 12%;
-        border: 1px solid rgba(16, 15, 12, 0.12);
-        border-radius: inherit;
-        content: "";
-      }
-
-      .coil::after {
-        inset: 27%;
-      }
-
-      .coil-a {
-        top: 15%;
-        left: 11%;
-      }
-
-      .coil-b {
-        right: 13%;
-        bottom: 18%;
+      h1 {
+        margin: 0;
+        color: rgba(16, 15, 12, 0.18);
+        font-family: var(--serif);
+        font-size: 9rem;
+        font-weight: 500;
+        line-height: 0.9;
       }
 
       .chrome {
@@ -172,7 +146,7 @@
       }
 
       .brand,
-      .state,
+      .equation,
       .seed {
         pointer-events: auto;
         font-family: var(--mono);
@@ -191,22 +165,20 @@
         width: 0.72rem;
         height: 0.72rem;
         margin-right: 0.62rem;
-        border-radius: 50%;
         background: var(--accent);
         box-shadow: inset 0 0 0 2px var(--ink);
         content: "";
         vertical-align: -0.08rem;
       }
 
-      .state {
+      .equation {
         justify-self: center;
-        min-width: 11rem;
-        padding: 0.52rem 0.72rem;
+        min-width: 17rem;
+        padding: 0.54rem 0.8rem;
         border: 1px solid var(--line);
-        background: rgba(243, 238, 228, 0.78);
+        background: rgba(243, 238, 228, 0.82);
         backdrop-filter: blur(16px);
         text-align: center;
-        text-transform: uppercase;
       }
 
       .seed {
@@ -232,102 +204,31 @@
         text-align: right;
       }
 
-      .title {
+      .readings {
         position: fixed;
-        z-index: 3;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        pointer-events: none;
-      }
-
-      h1 {
-        margin: 0;
-        color: rgba(16, 15, 12, 0.78);
-        font-family: var(--serif);
-        font-size: 9rem;
-        font-weight: 500;
-        line-height: 0.9;
-        text-shadow:
-          0 0 1px rgba(243, 238, 228, 0.8),
-          0 0 28px rgba(243, 238, 228, 0.72);
-      }
-
-      .annotations {
-        position: fixed;
-        inset: 0;
-        z-index: 4;
-        pointer-events: none;
-      }
-
-      .annotation {
-        position: absolute;
-        max-width: 14rem;
-        padding-top: 0.55rem;
-        border-top: 1px solid var(--line-strong);
-        color: rgba(16, 15, 12, 0.74);
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        font-weight: 820;
-        line-height: 1.35;
-        text-transform: uppercase;
-      }
-
-      .annotation::before {
-        position: absolute;
-        top: -0.34rem;
-        left: 0;
-        width: 0.62rem;
-        height: 0.62rem;
-        background: var(--accent);
-        box-shadow: inset 0 0 0 1px var(--ink);
-        content: "";
-      }
-
-      .annotation-a {
-        top: 21%;
-        left: 7%;
-      }
-
-      .annotation-b {
-        top: 18%;
-        right: 8%;
-      }
-
-      .annotation-c {
-        right: 9%;
-        bottom: 21%;
-      }
-
-      .panel {
-        position: fixed;
-        inset: auto 1.3rem 1.15rem;
+        inset: auto auto 1.15rem 1.3rem;
         z-index: 5;
         display: grid;
-        grid-template-columns: minmax(14rem, 24rem) auto;
-        gap: 1rem;
-        align-items: end;
-        pointer-events: none;
-      }
-
-      .meters {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        width: min(27rem, calc(100vw - 2.6rem));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1px;
         border: 1px solid var(--line);
         background: var(--line);
         box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
-        pointer-events: auto;
       }
 
-      .meter {
-        min-height: 5.3rem;
+      .reading {
+        min-height: 5.2rem;
         padding: 0.78rem;
-        background: rgba(243, 238, 228, 0.84);
+        background: rgba(243, 238, 228, 0.86);
         backdrop-filter: blur(18px);
       }
 
-      .meter span {
+      .reading-wide {
+        grid-column: 1 / -1;
+      }
+
+      .reading span {
         display: block;
         color: var(--soft);
         font-family: var(--mono);
@@ -336,98 +237,52 @@
         text-transform: uppercase;
       }
 
-      .meter strong {
+      .reading strong {
         display: block;
         margin-top: 0.78rem;
         color: var(--ink);
         font-family: var(--mono);
-        font-size: 1rem;
+        font-size: 0.92rem;
+        font-weight: 850;
+        line-height: 1.25;
+      }
+
+      .roots {
+        position: fixed;
+        inset: auto 1.3rem 1.15rem auto;
+        z-index: 5;
+        display: grid;
+        width: min(24rem, calc(100vw - 2.6rem));
+        gap: 1px;
+        border: 1px solid var(--line);
+        background: var(--line);
+        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
+      }
+
+      .root-row {
+        display: grid;
+        grid-template-columns: 3.5rem 1fr;
+        gap: 0.7rem;
+        align-items: center;
+        min-height: 3rem;
+        padding: 0.68rem 0.78rem;
+        background: rgba(243, 238, 228, 0.86);
+        backdrop-filter: blur(18px);
+        font-family: var(--mono);
+        font-size: 0.72rem;
         font-weight: 850;
       }
 
-      .controls {
-        justify-self: end;
-        display: grid;
-        grid-template-columns: repeat(2, 3rem);
-        gap: 0.42rem;
-        padding: 0.42rem;
-        border: 1px solid var(--line);
-        background: rgba(243, 238, 228, 0.84);
-        backdrop-filter: blur(18px);
-        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
-        pointer-events: auto;
-      }
-
-      .control {
-        display: grid;
-        width: 3rem;
-        height: 3rem;
-        place-items: center;
-        border: 1px solid transparent;
-        background: transparent;
-        transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
-      }
-
-      .control:hover {
-        border-color: var(--line-strong);
-        background: var(--paper-hot);
-      }
-
-      .control:active {
-        transform: translateY(2px);
-      }
-
-      .control-primary {
-        border-color: var(--ink);
-        background: var(--accent);
-      }
-
-      .icon {
-        position: relative;
-        display: block;
-        width: 1.34rem;
-        height: 1.34rem;
-      }
-
-      .icon::before,
-      .icon::after {
-        position: absolute;
-        content: "";
-      }
-
-      .icon-pulse {
-        border: 2px solid var(--ink);
-        border-radius: 50%;
-      }
-
-      .icon-pulse::before {
-        inset: 0.25rem;
-        border: 2px solid var(--ink);
-        border-radius: inherit;
-      }
-
-      .icon-reset {
-        border-top: 2px solid var(--ink);
-        border-left: 2px solid var(--ink);
-        border-radius: 50%;
-        rotate: -28deg;
-      }
-
-      .icon-reset::before {
-        right: -0.16rem;
-        bottom: 0.05rem;
-        width: 0.45rem;
-        height: 0.45rem;
-        border-right: 2px solid var(--ink);
-        border-bottom: 2px solid var(--ink);
-        rotate: 10deg;
+      .root-row span {
+        color: var(--soft);
+        text-transform: uppercase;
       }
 
       .caption {
         position: fixed;
         left: 50%;
         bottom: 1.85rem;
-        z-index: 4;
+        z-index: 5;
         translate: -50% 0;
         width: min(35rem, calc(100vw - 2rem));
         color: rgba(16, 15, 12, 0.72);
@@ -440,37 +295,52 @@
         pointer-events: none;
       }
 
-      @media (max-width: 900px) {
+      .action {
+        position: fixed;
+        top: 4.8rem;
+        right: 1.3rem;
+        z-index: 5;
+        min-height: 2.55rem;
+        padding: 0.55rem 0.8rem;
+        border: 1px solid var(--line-strong);
+        background: rgba(243, 238, 228, 0.82);
+        backdrop-filter: blur(16px);
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .action:hover {
+        background: var(--paper-hot);
+      }
+
+      @media (max-width: 920px) {
         .chrome {
           grid-template-columns: 1fr auto;
         }
 
-        .state {
+        .equation {
           display: none;
-        }
-
-        .annotation {
-          display: none;
-        }
-
-        .plate {
-          inset: 4.5rem 1rem 7.4rem;
         }
 
         h1 {
           font-size: 6rem;
         }
 
-        .panel {
-          grid-template-columns: 1fr auto;
-        }
-
         .caption {
           display: none;
         }
+
+        .roots {
+          top: 4.8rem;
+          right: 1rem;
+          bottom: auto;
+        }
       }
 
-      @media (max-width: 560px) {
+      @media (max-width: 620px) {
         .chrome {
           padding: 0.85rem;
         }
@@ -480,39 +350,42 @@
         }
 
         h1 {
-          font-size: 3.8rem;
+          font-size: 3.7rem;
         }
 
-        .coil {
-          width: 8rem;
+        .action {
+          top: auto;
+          right: 0.85rem;
+          bottom: 0.85rem;
         }
 
-        .panel {
-          inset: auto 0.85rem 0.85rem;
+        .readings {
+          inset: auto auto 0.85rem 0.85rem;
+          width: calc(100vw - 6.7rem);
           grid-template-columns: 1fr;
         }
 
-        .meters {
-          grid-template-columns: repeat(3, 1fr);
+        .reading {
+          min-height: 3.5rem;
+          padding: 0.58rem;
         }
 
-        .meter {
-          min-height: 4.2rem;
-          padding: 0.62rem;
+        .reading strong {
+          margin-top: 0.4rem;
+          font-size: 0.78rem;
         }
 
-        .meter strong {
-          margin-top: 0.56rem;
-          font-size: 0.9rem;
+        .roots {
+          top: 4rem;
+          right: 0.85rem;
+          width: calc(100vw - 1.7rem);
         }
 
-        .controls {
-          justify-self: stretch;
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .control {
-          width: auto;
+        .root-row {
+          min-height: 2.35rem;
+          grid-template-columns: 2.8rem 1fr;
+          padding: 0.45rem 0.58rem;
+          font-size: 0.64rem;
         }
       }
 
@@ -528,109 +401,87 @@
     </style>
   </head>
   <body>
-    <main class="instrument" id="top" aria-label="dinguerie">
-      <canvas id="field" aria-hidden="true"></canvas>
-      <div class="plate" aria-hidden="true"></div>
-      <div class="coil coil-a" aria-hidden="true"></div>
-      <div class="coil coil-b" aria-hidden="true"></div>
+    <main class="plane" id="top" aria-label="dinguerie complex plane">
+      <canvas id="phase" aria-hidden="true"></canvas>
+      <div class="grain" aria-hidden="true"></div>
 
       <header class="chrome">
         <a class="brand" href="#top">dinguerie</a>
-        <div class="state" id="state">field coherent</div>
+        <div class="equation">z^3 + c z - 1 = 0</div>
         <label class="seed">
           <span>seed</span>
           <input id="seed" value="02491" aria-label="Seed">
         </label>
       </header>
 
-      <section class="title" aria-labelledby="title">
-        <h1 id="title">dinguerie</h1>
-      </section>
-
-      <div class="annotations" aria-hidden="true">
-        <p class="annotation annotation-a" id="annotation-a">the probe bends the room before it touches it</p>
-        <p class="annotation annotation-b" id="annotation-b">a private storm in a calibrated box</p>
-        <p class="annotation annotation-c" id="annotation-c">every line is trying to find the same voltage</p>
+      <div class="title" aria-hidden="true">
+        <h1>dinguerie</h1>
       </div>
 
-      <p class="caption" id="caption">move the probe through the field, click to leave a charge</p>
+      <button class="action" type="button" id="clear">clear pins</button>
 
-      <section class="panel" aria-label="Readings and controls">
-        <div class="meters" aria-live="polite">
-          <div class="meter">
-            <span>voltage</span>
-            <strong id="voltage">0.00</strong>
-          </div>
-          <div class="meter">
-            <span>frequency</span>
-            <strong id="frequency">0.00</strong>
-          </div>
-          <div class="meter">
-            <span>phase</span>
-            <strong id="phase">calm</strong>
-          </div>
+      <section class="readings" aria-label="Complex readings">
+        <div class="reading">
+          <span>constant c</span>
+          <strong id="constant">0.000 + 0.000i</strong>
         </div>
-
-        <nav class="controls" aria-label="Controls">
-          <button class="control control-primary" type="button" id="pulse" aria-label="Pulse" title="Pulse">
-            <span class="icon icon-pulse" aria-hidden="true"></span>
-          </button>
-          <button class="control" type="button" id="reset" aria-label="Reset" title="Reset">
-            <span class="icon icon-reset" aria-hidden="true"></span>
-          </button>
-        </nav>
+        <div class="reading">
+          <span>discriminant</span>
+          <strong id="discriminant">0.000 + 0.000i</strong>
+        </div>
+        <div class="reading reading-wide">
+          <span>plane</span>
+          <strong id="plane-note">phase portrait with modulus contours</strong>
+        </div>
       </section>
+
+      <section class="roots" aria-label="Roots">
+        <div class="root-row"><span>r1</span><strong id="root-0">0.000 + 0.000i</strong></div>
+        <div class="root-row"><span>r2</span><strong id="root-1">0.000 + 0.000i</strong></div>
+        <div class="root-row"><span>r3</span><strong id="root-2">0.000 + 0.000i</strong></div>
+      </section>
+
+      <p class="caption">move through the c-plane. click to pin the current cubic.</p>
     </main>
 
     <script>
       (() => {
         const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
         const root = document.documentElement;
-        const canvas = document.querySelector("#field");
+        const canvas = document.querySelector("#phase");
         const ctx = canvas.getContext("2d", { alpha: false });
         const seedInput = document.querySelector("#seed");
-        const state = document.querySelector("#state");
-        const voltage = document.querySelector("#voltage");
-        const frequency = document.querySelector("#frequency");
-        const phase = document.querySelector("#phase");
-        const pulse = document.querySelector("#pulse");
-        const reset = document.querySelector("#reset");
-        const caption = document.querySelector("#caption");
-        const annotations = [
-          document.querySelector("#annotation-a"),
-          document.querySelector("#annotation-b"),
-          document.querySelector("#annotation-c")
+        const clearButton = document.querySelector("#clear");
+        const constant = document.querySelector("#constant");
+        const discriminant = document.querySelector("#discriminant");
+        const planeNote = document.querySelector("#plane-note");
+        const rootLabels = [
+          document.querySelector("#root-0"),
+          document.querySelector("#root-1"),
+          document.querySelector("#root-2")
         ];
 
+        const tau = Math.PI * 2;
         const colors = ["#2454ff", "#ff4f35", "#baff39", "#38d0aa", "#7e69ff", "#d4a321"];
-        const notes = [
-          "the probe bends the room before it touches it",
-          "a private storm in a calibrated box",
-          "every line is trying to find the same voltage",
-          "old electricity, new weather",
-          "the word hums before it becomes readable",
-          "a diagram that refuses to stay still",
-          "magnetism pretending to be typography",
-          "the field keeps a memory of your hand"
-        ];
-        const captions = [
-          "move the probe through the field, click to leave a charge",
-          "a word held inside an electromagnetic weather map",
-          "small changes in pressure redraw the whole room",
-          "touch the plate and the instrument answers"
-        ];
-
         let width = 1;
         let height = 1;
         let ratio = 1;
+        let bufferScale = 3;
+        let buffer = document.createElement("canvas");
+        let bctx = buffer.getContext("2d");
+        let image = null;
+        let domainWidth = 5;
+        let domainHeight = 3;
         let seed = 2491;
         let rand = mulberry(seed);
-        let charges = [];
-        let traces = [];
+        let pointer = { x: 0.5, y: 0.5, active: false };
+        let cTarget = { re: -0.38, im: 0.52 };
+        let cNow = { re: -0.38, im: 0.52 };
+        let roots = [];
+        let rootTrail = [];
+        let pins = [];
         let frame = 0;
-        let lastDraw = 0;
-        let pulseEnergy = 0.35;
-        let pointer = { x: 0, y: 0, active: false, down: false, charge: 1.1 };
+        let lastRender = 0;
         let accent = colors[0];
 
         function mulberry(value) {
@@ -643,264 +494,360 @@
           };
         }
 
-        function clamp(value, min, max) {
-          return Math.min(max, Math.max(min, value));
-        }
-
         function readSeed() {
           const parsed = Number(seedInput.value.replace(/\D/g, "").slice(0, 8));
           seed = parsed || 2491;
           seedInput.value = String(seed).padStart(5, "0");
           rand = mulberry(seed);
-        }
-
-        function resetField(changeSeed = false) {
-          if (changeSeed) {
-            seed = 10000 + Math.floor(Math.random() * 89999);
-            seedInput.value = String(seed);
-          }
-          readSeed();
           accent = colors[Math.floor(rand() * colors.length)];
           root.style.setProperty("--accent", accent);
-          charges = [
-            { x: width * (0.23 + rand() * 0.08), y: height * (0.38 + rand() * 0.2), q: 1.15, life: 1, fixed: true },
-            { x: width * (0.74 + rand() * 0.08), y: height * (0.34 + rand() * 0.22), q: -1.05, life: 1, fixed: true },
-            { x: width * (0.48 + rand() * 0.1), y: height * (0.58 + rand() * 0.12), q: 0.72, life: 1, fixed: true }
+          planeNote.textContent = rand() > 0.5 ? "phase portrait with modulus contours" : "roots moving through a cubic surface";
+        }
+
+        function add(a, b) {
+          return { re: a.re + b.re, im: a.im + b.im };
+        }
+
+        function sub(a, b) {
+          return { re: a.re - b.re, im: a.im - b.im };
+        }
+
+        function mul(a, b) {
+          return { re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re };
+        }
+
+        function div(a, b) {
+          const d = b.re * b.re + b.im * b.im || 1e-9;
+          return { re: (a.re * b.re + a.im * b.im) / d, im: (a.im * b.re - a.re * b.im) / d };
+        }
+
+        function abs(a) {
+          return Math.hypot(a.re, a.im);
+        }
+
+        function poly(z, c) {
+          const z2 = mul(z, z);
+          const z3 = mul(z2, z);
+          return add(add(z3, mul(c, z)), { re: -1, im: 0 });
+        }
+
+        function solveRoots(c) {
+          let r = [
+            { re: 1.1, im: 0.1 },
+            { re: -0.58, im: 0.94 },
+            { re: -0.52, im: -0.88 }
           ];
-          traces = makeSeeds();
-          updateText();
-          pulseEnergy = 0.52;
-        }
 
-        function updateText() {
-          const start = Math.floor(rand() * notes.length);
-          annotations.forEach((annotation, index) => {
-            annotation.textContent = notes[(start + index * 2) % notes.length];
-          });
-          caption.textContent = captions[Math.floor(rand() * captions.length)];
-        }
-
-        function makeSeeds() {
-          const count = width < 680 ? 74 : 128;
-          const list = [];
-          const golden = Math.PI * (3 - Math.sqrt(5));
-          const radiusMax = Math.min(width, height) * 0.45;
-          for (let i = 0; i < count; i += 1) {
-            const radius = Math.sqrt((i + 0.5) / count) * radiusMax;
-            const angle = i * golden + rand() * 0.3;
-            list.push({
-              x: width * 0.5 + Math.cos(angle) * radius * (1.55 + rand() * 0.2),
-              y: height * 0.5 + Math.sin(angle) * radius * (0.88 + rand() * 0.18),
-              phase: rand() * Math.PI * 2,
-              hue: Math.floor(rand() * colors.length)
+          for (let iter = 0; iter < 16; iter += 1) {
+            r = r.map((value, index) => {
+              let denom = { re: 1, im: 0 };
+              for (let j = 0; j < r.length; j += 1) {
+                if (j !== index) denom = mul(denom, sub(value, r[j]));
+              }
+              return sub(value, div(poly(value, c), denom));
             });
           }
-          return list;
+
+          return r.sort((a, b) => a.re - b.re);
         }
 
-        function resize() {
-          ratio = Math.min(devicePixelRatio || 1, 1.55);
-          width = innerWidth;
-          height = innerHeight;
-          canvas.width = Math.round(width * ratio);
-          canvas.height = Math.round(height * ratio);
-          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-          resetField(false);
+        function formatComplex(z) {
+          const re = Math.abs(z.re) < 0.001 ? 0 : z.re;
+          const im = Math.abs(z.im) < 0.001 ? 0 : z.im;
+          const sign = im < 0 ? "-" : "+";
+          return `${re.toFixed(3)} ${sign} ${Math.abs(im).toFixed(3)}i`;
         }
 
-        function fieldAt(x, y, time) {
-          let vx = 0;
-          let vy = 0;
-          const allCharges = charges.slice();
-          if (pointer.active) allCharges.push({ x: pointer.x, y: pointer.y, q: pointer.down ? -1.7 : pointer.charge, life: 1 });
-
-          allCharges.forEach((charge) => {
-            const dx = x - charge.x;
-            const dy = y - charge.y;
-            const d2 = dx * dx + dy * dy + 1200;
-            const force = charge.q * charge.life * 8200 / d2;
-            vx += dx * force / Math.sqrt(d2);
-            vy += dy * force / Math.sqrt(d2);
-          });
-
-          const waveA = Math.sin(y * 0.012 + time * 0.0008 + seed * 0.01);
-          const waveB = Math.cos(x * 0.009 - time * 0.0007);
-          vx += waveA * (0.58 + pulseEnergy * 0.4);
-          vy += waveB * (0.48 + pulseEnergy * 0.35);
-
-          const curl = Math.sin((x + y) * 0.004 + time * 0.0006);
-          vx += -curl * 0.44;
-          vy += curl * 0.44;
-
-          const mag = Math.hypot(vx, vy) || 1;
-          return { x: vx / mag, y: vy / mag, mag };
+        function mapToComplex(px, py, w, h) {
+          return {
+            re: (px / Math.max(1, w - 1) - 0.5) * domainWidth,
+            im: (0.5 - py / Math.max(1, h - 1)) * domainHeight
+          };
         }
 
-        function drawBackground(time) {
-          const gradient = ctx.createRadialGradient(width * 0.5, height * 0.48, 20, width * 0.5, height * 0.52, Math.max(width, height) * 0.75);
-          gradient.addColorStop(0, "#fffaf0");
-          gradient.addColorStop(0.5, "#f3eee4");
-          gradient.addColorStop(1, "#d7cdbd");
-          ctx.fillStyle = gradient;
-          ctx.fillRect(0, 0, width, height);
+        function complexToScreen(z) {
+          return {
+            x: (z.re / domainWidth + 0.5) * width,
+            y: (0.5 - z.im / domainHeight) * height
+          };
+        }
 
-          ctx.globalAlpha = 0.28;
+        function hsv(h, s, v) {
+          const i = Math.floor(h * 6);
+          const f = h * 6 - i;
+          const p = v * (1 - s);
+          const q = v * (1 - f * s);
+          const t = v * (1 - (1 - f) * s);
+          const m = i % 6;
+          let r = v;
+          let g = t;
+          let b = p;
+          if (m === 1) { r = q; g = v; b = p; }
+          if (m === 2) { r = p; g = v; b = t; }
+          if (m === 3) { r = p; g = q; b = v; }
+          if (m === 4) { r = t; g = p; b = v; }
+          if (m === 5) { r = v; g = p; b = q; }
+          return [r * 255, g * 255, b * 255];
+        }
+
+        function renderField(time) {
+          const w = buffer.width;
+          const h = buffer.height;
+          const data = image.data;
+          let index = 0;
+          const timeDrift = reducedMotion ? 0 : Math.sin(time * 0.00025) * 0.025;
+
+          for (let py = 0; py < h; py += 1) {
+            for (let px = 0; px < w; px += 1) {
+              const z = mapToComplex(px, py, w, h);
+              const fz = poly(z, { re: cNow.re + timeDrift, im: cNow.im - timeDrift });
+              const magnitude = abs(fz);
+              const arg = Math.atan2(fz.im, fz.re);
+              const hue = (arg / tau + 1) % 1;
+              const logMag = Math.log(magnitude + 0.0006);
+              const phaseLine = Math.pow(0.5 + 0.5 * Math.cos(10 * arg), 10);
+              const modLine = Math.pow(0.5 + 0.5 * Math.cos(8 * logMag), 12);
+              const zeroGlow = Math.exp(-magnitude * 2.4);
+              const sat = 0.34 + zeroGlow * 0.34;
+              const val = 0.72 + phaseLine * 0.18 + modLine * 0.18 + zeroGlow * 0.16;
+              const rgb = hsv(hue, sat, Math.min(1, val));
+              const paperMix = 0.16;
+              data[index] = rgb[0] * (1 - paperMix) + 243 * paperMix;
+              data[index + 1] = rgb[1] * (1 - paperMix) + 238 * paperMix;
+              data[index + 2] = rgb[2] * (1 - paperMix) + 228 * paperMix;
+              data[index + 3] = 255;
+              index += 4;
+            }
+          }
+          bctx.putImageData(image, 0, 0);
+          ctx.imageSmoothingEnabled = true;
+          ctx.drawImage(buffer, 0, 0, width, height);
+        }
+
+        function drawGrid() {
+          ctx.save();
+          ctx.globalAlpha = 0.34;
           ctx.strokeStyle = "#100f0c";
           ctx.lineWidth = 1;
-          const grid = width < 560 ? 42 : 56;
-          for (let x = (time * 0.006) % grid; x < width; x += grid) {
+          const step = width < 620 ? 52 : 68;
+          for (let x = width / 2 % step; x < width; x += step) {
             ctx.beginPath();
             ctx.moveTo(x, 0);
             ctx.lineTo(x, height);
             ctx.stroke();
           }
-          for (let y = 0; y < height; y += grid) {
+          for (let y = height / 2 % step; y < height; y += step) {
             ctx.beginPath();
             ctx.moveTo(0, y);
             ctx.lineTo(width, y);
             ctx.stroke();
           }
-          ctx.globalAlpha = 1;
-        }
-
-        function drawWordMask() {
-          const size = width < 560 ? 64 : width < 900 ? 112 : 170;
-          ctx.save();
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.font = `${size}px Georgia, Times New Roman, serif`;
-          ctx.globalAlpha = 0.045;
-          ctx.fillStyle = "#100f0c";
-          ctx.fillText("dinguerie", width * 0.5, height * 0.5);
-          ctx.globalAlpha = 0.12;
-          ctx.lineWidth = 1;
-          ctx.strokeStyle = accent;
-          ctx.strokeText("dinguerie", width * 0.5, height * 0.5);
+          ctx.globalAlpha = 0.7;
+          ctx.strokeStyle = "#100f0c";
+          ctx.beginPath();
+          ctx.moveTo(0, height / 2);
+          ctx.lineTo(width, height / 2);
+          ctx.moveTo(width / 2, 0);
+          ctx.lineTo(width / 2, height);
+          ctx.stroke();
           ctx.restore();
         }
 
-        function drawStreamline(seedPoint, time, direction) {
-          let x = seedPoint.x + Math.sin(time * 0.0003 + seedPoint.phase) * 8;
-          let y = seedPoint.y + Math.cos(time * 0.0004 + seedPoint.phase) * 6;
-          const maxSteps = width < 680 ? 42 : 58;
-          const stepLength = width < 680 ? 9 : 11;
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-          let strength = 0;
-
-          for (let i = 0; i < maxSteps; i += 1) {
-            const vector = fieldAt(x, y, time);
-            strength += vector.mag;
-            x += vector.x * stepLength * direction;
-            y += vector.y * stepLength * direction;
-            if (x < -40 || x > width + 40 || y < -40 || y > height + 40) break;
-            ctx.lineTo(x, y);
-          }
-
-          const alpha = clamp(0.04 + strength / maxSteps * 0.04, 0.04, 0.22);
-          ctx.globalAlpha = alpha;
-          ctx.strokeStyle = colors[seedPoint.hue];
-          ctx.stroke();
-        }
-
-        function drawCharges(time) {
-          const allCharges = charges.slice();
-          if (pointer.active) allCharges.push({ x: pointer.x, y: pointer.y, q: pointer.down ? -1.7 : pointer.charge, life: 1, probe: true });
-
-          allCharges.forEach((charge) => {
-            const radius = charge.probe ? 22 + Math.sin(time * 0.008) * 3 : 13 + Math.abs(charge.q) * 5;
-            ctx.globalAlpha = charge.probe ? 0.9 : 0.6 * charge.life;
-            ctx.strokeStyle = charge.q > 0 ? accent : "#ff4f35";
-            ctx.lineWidth = charge.probe ? 2 : 1.5;
+        function drawRootTrails() {
+          ctx.save();
+          ctx.lineWidth = 1.5;
+          for (let rootIndex = 0; rootIndex < 3; rootIndex += 1) {
             ctx.beginPath();
-            ctx.arc(charge.x, charge.y, radius, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.globalAlpha = charge.probe ? 0.75 : 0.55 * charge.life;
-            ctx.fillStyle = charge.q > 0 ? accent : "#ff4f35";
-            ctx.fillRect(charge.x - 3, charge.y - 3, 6, 6);
-          });
-          ctx.globalAlpha = 1;
-        }
-
-        function draw(time = 0) {
-          if (time - lastDraw < 32 && !reducedMotion) {
-            frame = requestAnimationFrame(draw);
-            return;
-          }
-          lastDraw = time;
-
-          drawBackground(time);
-          drawWordMask();
-
-          ctx.lineWidth = 1.1;
-          traces.forEach((trace, index) => {
-            drawStreamline(trace, time, 1);
-            if (index % 3 === 0) drawStreamline(trace, time, -1);
-          });
-
-          drawCharges(time);
-
-          if (!reducedMotion) {
-            charges.forEach((charge) => {
-              if (!charge.fixed) charge.life *= 0.986;
+            let started = false;
+            rootTrail.forEach((snapshot) => {
+              const rootPoint = snapshot[rootIndex];
+              if (!rootPoint) return;
+              const point = complexToScreen(rootPoint);
+              if (!started) {
+                ctx.moveTo(point.x, point.y);
+                started = true;
+              } else {
+                ctx.lineTo(point.x, point.y);
+              }
             });
-            charges = charges.filter((charge) => charge.fixed || charge.life > 0.08);
-            pulseEnergy = Math.max(0.18, pulseEnergy * 0.982);
+            ctx.globalAlpha = 0.38;
+            ctx.strokeStyle = colors[(rootIndex + 1) % colors.length];
+            ctx.stroke();
           }
-
-          const probe = pointer.active ? fieldAt(pointer.x, pointer.y, time).mag : 0;
-          voltage.textContent = (probe * 2.4 + pulseEnergy * 1.3).toFixed(2);
-          frequency.textContent = (charges.length * 3.7 + pulseEnergy * 12).toFixed(1);
-          phase.textContent = pointer.down ? "inverted" : charges.length > 3 ? "charged" : "calm";
-          state.textContent = pulseEnergy > 0.55 ? "field disturbed" : "field coherent";
-          frame = requestAnimationFrame(draw);
+          ctx.restore();
         }
 
-        function addCharge(x, y, q = 1) {
-          charges.push({ x, y, q, life: 1, fixed: false });
-          while (charges.length > 9) {
-            const index = charges.findIndex((charge) => !charge.fixed);
-            if (index === -1) break;
-            charges.splice(index, 1);
-          }
-          pulseEnergy = 1.2;
+        function drawPins() {
+          ctx.save();
+          pins.forEach((pin) => {
+            pin.roots.forEach((rootPoint, index) => {
+              const point = complexToScreen(rootPoint);
+              ctx.globalAlpha = 0.72;
+              ctx.strokeStyle = colors[(index + 3) % colors.length];
+              ctx.lineWidth = 1.5;
+              ctx.beginPath();
+              ctx.arc(point.x, point.y, 11, 0, tau);
+              ctx.stroke();
+              ctx.globalAlpha = 0.36;
+              ctx.beginPath();
+              ctx.moveTo(point.x - 18, point.y);
+              ctx.lineTo(point.x + 18, point.y);
+              ctx.moveTo(point.x, point.y - 18);
+              ctx.lineTo(point.x, point.y + 18);
+              ctx.stroke();
+            });
+          });
+          ctx.restore();
         }
 
-        pulse.addEventListener("click", () => {
-          addCharge(width * 0.5, height * 0.5, rand() > 0.5 ? 1.4 : -1.4);
-        });
+        function drawRoots() {
+          ctx.save();
+          roots.forEach((rootPoint, index) => {
+            const point = complexToScreen(rootPoint);
+            ctx.globalAlpha = 0.95;
+            ctx.fillStyle = colors[(index + 1) % colors.length];
+            ctx.strokeStyle = "#100f0c";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, 6, 0, tau);
+            ctx.fill();
+            ctx.stroke();
+            ctx.globalAlpha = 0.42;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, 19, 0, tau);
+            ctx.stroke();
+          });
+          ctx.restore();
+        }
 
-        reset.addEventListener("click", () => resetField(true));
+        function drawPointer() {
+          if (!pointer.active) return;
+          ctx.save();
+          ctx.globalAlpha = 0.86;
+          ctx.strokeStyle = "#100f0c";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(pointer.x - 14, pointer.y);
+          ctx.lineTo(pointer.x + 14, pointer.y);
+          ctx.moveTo(pointer.x, pointer.y - 14);
+          ctx.lineTo(pointer.x, pointer.y + 14);
+          ctx.stroke();
+          ctx.globalAlpha = 0.45;
+          ctx.strokeStyle = accent;
+          ctx.beginPath();
+          ctx.arc(pointer.x, pointer.y, 24, 0, tau);
+          ctx.stroke();
+          ctx.restore();
+        }
 
-        seedInput.addEventListener("change", () => resetField(false));
-        seedInput.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") resetField(false);
-        });
+        function drawLabels() {
+          ctx.save();
+          ctx.globalAlpha = 0.22;
+          ctx.fillStyle = "#100f0c";
+          ctx.font = `${width < 620 ? 64 : width < 920 ? 104 : 156}px Georgia, Times New Roman, serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("dinguerie", width * 0.5, height * 0.5);
+          ctx.restore();
+        }
+
+        function discriminantFor(c) {
+          const c2 = mul(c, c);
+          const c3 = mul(c2, c);
+          return { re: -4 * c3.re - 27, im: -4 * c3.im };
+        }
+
+        function updateReadouts() {
+          constant.textContent = formatComplex(cNow);
+          discriminant.textContent = formatComplex(discriminantFor(cNow));
+          roots.forEach((rootPoint, index) => {
+            rootLabels[index].textContent = formatComplex(rootPoint);
+          });
+        }
+
+        function resize() {
+          ratio = Math.min(devicePixelRatio || 1, 1.5);
+          width = innerWidth;
+          height = innerHeight;
+          canvas.width = Math.round(width * ratio);
+          canvas.height = Math.round(height * ratio);
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+          bufferScale = width < 620 ? 6 : 6;
+          buffer.width = Math.max(120, Math.round(width / bufferScale));
+          buffer.height = Math.max(120, Math.round(height / bufferScale));
+          image = bctx.createImageData(buffer.width, buffer.height);
+          domainHeight = width < 620 ? 4.6 : 3.7;
+          domainWidth = domainHeight * width / height;
+        }
+
+        function tick(time = performance.now()) {
+          if (!pointer.active && !reducedMotion) {
+            cTarget = {
+              re: Math.cos(time * 0.00016 + seed * 0.001) * 0.72 - 0.18,
+              im: Math.sin(time * 0.00014 + seed * 0.0013) * 0.62
+            };
+          }
+
+          cNow.re += (cTarget.re - cNow.re) * 0.12;
+          cNow.im += (cTarget.im - cNow.im) * 0.12;
+
+          if (time - lastRender > (reducedMotion ? 700 : 240)) {
+            roots = solveRoots(cNow);
+            rootTrail.push(roots.map((rootPoint) => ({ re: rootPoint.re, im: rootPoint.im })));
+            while (rootTrail.length > 84) rootTrail.shift();
+
+            renderField(time);
+            drawGrid();
+            drawLabels();
+            drawRootTrails();
+            drawPins();
+            drawRoots();
+            drawPointer();
+            updateReadouts();
+            lastRender = time;
+          }
+          frame = setTimeout(() => tick(performance.now()), reducedMotion ? 700 : 160);
+        }
 
         addEventListener("resize", resize, { passive: true });
         addEventListener("pointermove", (event) => {
-          pointer.x = event.clientX;
-          pointer.y = event.clientY;
-          pointer.active = true;
-        }, { passive: true });
-        addEventListener("pointerdown", (event) => {
-          pointer.down = true;
-          addCharge(event.clientX, event.clientY, -1.35);
-        }, { passive: true });
-        addEventListener("pointerup", () => {
-          pointer.down = false;
+          pointer = { x: event.clientX, y: event.clientY, active: true };
+          cTarget = {
+            re: (event.clientX / width - 0.5) * 2.9,
+            im: (0.5 - event.clientY / height) * 1.95
+          };
         }, { passive: true });
         addEventListener("pointerleave", () => {
           pointer.active = false;
-          pointer.down = false;
         }, { passive: true });
-        document.addEventListener("visibilitychange", () => {
-          cancelAnimationFrame(frame);
-          if (!document.hidden) frame = requestAnimationFrame(draw);
+        addEventListener("click", (event) => {
+          if (event.target.closest("button, input, a")) return;
+          pins.push({ c: { re: cNow.re, im: cNow.im }, roots: roots.map((rootPoint) => ({ re: rootPoint.re, im: rootPoint.im })) });
+          while (pins.length > 5) pins.shift();
+        }, { passive: true });
+
+        clearButton.addEventListener("click", () => {
+          pins = [];
+          rootTrail = [];
         });
 
+        seedInput.addEventListener("change", () => {
+          readSeed();
+          rootTrail = [];
+          pins = [];
+        });
+        seedInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") seedInput.blur();
+        });
+
+        document.addEventListener("visibilitychange", () => {
+          clearTimeout(frame);
+          if (!document.hidden) frame = setTimeout(() => tick(performance.now()), 120);
+        });
+
+        readSeed();
         resize();
-        draw();
+        tick();
       })();
     </script>
   </body>
