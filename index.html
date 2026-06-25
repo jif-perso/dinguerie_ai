@@ -115,24 +115,26 @@
       .readout {
         pointer-events: auto;
         font-family: var(--mono);
-        font-size: 0.72rem;
         font-weight: 850;
       }
 
       .brand {
         justify-self: start;
+        font-size: 2.35rem;
+        font-weight: 950;
+        line-height: 0.9;
         text-decoration: none;
       }
 
       .brand::before {
         display: inline-block;
-        width: 0.72rem;
-        height: 0.72rem;
-        margin-right: 0.62rem;
+        width: 1.12rem;
+        height: 1.12rem;
+        margin-right: 0.72rem;
         background: var(--green);
         box-shadow: inset 0 0 0 2px var(--ink);
         content: "";
-        vertical-align: -0.08rem;
+        vertical-align: 0.1rem;
       }
 
       .formula {
@@ -141,12 +143,14 @@
         padding: 0.55rem 0.78rem;
         border: 1px solid var(--line);
         background: rgba(255, 250, 240, 0.86);
+        font-size: 0.72rem;
         text-align: center;
       }
 
       .readout {
         justify-self: end;
         color: var(--soft);
+        font-size: 0.72rem;
         text-align: right;
         text-transform: uppercase;
       }
@@ -243,6 +247,16 @@
           display: none;
         }
 
+        .brand {
+          font-size: 1.8rem;
+        }
+
+        .brand::before {
+          width: 0.9rem;
+          height: 0.9rem;
+          margin-right: 0.56rem;
+        }
+
         .panel {
           right: 0.85rem;
           bottom: 0.85rem;
@@ -268,6 +282,16 @@
         .readout,
         .panel {
           display: none;
+        }
+
+        .brand {
+          font-size: 1.42rem;
+        }
+
+        .brand::before {
+          width: 0.72rem;
+          height: 0.72rem;
+          vertical-align: 0;
         }
 
         .caption {
@@ -304,7 +328,6 @@
       </header>
 
       <div class="actions">
-        <button class="action" id="reset" type="button">reset</button>
         <button class="action" id="newSurface" type="button">new surface</button>
       </div>
 
@@ -337,7 +360,6 @@
       const surfaceLengthLabel = document.querySelector("#surfaceLength");
       const straightLengthLabel = document.querySelector("#straightLength");
       const savedLengthLabel = document.querySelector("#savedLength");
-      const resetButton = document.querySelector("#reset");
       const newSurfaceButton = document.querySelector("#newSurface");
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
       const scene = new THREE.Scene();
@@ -903,11 +925,6 @@
         requestAnimationFrame(animate);
       }
 
-      function reset() {
-        selected.length = 0;
-        placeDefaultPath();
-      }
-
       function newSurface() {
         surfaceVariant = (surfaceVariant + 1) % surfaceVariants.length;
         terrainSeed = surfaceVariants[surfaceVariant].seed;
@@ -928,7 +945,6 @@
       canvas.addEventListener("pointercancel", cancelDrag);
       canvas.addEventListener("wheel", zoomCamera, { passive: false });
       window.addEventListener("resize", resize);
-      resetButton.addEventListener("click", reset);
       newSurfaceButton.addEventListener("click", newSurface);
 
       makeSurface();
