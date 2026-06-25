@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="dinguerie is a living complex-plane study.">
+    <meta name="description" content="dinguerie is a living Mobius chamber.">
     <meta name="theme-color" content="#f3eee4">
     <meta property="og:title" content="dinguerie">
-    <meta property="og:description" content="A living complex-plane study.">
+    <meta property="og:description" content="A living Mobius chamber.">
     <meta property="og:type" content="website">
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Cpath d='M12 32h40M32 12v40' stroke='%23f3eee4' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23c8ff45' stroke-width='4'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M18 40C26 20 39 44 46 24' fill='none' stroke='%23c8ff45' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E"
     >
     <title>dinguerie</title>
     <style>
@@ -19,9 +19,9 @@
         --paper: #f3eee4;
         --paper-hot: #fffaf0;
         --ink: #100f0c;
-        --soft: #756d62;
+        --soft: #746b60;
         --line: rgba(16, 15, 12, 0.18);
-        --line-strong: rgba(16, 15, 12, 0.38);
+        --line-strong: rgba(16, 15, 12, 0.42);
         --blue: #2454ff;
         --red: #ff4f35;
         --green: #baff39;
@@ -53,18 +53,13 @@
       }
 
       button,
-      input,
       a {
         font: inherit;
       }
 
-      button,
-      input {
-        color: inherit;
-      }
-
       button {
         border: 0;
+        color: inherit;
         cursor: pointer;
       }
 
@@ -82,18 +77,18 @@
         outline-offset: 4px;
       }
 
-      .plane {
+      .chamber {
         position: fixed;
         inset: 0;
         isolation: isolate;
         background:
           linear-gradient(90deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
           linear-gradient(0deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
-          radial-gradient(circle at 50% 50%, var(--paper-hot), var(--paper) 56%, #d8cfc0 100%);
+          radial-gradient(circle at 50% 52%, var(--paper-hot), var(--paper) 58%, #d8cfc0 100%);
         background-size: 36px 36px, 36px 36px, 100% 100%;
       }
 
-      #phase {
+      .stage {
         position: absolute;
         inset: 0;
         z-index: 1;
@@ -106,31 +101,13 @@
         position: absolute;
         inset: 0;
         z-index: 2;
-        opacity: 0.32;
+        opacity: 0.22;
         pointer-events: none;
         background-image:
           linear-gradient(rgba(16, 15, 12, 0.045) 1px, transparent 1px),
           linear-gradient(90deg, rgba(16, 15, 12, 0.045) 1px, transparent 1px);
         background-size: 9px 9px;
-        mask-image: radial-gradient(circle at 50% 50%, black 0%, black 38%, transparent 84%);
-      }
-
-      .title {
-        position: absolute;
-        inset: 0;
-        z-index: 3;
-        display: grid;
-        place-items: center;
-        pointer-events: none;
-      }
-
-      h1 {
-        margin: 0;
-        color: rgba(16, 15, 12, 0.18);
-        font-family: var(--serif);
-        font-size: 9rem;
-        font-weight: 500;
-        line-height: 0.9;
+        mask-image: radial-gradient(circle at 50% 50%, black 0%, black 42%, transparent 86%);
       }
 
       .chrome {
@@ -146,8 +123,8 @@
       }
 
       .brand,
-      .equation,
-      .seed {
+      .formula,
+      .readout-top {
         pointer-events: auto;
         font-family: var(--mono);
         font-size: 0.72rem;
@@ -171,45 +148,45 @@
         vertical-align: -0.08rem;
       }
 
-      .equation {
+      .formula {
         justify-self: center;
-        min-width: 17rem;
+        min-width: 22rem;
         padding: 0.54rem 0.8rem;
         border: 1px solid var(--line);
-        background: rgba(243, 238, 228, 0.82);
-        backdrop-filter: blur(16px);
+        background: rgba(243, 238, 228, 0.84);
         text-align: center;
       }
 
-      .seed {
+      .readout-top {
         justify-self: end;
-        display: flex;
-        align-items: center;
-        gap: 0.65rem;
         color: var(--soft);
         text-transform: uppercase;
       }
 
-      .seed input {
-        width: 5.2rem;
-        border: 0;
-        border-bottom: 1px solid var(--line-strong);
-        border-radius: 0;
-        outline: 0;
-        background: transparent;
-        color: var(--ink);
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        font-weight: 850;
-        text-align: right;
+      .watermark {
+        position: fixed;
+        inset: 0;
+        z-index: 3;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
       }
 
-      .readings {
+      h1 {
+        margin: 0;
+        color: rgba(16, 15, 12, 0.11);
+        font-family: var(--serif);
+        font-size: 9.5rem;
+        font-weight: 500;
+        line-height: 0.9;
+      }
+
+      .panel {
         position: fixed;
         inset: auto auto 1.15rem 1.3rem;
         z-index: 5;
         display: grid;
-        width: min(27rem, calc(100vw - 2.6rem));
+        width: min(28rem, calc(100vw - 2.6rem));
         grid-template-columns: repeat(2, 1fr);
         gap: 1px;
         border: 1px solid var(--line);
@@ -217,18 +194,17 @@
         box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
       }
 
-      .reading {
-        min-height: 5.2rem;
+      .cell {
+        min-height: 5rem;
         padding: 0.78rem;
-        background: rgba(243, 238, 228, 0.86);
-        backdrop-filter: blur(18px);
+        background: rgba(243, 238, 228, 0.9);
       }
 
-      .reading-wide {
+      .cell-wide {
         grid-column: 1 / -1;
       }
 
-      .reading span {
+      .cell span {
         display: block;
         color: var(--soft);
         font-family: var(--mono);
@@ -237,45 +213,71 @@
         text-transform: uppercase;
       }
 
-      .reading strong {
+      .cell strong {
         display: block;
-        margin-top: 0.78rem;
+        margin-top: 0.74rem;
         color: var(--ink);
         font-family: var(--mono);
-        font-size: 0.92rem;
+        font-size: 0.88rem;
         font-weight: 850;
         line-height: 1.25;
       }
 
-      .roots {
+      .legend {
         position: fixed;
         inset: auto 1.3rem 1.15rem auto;
         z-index: 5;
         display: grid;
-        width: min(24rem, calc(100vw - 2.6rem));
         gap: 1px;
+        width: min(23rem, calc(100vw - 2.6rem));
         border: 1px solid var(--line);
         background: var(--line);
         box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
       }
 
-      .root-row {
+      .legend-row {
         display: grid;
-        grid-template-columns: 3.5rem 1fr;
+        grid-template-columns: auto 1fr;
         gap: 0.7rem;
         align-items: center;
         min-height: 3rem;
         padding: 0.68rem 0.78rem;
-        background: rgba(243, 238, 228, 0.86);
-        backdrop-filter: blur(18px);
+        background: rgba(243, 238, 228, 0.9);
         font-family: var(--mono);
         font-size: 0.72rem;
         font-weight: 850;
       }
 
-      .root-row span {
-        color: var(--soft);
+      .swatch {
+        width: 0.8rem;
+        height: 0.8rem;
+        background: var(--swatch);
+        box-shadow: inset 0 0 0 1px var(--ink);
+      }
+
+      .actions {
+        position: fixed;
+        top: 4.8rem;
+        right: 1.3rem;
+        z-index: 5;
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .action {
+        min-height: 2.55rem;
+        padding: 0.55rem 0.8rem;
+        border: 1px solid var(--line-strong);
+        background: rgba(243, 238, 228, 0.88);
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        font-weight: 850;
         text-transform: uppercase;
+      }
+
+      .action:hover {
+        background: var(--paper-hot);
       }
 
       .caption {
@@ -295,33 +297,12 @@
         pointer-events: none;
       }
 
-      .action {
-        position: fixed;
-        top: 4.8rem;
-        right: 1.3rem;
-        z-index: 5;
-        min-height: 2.55rem;
-        padding: 0.55rem 0.8rem;
-        border: 1px solid var(--line-strong);
-        background: rgba(243, 238, 228, 0.82);
-        backdrop-filter: blur(16px);
-        color: var(--ink);
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        font-weight: 850;
-        text-transform: uppercase;
-      }
-
-      .action:hover {
-        background: var(--paper-hot);
-      }
-
       @media (max-width: 920px) {
         .chrome {
           grid-template-columns: 1fr auto;
         }
 
-        .equation {
+        .formula {
           display: none;
         }
 
@@ -333,7 +314,7 @@
           display: none;
         }
 
-        .roots {
+        .legend {
           top: 4.8rem;
           right: 1rem;
           bottom: auto;
@@ -345,210 +326,122 @@
           padding: 0.85rem;
         }
 
-        .seed span {
+        .readout-top {
           display: none;
         }
 
         h1 {
-          font-size: 3.7rem;
+          font-size: 3.8rem;
         }
 
-        .action {
+        .actions {
           top: auto;
           right: 0.85rem;
           bottom: 0.85rem;
         }
 
-        .readings {
+        .panel {
           inset: auto auto 0.85rem 0.85rem;
-          width: calc(100vw - 6.7rem);
+          width: calc(100vw - 8rem);
           grid-template-columns: 1fr;
         }
 
-        .reading {
-          min-height: 3.5rem;
+        .cell {
+          min-height: 3.4rem;
           padding: 0.58rem;
         }
 
-        .reading strong {
-          margin-top: 0.4rem;
-          font-size: 0.78rem;
+        .cell strong {
+          margin-top: 0.38rem;
+          font-size: 0.76rem;
         }
 
-        .roots {
-          top: 4rem;
-          right: 0.85rem;
-          width: calc(100vw - 1.7rem);
-        }
-
-        .root-row {
-          min-height: 2.35rem;
-          grid-template-columns: 2.8rem 1fr;
-          padding: 0.45rem 0.58rem;
-          font-size: 0.64rem;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
+        .legend {
+          display: none;
         }
       }
     </style>
   </head>
   <body>
-    <main class="plane" id="top" aria-label="dinguerie complex plane">
-      <canvas id="phase" aria-hidden="true"></canvas>
+    <main class="chamber" id="top" aria-label="dinguerie Mobius chamber">
+      <svg class="stage" id="stage" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mobius transformation of a grid">
+        <g id="base-grid"></g>
+        <circle id="unit-circle" cx="500" cy="500" r="315" fill="none" stroke="rgba(16,15,12,0.3)" stroke-width="1.5"></circle>
+        <g id="curves"></g>
+        <g id="trail"></g>
+        <g id="pins"></g>
+        <g id="points"></g>
+      </svg>
       <div class="grain" aria-hidden="true"></div>
 
       <header class="chrome">
         <a class="brand" href="#top">dinguerie</a>
-        <div class="equation">z^3 + c z - 1 = 0</div>
-        <label class="seed">
-          <span>seed</span>
-          <input id="seed" value="02491" aria-label="Seed">
-        </label>
+        <div class="formula">M_a(z) = (z - a) / (1 - conj(a)z)</div>
+        <div class="readout-top" id="status">conformal</div>
       </header>
 
-      <div class="title" aria-hidden="true">
+      <div class="watermark" aria-hidden="true">
         <h1>dinguerie</h1>
       </div>
 
-      <button class="action" type="button" id="clear">clear pins</button>
+      <div class="actions">
+        <button class="action" type="button" id="freeze">freeze</button>
+        <button class="action" type="button" id="reset">reset</button>
+      </div>
 
-      <section class="readings" aria-label="Complex readings">
-        <div class="reading">
-          <span>constant c</span>
-          <strong id="constant">0.000 + 0.000i</strong>
+      <section class="panel" aria-label="Mobius readings">
+        <div class="cell">
+          <span>parameter a</span>
+          <strong id="param">0.000 + 0.000i</strong>
         </div>
-        <div class="reading">
-          <span>discriminant</span>
-          <strong id="discriminant">0.000 + 0.000i</strong>
+        <div class="cell">
+          <span>modulus</span>
+          <strong id="modulus">0.000</strong>
         </div>
-        <div class="reading reading-wide">
-          <span>plane</span>
-          <strong id="plane-note">phase portrait with modulus contours</strong>
+        <div class="cell cell-wide">
+          <span>invariant</span>
+          <strong id="invariant">circles and lines remain circles and lines</strong>
         </div>
       </section>
 
-      <section class="roots" aria-label="Roots">
-        <div class="root-row"><span>r1</span><strong id="root-0">0.000 + 0.000i</strong></div>
-        <div class="root-row"><span>r2</span><strong id="root-1">0.000 + 0.000i</strong></div>
-        <div class="root-row"><span>r3</span><strong id="root-2">0.000 + 0.000i</strong></div>
+      <section class="legend" aria-label="Legend">
+        <div class="legend-row"><i class="swatch" style="--swatch: #2454ff"></i><span>vertical family under M_a</span></div>
+        <div class="legend-row"><i class="swatch" style="--swatch: #ff4f35"></i><span>horizontal family under M_a</span></div>
+        <div class="legend-row"><i class="swatch" style="--swatch: #38d0aa"></i><span>image of the origin and pointer</span></div>
       </section>
 
-      <p class="caption">move through the c-plane. click to pin the current cubic.</p>
+      <p class="caption">move through the disk. click to pin a transformation.</p>
     </main>
 
     <script>
       (() => {
-        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
         const root = document.documentElement;
-        const canvas = document.querySelector("#phase");
-        const ctx = canvas.getContext("2d", { alpha: false });
-        const seedInput = document.querySelector("#seed");
-        const clearButton = document.querySelector("#clear");
-        const constant = document.querySelector("#constant");
-        const discriminant = document.querySelector("#discriminant");
-        const planeNote = document.querySelector("#plane-note");
-        const rootLabels = [
-          document.querySelector("#root-0"),
-          document.querySelector("#root-1"),
-          document.querySelector("#root-2")
-        ];
-
-        const tau = Math.PI * 2;
-        const colors = ["#2454ff", "#ff4f35", "#baff39", "#38d0aa", "#7e69ff", "#d4a321"];
-        let width = 1;
-        let height = 1;
-        let ratio = 1;
-        let bufferScale = 3;
-        let buffer = document.createElement("canvas");
-        let bctx = buffer.getContext("2d");
-        let image = null;
-        let domainWidth = 5;
-        let domainHeight = 3;
-        let seed = 2491;
-        let rand = mulberry(seed);
-        let pointer = { x: 0.5, y: 0.5, active: false };
-        let cTarget = { re: -0.38, im: 0.52 };
-        let cNow = { re: -0.38, im: 0.52 };
-        let roots = [];
-        let rootTrail = [];
+        const svg = document.querySelector("#stage");
+        const baseGrid = document.querySelector("#base-grid");
+        const curves = document.querySelector("#curves");
+        const trailGroup = document.querySelector("#trail");
+        const pinsGroup = document.querySelector("#pins");
+        const pointsGroup = document.querySelector("#points");
+        const paramLabel = document.querySelector("#param");
+        const modulusLabel = document.querySelector("#modulus");
+        const invariantLabel = document.querySelector("#invariant");
+        const status = document.querySelector("#status");
+        const freezeButton = document.querySelector("#freeze");
+        const resetButton = document.querySelector("#reset");
+        const colors = ["#2454ff", "#ff4f35", "#38d0aa", "#7e69ff", "#d4a321"];
+        const lines = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8];
+        const samples = 38;
+        let a = { re: 0.28, im: -0.16 };
+        let target = { re: 0.28, im: -0.16 };
+        let frozen = false;
         let pins = [];
-        let frame = 0;
-        let lastRender = 0;
-        let accent = colors[0];
+        let trail = [];
+        let scheduled = false;
 
-        function mulberry(value) {
-          return function next() {
-            value |= 0;
-            value = value + 0x6D2B79F5 | 0;
-            let t = Math.imul(value ^ value >>> 15, 1 | value);
-            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-            return ((t ^ t >>> 14) >>> 0) / 4294967296;
-          };
-        }
-
-        function readSeed() {
-          const parsed = Number(seedInput.value.replace(/\D/g, "").slice(0, 8));
-          seed = parsed || 2491;
-          seedInput.value = String(seed).padStart(5, "0");
-          rand = mulberry(seed);
-          accent = colors[Math.floor(rand() * colors.length)];
-          root.style.setProperty("--accent", accent);
-          planeNote.textContent = rand() > 0.5 ? "phase portrait with modulus contours" : "roots moving through a cubic surface";
-        }
-
-        function add(a, b) {
-          return { re: a.re + b.re, im: a.im + b.im };
-        }
-
-        function sub(a, b) {
-          return { re: a.re - b.re, im: a.im - b.im };
-        }
-
-        function mul(a, b) {
-          return { re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re };
-        }
-
-        function div(a, b) {
-          const d = b.re * b.re + b.im * b.im || 1e-9;
-          return { re: (a.re * b.re + a.im * b.im) / d, im: (a.im * b.re - a.re * b.im) / d };
-        }
-
-        function abs(a) {
-          return Math.hypot(a.re, a.im);
-        }
-
-        function poly(z, c) {
-          const z2 = mul(z, z);
-          const z3 = mul(z2, z);
-          return add(add(z3, mul(c, z)), { re: -1, im: 0 });
-        }
-
-        function solveRoots(c) {
-          let r = [
-            { re: 1.1, im: 0.1 },
-            { re: -0.58, im: 0.94 },
-            { re: -0.52, im: -0.88 }
-          ];
-
-          for (let iter = 0; iter < 16; iter += 1) {
-            r = r.map((value, index) => {
-              let denom = { re: 1, im: 0 };
-              for (let j = 0; j < r.length; j += 1) {
-                if (j !== index) denom = mul(denom, sub(value, r[j]));
-              }
-              return sub(value, div(poly(value, c), denom));
-            });
-          }
-
-          return r.sort((a, b) => a.re - b.re);
+        function createSvg(name, attrs = {}) {
+          const element = document.createElementNS("http://www.w3.org/2000/svg", name);
+          Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+          return element;
         }
 
         function formatComplex(z) {
@@ -558,296 +451,244 @@
           return `${re.toFixed(3)} ${sign} ${Math.abs(im).toFixed(3)}i`;
         }
 
-        function mapToComplex(px, py, w, h) {
+        function add(aValue, bValue) {
+          return { re: aValue.re + bValue.re, im: aValue.im + bValue.im };
+        }
+
+        function sub(aValue, bValue) {
+          return { re: aValue.re - bValue.re, im: aValue.im - bValue.im };
+        }
+
+        function mul(aValue, bValue) {
           return {
-            re: (px / Math.max(1, w - 1) - 0.5) * domainWidth,
-            im: (0.5 - py / Math.max(1, h - 1)) * domainHeight
+            re: aValue.re * bValue.re - aValue.im * bValue.im,
+            im: aValue.re * bValue.im + aValue.im * bValue.re
           };
         }
 
-        function complexToScreen(z) {
+        function div(aValue, bValue) {
+          const d = bValue.re * bValue.re + bValue.im * bValue.im || 1e-9;
           return {
-            x: (z.re / domainWidth + 0.5) * width,
-            y: (0.5 - z.im / domainHeight) * height
+            re: (aValue.re * bValue.re + aValue.im * bValue.im) / d,
+            im: (aValue.im * bValue.re - aValue.re * bValue.im) / d
           };
         }
 
-        function hsv(h, s, v) {
-          const i = Math.floor(h * 6);
-          const f = h * 6 - i;
-          const p = v * (1 - s);
-          const q = v * (1 - f * s);
-          const t = v * (1 - (1 - f) * s);
-          const m = i % 6;
-          let r = v;
-          let g = t;
-          let b = p;
-          if (m === 1) { r = q; g = v; b = p; }
-          if (m === 2) { r = p; g = v; b = t; }
-          if (m === 3) { r = p; g = q; b = v; }
-          if (m === 4) { r = t; g = p; b = v; }
-          if (m === 5) { r = v; g = p; b = q; }
-          return [r * 255, g * 255, b * 255];
+        function mobius(z) {
+          const conjugate = { re: a.re, im: -a.im };
+          return div(sub(z, a), sub({ re: 1, im: 0 }, mul(conjugate, z)));
         }
 
-        function renderField(time) {
-          const w = buffer.width;
-          const h = buffer.height;
-          const data = image.data;
-          let index = 0;
-          const timeDrift = reducedMotion ? 0 : Math.sin(time * 0.00025) * 0.025;
-
-          for (let py = 0; py < h; py += 1) {
-            for (let px = 0; px < w; px += 1) {
-              const z = mapToComplex(px, py, w, h);
-              const fz = poly(z, { re: cNow.re + timeDrift, im: cNow.im - timeDrift });
-              const magnitude = abs(fz);
-              const arg = Math.atan2(fz.im, fz.re);
-              const hue = (arg / tau + 1) % 1;
-              const logMag = Math.log(magnitude + 0.0006);
-              const phaseLine = Math.pow(0.5 + 0.5 * Math.cos(10 * arg), 10);
-              const modLine = Math.pow(0.5 + 0.5 * Math.cos(8 * logMag), 12);
-              const zeroGlow = Math.exp(-magnitude * 2.4);
-              const sat = 0.34 + zeroGlow * 0.34;
-              const val = 0.72 + phaseLine * 0.18 + modLine * 0.18 + zeroGlow * 0.16;
-              const rgb = hsv(hue, sat, Math.min(1, val));
-              const paperMix = 0.16;
-              data[index] = rgb[0] * (1 - paperMix) + 243 * paperMix;
-              data[index + 1] = rgb[1] * (1 - paperMix) + 238 * paperMix;
-              data[index + 2] = rgb[2] * (1 - paperMix) + 228 * paperMix;
-              data[index + 3] = 255;
-              index += 4;
-            }
-          }
-          bctx.putImageData(image, 0, 0);
-          ctx.imageSmoothingEnabled = true;
-          ctx.drawImage(buffer, 0, 0, width, height);
+        function toScreen(z) {
+          return {
+            x: 500 + z.re * 315,
+            y: 500 - z.im * 315
+          };
         }
 
-        function drawGrid() {
-          ctx.save();
-          ctx.globalAlpha = 0.34;
-          ctx.strokeStyle = "#100f0c";
-          ctx.lineWidth = 1;
-          const step = width < 620 ? 52 : 68;
-          for (let x = width / 2 % step; x < width; x += step) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, height);
-            ctx.stroke();
-          }
-          for (let y = height / 2 % step; y < height; y += step) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(width, y);
-            ctx.stroke();
-          }
-          ctx.globalAlpha = 0.7;
-          ctx.strokeStyle = "#100f0c";
-          ctx.beginPath();
-          ctx.moveTo(0, height / 2);
-          ctx.lineTo(width, height / 2);
-          ctx.moveTo(width / 2, 0);
-          ctx.lineTo(width / 2, height);
-          ctx.stroke();
-          ctx.restore();
+        function pathFrom(points) {
+          return points.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(" ");
         }
 
-        function drawRootTrails() {
-          ctx.save();
-          ctx.lineWidth = 1.5;
-          for (let rootIndex = 0; rootIndex < 3; rootIndex += 1) {
-            ctx.beginPath();
-            let started = false;
-            rootTrail.forEach((snapshot) => {
-              const rootPoint = snapshot[rootIndex];
-              if (!rootPoint) return;
-              const point = complexToScreen(rootPoint);
-              if (!started) {
-                ctx.moveTo(point.x, point.y);
-                started = true;
-              } else {
-                ctx.lineTo(point.x, point.y);
-              }
+        function buildBaseGrid() {
+          baseGrid.replaceChildren();
+          lines.forEach((value) => {
+            const v = createSvg("line", {
+              x1: 500 + value * 315,
+              y1: 185,
+              x2: 500 + value * 315,
+              y2: 815,
+              stroke: "rgba(16,15,12,0.12)",
+              "stroke-width": "1"
             });
-            ctx.globalAlpha = 0.38;
-            ctx.strokeStyle = colors[(rootIndex + 1) % colors.length];
-            ctx.stroke();
+            const h = createSvg("line", {
+              x1: 185,
+              y1: 500 - value * 315,
+              x2: 815,
+              y2: 500 - value * 315,
+              stroke: "rgba(16,15,12,0.12)",
+              "stroke-width": "1"
+            });
+            baseGrid.append(v, h);
+          });
+          baseGrid.append(createSvg("line", { x1: 120, y1: 500, x2: 880, y2: 500, stroke: "rgba(16,15,12,0.32)", "stroke-width": "1.4" }));
+          baseGrid.append(createSvg("line", { x1: 500, y1: 120, x2: 500, y2: 880, stroke: "rgba(16,15,12,0.32)", "stroke-width": "1.4" }));
+        }
+
+        function transformedLine(kind, value) {
+          const points = [];
+          for (let i = 0; i < samples; i += 1) {
+            const t = -0.96 + i * (1.92 / (samples - 1));
+            const z = kind === "vertical" ? { re: value, im: t } : { re: t, im: value };
+            if (z.re * z.re + z.im * z.im > 0.98) continue;
+            points.push(toScreen(mobius(z)));
           }
-          ctx.restore();
+          return points;
+        }
+
+        function drawCurves() {
+          curves.replaceChildren();
+          lines.forEach((value, index) => {
+            const vertical = transformedLine("vertical", value);
+            const horizontal = transformedLine("horizontal", value);
+            if (vertical.length > 2) {
+              curves.append(createSvg("path", {
+                d: pathFrom(vertical),
+                fill: "none",
+                stroke: colors[index % colors.length],
+                "stroke-width": value === 0 ? "2.2" : "1.25",
+                "stroke-opacity": value === 0 ? "0.78" : "0.42"
+              }));
+            }
+            if (horizontal.length > 2) {
+              curves.append(createSvg("path", {
+                d: pathFrom(horizontal),
+                fill: "none",
+                stroke: colors[(index + 1) % colors.length],
+                "stroke-width": value === 0 ? "2.2" : "1.25",
+                "stroke-opacity": value === 0 ? "0.78" : "0.42"
+              }));
+            }
+          });
+        }
+
+        function drawPoints() {
+          pointsGroup.replaceChildren();
+          const origin = toScreen(mobius({ re: 0, im: 0 }));
+          const parameter = toScreen(a);
+          const inverse = toScreen({ re: -a.re, im: -a.im });
+          [
+            [origin, "#38d0aa", 9],
+            [parameter, "#2454ff", 7],
+            [inverse, "#ff4f35", 7]
+          ].forEach(([point, color, radius]) => {
+            pointsGroup.append(createSvg("circle", {
+              cx: point.x,
+              cy: point.y,
+              r: radius,
+              fill: color,
+              stroke: "#100f0c",
+              "stroke-width": "1.6"
+            }));
+            pointsGroup.append(createSvg("circle", {
+              cx: point.x,
+              cy: point.y,
+              r: radius + 14,
+              fill: "none",
+              stroke: color,
+              "stroke-width": "1.2",
+              "stroke-opacity": "0.36"
+            }));
+          });
+        }
+
+        function drawTrail() {
+          trailGroup.replaceChildren();
+          if (trail.length < 2) return;
+          trailGroup.append(createSvg("path", {
+            d: pathFrom(trail.map(toScreen)),
+            fill: "none",
+            stroke: "#100f0c",
+            "stroke-width": "1.4",
+            "stroke-opacity": "0.32",
+            "stroke-dasharray": "2 8"
+          }));
         }
 
         function drawPins() {
-          ctx.save();
+          pinsGroup.replaceChildren();
           pins.forEach((pin) => {
-            pin.roots.forEach((rootPoint, index) => {
-              const point = complexToScreen(rootPoint);
-              ctx.globalAlpha = 0.72;
-              ctx.strokeStyle = colors[(index + 3) % colors.length];
-              ctx.lineWidth = 1.5;
-              ctx.beginPath();
-              ctx.arc(point.x, point.y, 11, 0, tau);
-              ctx.stroke();
-              ctx.globalAlpha = 0.36;
-              ctx.beginPath();
-              ctx.moveTo(point.x - 18, point.y);
-              ctx.lineTo(point.x + 18, point.y);
-              ctx.moveTo(point.x, point.y - 18);
-              ctx.lineTo(point.x, point.y + 18);
-              ctx.stroke();
-            });
+            const point = toScreen(pin);
+            pinsGroup.append(createSvg("circle", {
+              cx: point.x,
+              cy: point.y,
+              r: 15,
+              fill: "none",
+              stroke: "#100f0c",
+              "stroke-width": "1.4",
+              "stroke-opacity": "0.45"
+            }));
+            pinsGroup.append(createSvg("rect", {
+              x: point.x - 4,
+              y: point.y - 4,
+              width: 8,
+              height: 8,
+              fill: "#baff39",
+              stroke: "#100f0c",
+              "stroke-width": "1"
+            }));
           });
-          ctx.restore();
-        }
-
-        function drawRoots() {
-          ctx.save();
-          roots.forEach((rootPoint, index) => {
-            const point = complexToScreen(rootPoint);
-            ctx.globalAlpha = 0.95;
-            ctx.fillStyle = colors[(index + 1) % colors.length];
-            ctx.strokeStyle = "#100f0c";
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, 6, 0, tau);
-            ctx.fill();
-            ctx.stroke();
-            ctx.globalAlpha = 0.42;
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, 19, 0, tau);
-            ctx.stroke();
-          });
-          ctx.restore();
-        }
-
-        function drawPointer() {
-          if (!pointer.active) return;
-          ctx.save();
-          ctx.globalAlpha = 0.86;
-          ctx.strokeStyle = "#100f0c";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(pointer.x - 14, pointer.y);
-          ctx.lineTo(pointer.x + 14, pointer.y);
-          ctx.moveTo(pointer.x, pointer.y - 14);
-          ctx.lineTo(pointer.x, pointer.y + 14);
-          ctx.stroke();
-          ctx.globalAlpha = 0.45;
-          ctx.strokeStyle = accent;
-          ctx.beginPath();
-          ctx.arc(pointer.x, pointer.y, 24, 0, tau);
-          ctx.stroke();
-          ctx.restore();
-        }
-
-        function drawLabels() {
-          ctx.save();
-          ctx.globalAlpha = 0.22;
-          ctx.fillStyle = "#100f0c";
-          ctx.font = `${width < 620 ? 64 : width < 920 ? 104 : 156}px Georgia, Times New Roman, serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("dinguerie", width * 0.5, height * 0.5);
-          ctx.restore();
-        }
-
-        function discriminantFor(c) {
-          const c2 = mul(c, c);
-          const c3 = mul(c2, c);
-          return { re: -4 * c3.re - 27, im: -4 * c3.im };
         }
 
         function updateReadouts() {
-          constant.textContent = formatComplex(cNow);
-          discriminant.textContent = formatComplex(discriminantFor(cNow));
-          roots.forEach((rootPoint, index) => {
-            rootLabels[index].textContent = formatComplex(rootPoint);
-          });
+          const modulus = Math.hypot(a.re, a.im);
+          paramLabel.textContent = formatComplex(a);
+          modulusLabel.textContent = modulus.toFixed(3);
+          invariantLabel.textContent = modulus > 0.72 ? "near the boundary, the grid folds hard but keeps angles" : "circles and lines remain circles and lines";
+          status.textContent = frozen ? "frozen" : "conformal";
+          root.style.setProperty("--accent", colors[Math.min(colors.length - 1, Math.floor(modulus * colors.length))]);
         }
 
-        function resize() {
-          ratio = Math.min(devicePixelRatio || 1, 1.5);
-          width = innerWidth;
-          height = innerHeight;
-          canvas.width = Math.round(width * ratio);
-          canvas.height = Math.round(height * ratio);
-          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-          bufferScale = width < 620 ? 6 : 6;
-          buffer.width = Math.max(120, Math.round(width / bufferScale));
-          buffer.height = Math.max(120, Math.round(height / bufferScale));
-          image = bctx.createImageData(buffer.width, buffer.height);
-          domainHeight = width < 620 ? 4.6 : 3.7;
-          domainWidth = domainHeight * width / height;
+        function render() {
+          a = { re: target.re, im: target.im };
+          trail.push({ re: a.re, im: a.im });
+          while (trail.length > 80) trail.shift();
+          drawCurves();
+          drawTrail();
+          drawPins();
+          drawPoints();
+          updateReadouts();
+          scheduled = false;
         }
 
-        function tick(time = performance.now()) {
-          if (!pointer.active && !reducedMotion) {
-            cTarget = {
-              re: Math.cos(time * 0.00016 + seed * 0.001) * 0.72 - 0.18,
-              im: Math.sin(time * 0.00014 + seed * 0.0013) * 0.62
-            };
+        function scheduleRender() {
+          if (scheduled) return;
+          scheduled = true;
+          requestAnimationFrame(render);
+        }
+
+        function eventToParameter(event) {
+          const bounds = svg.getBoundingClientRect();
+          const x = (event.clientX - bounds.left) / bounds.width;
+          const y = (event.clientY - bounds.top) / bounds.height;
+          const re = (x - 0.5) * 1.62;
+          const im = (0.5 - y) * 1.62;
+          const magnitude = Math.hypot(re, im);
+          if (magnitude > 0.86) {
+            return { re: re / magnitude * 0.86, im: im / magnitude * 0.86 };
           }
-
-          cNow.re += (cTarget.re - cNow.re) * 0.12;
-          cNow.im += (cTarget.im - cNow.im) * 0.12;
-
-          if (time - lastRender > (reducedMotion ? 700 : 240)) {
-            roots = solveRoots(cNow);
-            rootTrail.push(roots.map((rootPoint) => ({ re: rootPoint.re, im: rootPoint.im })));
-            while (rootTrail.length > 84) rootTrail.shift();
-
-            renderField(time);
-            drawGrid();
-            drawLabels();
-            drawRootTrails();
-            drawPins();
-            drawRoots();
-            drawPointer();
-            updateReadouts();
-            lastRender = time;
-          }
-          frame = setTimeout(() => tick(performance.now()), reducedMotion ? 700 : 160);
+          return { re, im };
         }
 
-        addEventListener("resize", resize, { passive: true });
-        addEventListener("pointermove", (event) => {
-          pointer = { x: event.clientX, y: event.clientY, active: true };
-          cTarget = {
-            re: (event.clientX / width - 0.5) * 2.9,
-            im: (0.5 - event.clientY / height) * 1.95
-          };
-        }, { passive: true });
-        addEventListener("pointerleave", () => {
-          pointer.active = false;
-        }, { passive: true });
-        addEventListener("click", (event) => {
-          if (event.target.closest("button, input, a")) return;
-          pins.push({ c: { re: cNow.re, im: cNow.im }, roots: roots.map((rootPoint) => ({ re: rootPoint.re, im: rootPoint.im })) });
-          while (pins.length > 5) pins.shift();
+        svg.addEventListener("pointermove", (event) => {
+          if (frozen) return;
+          target = eventToParameter(event);
+          scheduleRender();
         }, { passive: true });
 
-        clearButton.addEventListener("click", () => {
+        svg.addEventListener("click", (event) => {
+          pins.push({ re: a.re, im: a.im });
+          while (pins.length > 7) pins.shift();
+          scheduleRender();
+        }, { passive: true });
+
+        freezeButton.addEventListener("click", () => {
+          frozen = !frozen;
+          freezeButton.textContent = frozen ? "move" : "freeze";
+          scheduleRender();
+        });
+
+        resetButton.addEventListener("click", () => {
           pins = [];
-          rootTrail = [];
+          trail = [];
+          target = { re: 0.28, im: -0.16 };
+          frozen = false;
+          freezeButton.textContent = "freeze";
+          scheduleRender();
         });
 
-        seedInput.addEventListener("change", () => {
-          readSeed();
-          rootTrail = [];
-          pins = [];
-        });
-        seedInput.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") seedInput.blur();
-        });
-
-        document.addEventListener("visibilitychange", () => {
-          clearTimeout(frame);
-          if (!document.hidden) frame = setTimeout(() => tick(performance.now()), 120);
-        });
-
-        readSeed();
-        resize();
-        tick();
+        buildBaseGrid();
+        render();
       })();
     </script>
   </body>
