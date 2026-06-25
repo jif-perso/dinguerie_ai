@@ -3,34 +3,35 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="dinguerie is a living typographic sculpture.">
-    <meta name="theme-color" content="#f4efe6">
+    <meta name="description" content="dinguerie is a living field instrument.">
+    <meta name="theme-color" content="#f3eee4">
     <meta property="og:title" content="dinguerie">
-    <meta property="og:description" content="A living typographic sculpture.">
+    <meta property="og:description" content="A living field instrument.">
     <meta property="og:type" content="website">
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2311110f'/%3E%3Cpath d='M12 34c10-20 30-20 40 0' fill='none' stroke='%23f4efe6' stroke-width='5' stroke-linecap='square'/%3E%3Ccircle cx='23' cy='38' r='4' fill='%23c8ff45'/%3E%3Ccircle cx='41' cy='38' r='4' fill='%23ff5338'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M14 32h36M32 14v36' stroke='%23c8ff45' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E"
     >
     <title>dinguerie</title>
     <style>
       :root {
         color-scheme: light;
-        --paper: #f4efe6;
-        --paper-hot: #fffaf1;
-        --ink: #11110f;
-        --muted: #756d62;
-        --line: rgba(17, 17, 15, 0.18);
-        --line-strong: rgba(17, 17, 15, 0.4);
-        --lime: #c8ff45;
-        --blue: #315cff;
-        --coral: #ff5338;
-        --mint: #39d8a4;
-        --violet: #816bff;
-        --gold: #d9a31f;
-        --active: var(--blue);
+        --paper: #f3eee4;
+        --paper-hot: #fffaf0;
+        --ink: #100f0c;
+        --soft: #766d61;
+        --line: rgba(16, 15, 12, 0.18);
+        --line-strong: rgba(16, 15, 12, 0.38);
+        --blue: #2454ff;
+        --red: #ff4f35;
+        --green: #baff39;
+        --mint: #38d0aa;
+        --gold: #d4a321;
+        --violet: #7e69ff;
+        --accent: var(--blue);
         --mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
         --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --serif: Georgia, "Times New Roman", serif;
       }
 
       * {
@@ -77,51 +78,85 @@
       }
 
       :focus-visible {
-        outline: 3px solid var(--active);
+        outline: 3px solid var(--accent);
         outline-offset: 4px;
       }
 
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-
-      .world {
+      .instrument {
         position: fixed;
         inset: 0;
+        isolation: isolate;
+        background:
+          linear-gradient(90deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(16, 15, 12, 0.035) 1px, transparent 1px),
+          radial-gradient(circle at 50% 48%, var(--paper-hot), var(--paper) 52%, #d8cfc0 100%);
+        background-size: 34px 34px, 34px 34px, 100% 100%;
+      }
+
+      #field {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
         width: 100%;
         height: 100%;
         cursor: crosshair;
       }
 
-      .grain {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        opacity: 0.34;
+      .plate {
+        position: absolute;
+        inset: 5.2rem 4.2rem 5.8rem;
+        z-index: 2;
+        border: 1px solid var(--line);
         pointer-events: none;
-        background-image:
-          linear-gradient(rgba(17, 17, 15, 0.06) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(17, 17, 15, 0.06) 1px, transparent 1px);
-        background-size: 10px 10px;
-        mask-image: radial-gradient(circle at 50% 42%, black 0%, black 34%, transparent 78%);
       }
 
-      .vignette {
-        position: fixed;
-        inset: 0;
+      .plate::before,
+      .plate::after {
+        position: absolute;
+        content: "";
+      }
+
+      .plate::before {
+        inset: 50% 0 auto;
+        border-top: 1px solid rgba(36, 84, 255, 0.22);
+      }
+
+      .plate::after {
+        inset: 0 auto 0 50%;
+        border-left: 1px solid rgba(36, 84, 255, 0.18);
+      }
+
+      .coil {
+        position: absolute;
         z-index: 2;
+        width: 12rem;
+        aspect-ratio: 1;
+        border: 1px solid rgba(16, 15, 12, 0.14);
+        border-radius: 50%;
         pointer-events: none;
-        background:
-          linear-gradient(180deg, rgba(244, 239, 230, 0.78), transparent 17%, transparent 78%, rgba(244, 239, 230, 0.9)),
-          radial-gradient(circle at 50% 44%, transparent 0%, transparent 52%, rgba(17, 17, 15, 0.11) 100%);
+      }
+
+      .coil::before,
+      .coil::after {
+        position: absolute;
+        inset: 12%;
+        border: 1px solid rgba(16, 15, 12, 0.12);
+        border-radius: inherit;
+        content: "";
+      }
+
+      .coil::after {
+        inset: 27%;
+      }
+
+      .coil-a {
+        top: 15%;
+        left: 11%;
+      }
+
+      .coil-b {
+        right: 13%;
+        bottom: 18%;
       }
 
       .chrome {
@@ -132,25 +167,23 @@
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
         gap: 1rem;
-        padding: 1rem 1.4rem;
+        padding: 1rem 1.3rem;
         pointer-events: none;
       }
 
       .brand,
-      .readout,
+      .state,
       .seed {
         pointer-events: auto;
         font-family: var(--mono);
         font-size: 0.72rem;
         font-weight: 850;
-        text-transform: uppercase;
       }
 
       .brand {
         justify-self: start;
         color: var(--ink);
         text-decoration: none;
-        text-transform: none;
       }
 
       .brand::before {
@@ -158,29 +191,31 @@
         width: 0.72rem;
         height: 0.72rem;
         margin-right: 0.62rem;
-        background: var(--active);
+        border-radius: 50%;
+        background: var(--accent);
         box-shadow: inset 0 0 0 2px var(--ink);
         content: "";
         vertical-align: -0.08rem;
       }
 
-      .readout {
+      .state {
         justify-self: center;
-        min-width: 10rem;
-        padding: 0.5rem 0.72rem;
+        min-width: 11rem;
+        padding: 0.52rem 0.72rem;
         border: 1px solid var(--line);
-        background: rgba(244, 239, 230, 0.74);
+        background: rgba(243, 238, 228, 0.78);
         backdrop-filter: blur(16px);
-        color: var(--ink);
         text-align: center;
+        text-transform: uppercase;
       }
 
       .seed {
         justify-self: end;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        color: var(--muted);
+        gap: 0.65rem;
+        color: var(--soft);
+        text-transform: uppercase;
       }
 
       .seed input {
@@ -197,19 +232,40 @@
         text-align: right;
       }
 
-      .annotations {
+      .title {
         position: fixed;
-        inset: 0;
         z-index: 3;
+        inset: 0;
+        display: grid;
+        place-items: center;
         pointer-events: none;
       }
 
-      .note {
+      h1 {
+        margin: 0;
+        color: rgba(16, 15, 12, 0.78);
+        font-family: var(--serif);
+        font-size: 9rem;
+        font-weight: 500;
+        line-height: 0.9;
+        text-shadow:
+          0 0 1px rgba(243, 238, 228, 0.8),
+          0 0 28px rgba(243, 238, 228, 0.72);
+      }
+
+      .annotations {
+        position: fixed;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      .annotation {
         position: absolute;
-        max-width: 13rem;
+        max-width: 14rem;
         padding-top: 0.55rem;
         border-top: 1px solid var(--line-strong);
-        color: rgba(17, 17, 15, 0.7);
+        color: rgba(16, 15, 12, 0.74);
         font-family: var(--mono);
         font-size: 0.66rem;
         font-weight: 820;
@@ -217,38 +273,38 @@
         text-transform: uppercase;
       }
 
-      .note::before {
+      .annotation::before {
         position: absolute;
         top: -0.34rem;
         left: 0;
         width: 0.62rem;
         height: 0.62rem;
-        background: var(--active);
+        background: var(--accent);
         box-shadow: inset 0 0 0 1px var(--ink);
         content: "";
       }
 
-      .note-a {
-        top: 22%;
-        left: 6%;
+      .annotation-a {
+        top: 21%;
+        left: 7%;
       }
 
-      .note-b {
+      .annotation-b {
         top: 18%;
-        right: 10%;
+        right: 8%;
       }
 
-      .note-c {
-        right: 7%;
-        bottom: 22%;
+      .annotation-c {
+        right: 9%;
+        bottom: 21%;
       }
 
-      .instruments {
+      .panel {
         position: fixed;
-        inset: auto 1.4rem 1.2rem;
-        z-index: 6;
+        inset: auto 1.3rem 1.15rem;
+        z-index: 5;
         display: grid;
-        grid-template-columns: minmax(14rem, 23rem) auto;
+        grid-template-columns: minmax(14rem, 24rem) auto;
         gap: 1rem;
         align-items: end;
         pointer-events: none;
@@ -260,20 +316,20 @@
         gap: 1px;
         border: 1px solid var(--line);
         background: var(--line);
-        box-shadow: 10px 10px 0 rgba(17, 17, 15, 0.08);
+        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
         pointer-events: auto;
       }
 
       .meter {
-        min-height: 5.5rem;
+        min-height: 5.3rem;
         padding: 0.78rem;
-        background: rgba(244, 239, 230, 0.82);
+        background: rgba(243, 238, 228, 0.84);
         backdrop-filter: blur(18px);
       }
 
       .meter span {
         display: block;
-        color: var(--muted);
+        color: var(--soft);
         font-family: var(--mono);
         font-size: 0.62rem;
         font-weight: 850;
@@ -282,27 +338,27 @@
 
       .meter strong {
         display: block;
-        margin-top: 0.86rem;
+        margin-top: 0.78rem;
         color: var(--ink);
         font-family: var(--mono);
         font-size: 1rem;
         font-weight: 850;
       }
 
-      .dock {
+      .controls {
         justify-self: end;
         display: grid;
-        grid-template-columns: repeat(4, 3rem);
+        grid-template-columns: repeat(2, 3rem);
         gap: 0.42rem;
         padding: 0.42rem;
         border: 1px solid var(--line);
-        background: rgba(244, 239, 230, 0.82);
+        background: rgba(243, 238, 228, 0.84);
         backdrop-filter: blur(18px);
-        box-shadow: 10px 10px 0 rgba(17, 17, 15, 0.08);
+        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
         pointer-events: auto;
       }
 
-      .tool {
+      .control {
         display: grid;
         width: 3rem;
         height: 3rem;
@@ -312,25 +368,25 @@
         transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
       }
 
-      .tool:hover {
+      .control:hover {
         border-color: var(--line-strong);
         background: var(--paper-hot);
       }
 
-      .tool:active {
+      .control:active {
         transform: translateY(2px);
       }
 
-      .tool-primary {
+      .control-primary {
         border-color: var(--ink);
-        background: var(--active);
+        background: var(--accent);
       }
 
       .icon {
         position: relative;
         display: block;
-        width: 1.35rem;
-        height: 1.35rem;
+        width: 1.34rem;
+        height: 1.34rem;
       }
 
       .icon::before,
@@ -339,44 +395,32 @@
         content: "";
       }
 
-      .icon-spark {
+      .icon-pulse {
         border: 2px solid var(--ink);
-        rotate: 45deg;
+        border-radius: 50%;
       }
 
-      .icon-spark::before {
-        inset: 0.24rem;
+      .icon-pulse::before {
+        inset: 0.25rem;
         border: 2px solid var(--ink);
+        border-radius: inherit;
       }
 
-      .icon-pause {
-        border-left: 4px solid var(--ink);
-        border-right: 4px solid var(--ink);
-      }
-
-      .icon-clear {
+      .icon-reset {
         border-top: 2px solid var(--ink);
+        border-left: 2px solid var(--ink);
+        border-radius: 50%;
+        rotate: -28deg;
+      }
+
+      .icon-reset::before {
+        right: -0.16rem;
+        bottom: 0.05rem;
+        width: 0.45rem;
+        height: 0.45rem;
+        border-right: 2px solid var(--ink);
         border-bottom: 2px solid var(--ink);
-        rotate: -18deg;
-      }
-
-      .icon-clear::before {
-        inset: 0.42rem -0.2rem;
-        border-top: 2px solid var(--ink);
-        rotate: 46deg;
-      }
-
-      .icon-print {
-        border: 2px solid var(--ink);
-      }
-
-      .icon-print::before {
-        left: 0.22rem;
-        right: 0.22rem;
-        bottom: -0.36rem;
-        height: 0.46rem;
-        border: 2px solid var(--ink);
-        background: var(--paper);
+        rotate: 10deg;
       }
 
       .caption {
@@ -385,8 +429,8 @@
         bottom: 1.85rem;
         z-index: 4;
         translate: -50% 0;
-        width: min(34rem, calc(100vw - 2rem));
-        color: rgba(17, 17, 15, 0.72);
+        width: min(35rem, calc(100vw - 2rem));
+        color: rgba(16, 15, 12, 0.72);
         font-family: var(--mono);
         font-size: 0.66rem;
         font-weight: 820;
@@ -396,30 +440,29 @@
         pointer-events: none;
       }
 
-      @media (max-width: 860px) {
+      @media (max-width: 900px) {
         .chrome {
           grid-template-columns: 1fr auto;
         }
 
-        .readout {
+        .state {
           display: none;
         }
 
-        .note {
+        .annotation {
           display: none;
         }
 
-        .instruments {
-          grid-template-columns: 1fr;
+        .plate {
+          inset: 4.5rem 1rem 7.4rem;
         }
 
-        .dock {
-          justify-self: stretch;
-          grid-template-columns: repeat(4, 1fr);
+        h1 {
+          font-size: 6rem;
         }
 
-        .tool {
-          width: auto;
+        .panel {
+          grid-template-columns: 1fr auto;
         }
 
         .caption {
@@ -436,18 +479,40 @@
           display: none;
         }
 
-        .instruments {
+        h1 {
+          font-size: 3.8rem;
+        }
+
+        .coil {
+          width: 8rem;
+        }
+
+        .panel {
           inset: auto 0.85rem 0.85rem;
+          grid-template-columns: 1fr;
+        }
+
+        .meters {
+          grid-template-columns: repeat(3, 1fr);
         }
 
         .meter {
-          min-height: 4.1rem;
+          min-height: 4.2rem;
           padding: 0.62rem;
         }
 
         .meter strong {
-          margin-top: 0.55rem;
+          margin-top: 0.56rem;
           font-size: 0.9rem;
+        }
+
+        .controls {
+          justify-self: stretch;
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .control {
+          width: auto;
         }
       }
 
@@ -463,58 +528,55 @@
     </style>
   </head>
   <body>
-    <canvas class="world" id="world" aria-hidden="true"></canvas>
-    <div class="grain" aria-hidden="true"></div>
-    <div class="vignette" aria-hidden="true"></div>
+    <main class="instrument" id="top" aria-label="dinguerie">
+      <canvas id="field" aria-hidden="true"></canvas>
+      <div class="plate" aria-hidden="true"></div>
+      <div class="coil coil-a" aria-hidden="true"></div>
+      <div class="coil coil-b" aria-hidden="true"></div>
 
-    <header class="chrome">
-      <a class="brand" href="#top">dinguerie</a>
-      <div class="readout" id="readout">forming</div>
-      <label class="seed">
-        <span>seed</span>
-        <input id="seed" value="02491" aria-label="Seed">
-      </label>
-    </header>
+      <header class="chrome">
+        <a class="brand" href="#top">dinguerie</a>
+        <div class="state" id="state">field coherent</div>
+        <label class="seed">
+          <span>seed</span>
+          <input id="seed" value="02491" aria-label="Seed">
+        </label>
+      </header>
 
-    <main id="top" aria-label="dinguerie">
-      <h1 class="sr-only">dinguerie</h1>
+      <section class="title" aria-labelledby="title">
+        <h1 id="title">dinguerie</h1>
+      </section>
 
       <div class="annotations" aria-hidden="true">
-        <p class="note note-a" id="note-a">soft riot held in a serif skeleton</p>
-        <p class="note note-b" id="note-b">weather behaves when nobody asks</p>
-        <p class="note note-c" id="note-c">the word keeps remembering itself</p>
+        <p class="annotation annotation-a" id="annotation-a">the probe bends the room before it touches it</p>
+        <p class="annotation annotation-b" id="annotation-b">a private storm in a calibrated box</p>
+        <p class="annotation annotation-c" id="annotation-c">every line is trying to find the same voltage</p>
       </div>
 
-      <p class="caption" id="caption">a word that refuses to stay printed</p>
+      <p class="caption" id="caption">move the probe through the field, click to leave a charge</p>
 
-      <section class="instruments" aria-label="Controls">
+      <section class="panel" aria-label="Readings and controls">
         <div class="meters" aria-live="polite">
           <div class="meter">
-            <span>pressure</span>
-            <strong id="pressure">0.34</strong>
+            <span>voltage</span>
+            <strong id="voltage">0.00</strong>
           </div>
           <div class="meter">
-            <span>particles</span>
-            <strong id="count">0</strong>
+            <span>frequency</span>
+            <strong id="frequency">0.00</strong>
           </div>
           <div class="meter">
-            <span>state</span>
-            <strong id="state">awake</strong>
+            <span>phase</span>
+            <strong id="phase">calm</strong>
           </div>
         </div>
 
-        <nav class="dock" aria-label="Actions">
-          <button class="tool tool-primary" type="button" id="spark" aria-label="Spark" title="Spark">
-            <span class="icon icon-spark" aria-hidden="true"></span>
+        <nav class="controls" aria-label="Controls">
+          <button class="control control-primary" type="button" id="pulse" aria-label="Pulse" title="Pulse">
+            <span class="icon icon-pulse" aria-hidden="true"></span>
           </button>
-          <button class="tool" type="button" id="pause" aria-label="Pause" title="Pause">
-            <span class="icon icon-pause" aria-hidden="true"></span>
-          </button>
-          <button class="tool" type="button" id="clear" aria-label="Clear" title="Clear">
-            <span class="icon icon-clear" aria-hidden="true"></span>
-          </button>
-          <button class="tool" type="button" id="print" aria-label="Print" title="Print">
-            <span class="icon icon-print" aria-hidden="true"></span>
+          <button class="control" type="button" id="reset" aria-label="Reset" title="Reset">
+            <span class="icon icon-reset" aria-hidden="true"></span>
           </button>
         </nav>
       </section>
@@ -524,41 +586,38 @@
       (() => {
         const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
         const root = document.documentElement;
-        const canvas = document.querySelector("#world");
+        const canvas = document.querySelector("#field");
         const ctx = canvas.getContext("2d", { alpha: false });
         const seedInput = document.querySelector("#seed");
-        const readout = document.querySelector("#readout");
-        const pressureLabel = document.querySelector("#pressure");
-        const countLabel = document.querySelector("#count");
-        const stateLabel = document.querySelector("#state");
+        const state = document.querySelector("#state");
+        const voltage = document.querySelector("#voltage");
+        const frequency = document.querySelector("#frequency");
+        const phase = document.querySelector("#phase");
+        const pulse = document.querySelector("#pulse");
+        const reset = document.querySelector("#reset");
         const caption = document.querySelector("#caption");
-        const notes = [
-          document.querySelector("#note-a"),
-          document.querySelector("#note-b"),
-          document.querySelector("#note-c")
+        const annotations = [
+          document.querySelector("#annotation-a"),
+          document.querySelector("#annotation-b"),
+          document.querySelector("#annotation-c")
         ];
-        const sparkButton = document.querySelector("#spark");
-        const pauseButton = document.querySelector("#pause");
-        const clearButton = document.querySelector("#clear");
-        const printButton = document.querySelector("#print");
 
-        const colors = ["#11110f", "#315cff", "#ff5338", "#c8ff45", "#39d8a4", "#816bff", "#d9a31f"];
-        const captions = [
-          "a word that refuses to stay printed",
-          "a small weather system with a name",
-          "letters trying to become architecture",
-          "a poster that learned to breathe",
-          "soft noise arranged into a little ceremony"
+        const colors = ["#2454ff", "#ff4f35", "#baff39", "#38d0aa", "#7e69ff", "#d4a321"];
+        const notes = [
+          "the probe bends the room before it touches it",
+          "a private storm in a calibrated box",
+          "every line is trying to find the same voltage",
+          "old electricity, new weather",
+          "the word hums before it becomes readable",
+          "a diagram that refuses to stay still",
+          "magnetism pretending to be typography",
+          "the field keeps a memory of your hand"
         ];
-        const noteBank = [
-          "soft riot held in a serif skeleton",
-          "weather behaves when nobody asks",
-          "the word keeps remembering itself",
-          "pressure makes the alphabet liquid",
-          "a quiet machine made of dust",
-          "geometry admits it is alive for once",
-          "the center is only a rumor",
-          "ink without paper, paper without ink"
+        const captions = [
+          "move the probe through the field, click to leave a charge",
+          "a word held inside an electromagnetic weather map",
+          "small changes in pressure redraw the whole room",
+          "touch the plate and the instrument answers"
         ];
 
         let width = 1;
@@ -566,15 +625,13 @@
         let ratio = 1;
         let seed = 2491;
         let rand = mulberry(seed);
-        let particles = [];
-        let shards = [];
-        let ripples = [];
+        let charges = [];
+        let traces = [];
         let frame = 0;
-        let paused = false;
-        let pressure = 0.34;
-        let pointer = { x: 0, y: 0, active: false, down: false };
-        let activeColor = 1;
-        let printFlash = 0;
+        let lastDraw = 0;
+        let pulseEnergy = 0.35;
+        let pointer = { x: 0, y: 0, active: false, down: false, charge: 1.1 };
+        let accent = colors[0];
 
         function mulberry(value) {
           return function next() {
@@ -590,298 +647,235 @@
           return Math.min(max, Math.max(min, value));
         }
 
-        function fontSizeForViewport() {
-          if (width < 560) return 82;
-          if (width < 860) return 104;
-          if (width < 1180) return 150;
-          return 210;
-        }
-
-        function sampleWord() {
-          const offscreen = document.createElement("canvas");
-          const scale = 0.42;
-          offscreen.width = Math.floor(width * scale);
-          offscreen.height = Math.floor(height * scale);
-          const octx = offscreen.getContext("2d", { willReadFrequently: true });
-          octx.fillStyle = "#000";
-          octx.fillRect(0, 0, offscreen.width, offscreen.height);
-          octx.fillStyle = "#fff";
-          octx.textAlign = "center";
-          octx.textBaseline = "middle";
-          octx.font = `${Math.floor(fontSizeForViewport() * scale)}px Georgia, Times New Roman, serif`;
-          octx.fillText("dinguerie", offscreen.width / 2, offscreen.height * 0.48);
-
-          const image = octx.getImageData(0, 0, offscreen.width, offscreen.height).data;
-          const targets = [];
-          const step = width < 680 ? 2 : 3;
-          for (let y = 0; y < offscreen.height; y += step) {
-            for (let x = 0; x < offscreen.width; x += step) {
-              const index = (y * offscreen.width + x) * 4;
-              if (image[index] > 80 && rand() > 0.12) {
-                targets.push({
-                  x: x / scale + (rand() - 0.5) * 2,
-                  y: y / scale + (rand() - 0.5) * 2
-                });
-              }
-            }
-          }
-          return targets;
-        }
-
-        function rebuild(keepSeed = true) {
-          if (!keepSeed) {
-            seed = 10000 + Math.floor(Math.random() * 89999);
-            seedInput.value = String(seed);
-          }
+        function readSeed() {
           const parsed = Number(seedInput.value.replace(/\D/g, "").slice(0, 8));
           seed = parsed || 2491;
           seedInput.value = String(seed).padStart(5, "0");
           rand = mulberry(seed);
-          const targets = sampleWord();
-          const old = particles;
-          particles = targets.map((target, index) => {
-            const previous = old[index % Math.max(1, old.length)];
-            const jitter = 18 + rand() * 48;
-            return {
-              x: previous ? previous.x : target.x + (rand() - 0.5) * jitter,
-              y: previous ? previous.y : target.y + (rand() - 0.5) * jitter,
-              tx: target.x,
-              ty: target.y,
-              vx: (rand() - 0.5) * 2,
-              vy: (rand() - 0.5) * 2,
-              size: 0.9 + rand() * 2.3,
-              color: Math.floor(rand() * colors.length),
-              delay: rand() * 120,
-              phase: rand() * Math.PI * 2
-            };
-          });
-          countLabel.textContent = String(particles.length);
-          updateCopy();
         }
 
-        function updateCopy() {
-          const start = Math.floor(rand() * noteBank.length);
-          notes.forEach((note, index) => {
-            note.textContent = noteBank[(start + index * 2) % noteBank.length];
+        function resetField(changeSeed = false) {
+          if (changeSeed) {
+            seed = 10000 + Math.floor(Math.random() * 89999);
+            seedInput.value = String(seed);
+          }
+          readSeed();
+          accent = colors[Math.floor(rand() * colors.length)];
+          root.style.setProperty("--accent", accent);
+          charges = [
+            { x: width * (0.23 + rand() * 0.08), y: height * (0.38 + rand() * 0.2), q: 1.15, life: 1, fixed: true },
+            { x: width * (0.74 + rand() * 0.08), y: height * (0.34 + rand() * 0.22), q: -1.05, life: 1, fixed: true },
+            { x: width * (0.48 + rand() * 0.1), y: height * (0.58 + rand() * 0.12), q: 0.72, life: 1, fixed: true }
+          ];
+          traces = makeSeeds();
+          updateText();
+          pulseEnergy = 0.52;
+        }
+
+        function updateText() {
+          const start = Math.floor(rand() * notes.length);
+          annotations.forEach((annotation, index) => {
+            annotation.textContent = notes[(start + index * 2) % notes.length];
           });
           caption.textContent = captions[Math.floor(rand() * captions.length)];
-          activeColor = 1 + Math.floor(rand() * (colors.length - 1));
-          root.style.setProperty("--active", colors[activeColor]);
+        }
+
+        function makeSeeds() {
+          const count = width < 680 ? 74 : 128;
+          const list = [];
+          const golden = Math.PI * (3 - Math.sqrt(5));
+          const radiusMax = Math.min(width, height) * 0.45;
+          for (let i = 0; i < count; i += 1) {
+            const radius = Math.sqrt((i + 0.5) / count) * radiusMax;
+            const angle = i * golden + rand() * 0.3;
+            list.push({
+              x: width * 0.5 + Math.cos(angle) * radius * (1.55 + rand() * 0.2),
+              y: height * 0.5 + Math.sin(angle) * radius * (0.88 + rand() * 0.18),
+              phase: rand() * Math.PI * 2,
+              hue: Math.floor(rand() * colors.length)
+            });
+          }
+          return list;
         }
 
         function resize() {
-          ratio = Math.min(devicePixelRatio || 1, 1.7);
+          ratio = Math.min(devicePixelRatio || 1, 1.55);
           width = innerWidth;
           height = innerHeight;
           canvas.width = Math.round(width * ratio);
           canvas.height = Math.round(height * ratio);
           ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-          rebuild(true);
+          resetField(false);
         }
 
-        function ignite(x = width / 2, y = height / 2, force = 1) {
-          ripples.push({ x, y, life: 0, force });
-          while (ripples.length > 10) ripples.shift();
-          pressure = clamp(pressure + 0.38 * force, 0.2, 2.2);
-          readout.textContent = "fracture";
-          particles.forEach((particle) => {
-            const dx = particle.x - x;
-            const dy = particle.y - y;
-            const distance = Math.hypot(dx, dy) || 1;
-            const push = Math.max(0, 1 - distance / 520) * 22 * force;
-            particle.vx += dx / distance * push;
-            particle.vy += dy / distance * push;
-          });
-          for (let i = 0; i < 18; i += 1) {
-            shards.push({
-              x,
-              y,
-              vx: (rand() - 0.5) * 18 * force,
-              vy: (rand() - 0.5) * 18 * force,
-              life: 1,
-              size: 12 + rand() * 48,
-              spin: (rand() - 0.5) * 0.2,
-              angle: rand() * Math.PI,
-              color: colors[Math.floor(rand() * colors.length)]
-            });
-          }
-        }
+        function fieldAt(x, y, time) {
+          let vx = 0;
+          let vy = 0;
+          const allCharges = charges.slice();
+          if (pointer.active) allCharges.push({ x: pointer.x, y: pointer.y, q: pointer.down ? -1.7 : pointer.charge, life: 1 });
 
-        function updateParticle(particle, time) {
-          if (particle.delay > 0) {
-            particle.delay -= 1;
-            return;
-          }
-
-          const driftX = Math.cos(time * 0.001 + particle.phase) * pressure * 0.18;
-          const driftY = Math.sin(time * 0.0013 + particle.phase) * pressure * 0.18;
-          particle.vx += (particle.tx + driftX - particle.x) * 0.018;
-          particle.vy += (particle.ty + driftY - particle.y) * 0.018;
-
-          if (pointer.active) {
-            const dx = particle.x - pointer.x;
-            const dy = particle.y - pointer.y;
-            const distance = Math.hypot(dx, dy) || 1;
-            const reach = pointer.down ? 280 : 180;
-            const strength = Math.max(0, 1 - distance / reach);
-            const direction = pointer.down ? -1 : 1;
-            particle.vx += dx / distance * strength * direction * 1.7;
-            particle.vy += dy / distance * strength * direction * 1.7;
-          }
-
-          ripples.forEach((ripple) => {
-            const dx = particle.x - ripple.x;
-            const dy = particle.y - ripple.y;
-            const distance = Math.hypot(dx, dy) || 1;
-            const ring = ripple.life * 620;
-            const hit = Math.max(0, 1 - Math.abs(distance - ring) / 86);
-            particle.vx += dx / distance * hit * 2.6 * ripple.force;
-            particle.vy += dy / distance * hit * 2.6 * ripple.force;
+          allCharges.forEach((charge) => {
+            const dx = x - charge.x;
+            const dy = y - charge.y;
+            const d2 = dx * dx + dy * dy + 1200;
+            const force = charge.q * charge.life * 8200 / d2;
+            vx += dx * force / Math.sqrt(d2);
+            vy += dy * force / Math.sqrt(d2);
           });
 
-          particle.vx *= 0.83;
-          particle.vy *= 0.83;
-          particle.x += particle.vx;
-          particle.y += particle.vy;
+          const waveA = Math.sin(y * 0.012 + time * 0.0008 + seed * 0.01);
+          const waveB = Math.cos(x * 0.009 - time * 0.0007);
+          vx += waveA * (0.58 + pulseEnergy * 0.4);
+          vy += waveB * (0.48 + pulseEnergy * 0.35);
+
+          const curl = Math.sin((x + y) * 0.004 + time * 0.0006);
+          vx += -curl * 0.44;
+          vy += curl * 0.44;
+
+          const mag = Math.hypot(vx, vy) || 1;
+          return { x: vx / mag, y: vy / mag, mag };
         }
 
         function drawBackground(time) {
-          const gradient = ctx.createRadialGradient(width * 0.5, height * 0.48, 40, width * 0.5, height * 0.5, Math.max(width, height) * 0.72);
-          gradient.addColorStop(0, "#fffaf1");
-          gradient.addColorStop(0.45, "#f4efe6");
-          gradient.addColorStop(1, "#d9d0c2");
+          const gradient = ctx.createRadialGradient(width * 0.5, height * 0.48, 20, width * 0.5, height * 0.52, Math.max(width, height) * 0.75);
+          gradient.addColorStop(0, "#fffaf0");
+          gradient.addColorStop(0.5, "#f3eee4");
+          gradient.addColorStop(1, "#d7cdbd");
           ctx.fillStyle = gradient;
           ctx.fillRect(0, 0, width, height);
 
-          ctx.globalAlpha = 0.2;
-          ctx.strokeStyle = colors[activeColor];
+          ctx.globalAlpha = 0.28;
+          ctx.strokeStyle = "#100f0c";
           ctx.lineWidth = 1;
-          for (let i = 0; i < 9; i += 1) {
-            const y = height * (0.2 + i * 0.07) + Math.sin(time * 0.0004 + i) * 16;
+          const grid = width < 560 ? 42 : 56;
+          for (let x = (time * 0.006) % grid; x < width; x += grid) {
             ctx.beginPath();
-            for (let x = -40; x <= width + 40; x += 40) {
-              const wave = Math.sin(x * 0.012 + time * 0.0007 + i) * (16 + i * 2);
-              if (x === -40) ctx.moveTo(x, y + wave);
-              else ctx.lineTo(x, y + wave);
-            }
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, height);
+            ctx.stroke();
+          }
+          for (let y = 0; y < height; y += grid) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
             ctx.stroke();
           }
           ctx.globalAlpha = 1;
         }
 
-        function drawMemoryText() {
-          const size = fontSizeForViewport();
+        function drawWordMask() {
+          const size = width < 560 ? 64 : width < 900 ? 112 : 170;
           ctx.save();
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.font = `${size}px Georgia, Times New Roman, serif`;
           ctx.globalAlpha = 0.045;
-          ctx.fillStyle = "#11110f";
-          ctx.fillText("dinguerie", width * 0.5, height * 0.48);
+          ctx.fillStyle = "#100f0c";
+          ctx.fillText("dinguerie", width * 0.5, height * 0.5);
           ctx.globalAlpha = 0.12;
           ctx.lineWidth = 1;
-          ctx.strokeStyle = colors[activeColor];
-          ctx.strokeText("dinguerie", width * 0.5 + Math.sin(pressure) * 5, height * 0.48 + Math.cos(pressure) * 3);
+          ctx.strokeStyle = accent;
+          ctx.strokeText("dinguerie", width * 0.5, height * 0.5);
           ctx.restore();
         }
 
-        function draw(time = 0) {
-          if (!paused && !reducedMotion) {
-            particles.forEach((particle) => updateParticle(particle, time));
-            ripples.forEach((ripple) => { ripple.life += 0.015; });
-            ripples = ripples.filter((ripple) => ripple.life < 1.18);
-            shards.forEach((shard) => {
-              shard.x += shard.vx;
-              shard.y += shard.vy;
-              shard.vx *= 0.94;
-              shard.vy *= 0.94;
-              shard.angle += shard.spin;
-              shard.life *= 0.965;
-            });
-            shards = shards.filter((shard) => shard.life > 0.04);
-            pressure = Math.max(0.28, pressure * 0.992);
+        function drawStreamline(seedPoint, time, direction) {
+          let x = seedPoint.x + Math.sin(time * 0.0003 + seedPoint.phase) * 8;
+          let y = seedPoint.y + Math.cos(time * 0.0004 + seedPoint.phase) * 6;
+          const maxSteps = width < 680 ? 42 : 58;
+          const stepLength = width < 680 ? 9 : 11;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          let strength = 0;
+
+          for (let i = 0; i < maxSteps; i += 1) {
+            const vector = fieldAt(x, y, time);
+            strength += vector.mag;
+            x += vector.x * stepLength * direction;
+            y += vector.y * stepLength * direction;
+            if (x < -40 || x > width + 40 || y < -40 || y > height + 40) break;
+            ctx.lineTo(x, y);
           }
+
+          const alpha = clamp(0.04 + strength / maxSteps * 0.04, 0.04, 0.22);
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = colors[seedPoint.hue];
+          ctx.stroke();
+        }
+
+        function drawCharges(time) {
+          const allCharges = charges.slice();
+          if (pointer.active) allCharges.push({ x: pointer.x, y: pointer.y, q: pointer.down ? -1.7 : pointer.charge, life: 1, probe: true });
+
+          allCharges.forEach((charge) => {
+            const radius = charge.probe ? 22 + Math.sin(time * 0.008) * 3 : 13 + Math.abs(charge.q) * 5;
+            ctx.globalAlpha = charge.probe ? 0.9 : 0.6 * charge.life;
+            ctx.strokeStyle = charge.q > 0 ? accent : "#ff4f35";
+            ctx.lineWidth = charge.probe ? 2 : 1.5;
+            ctx.beginPath();
+            ctx.arc(charge.x, charge.y, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = charge.probe ? 0.75 : 0.55 * charge.life;
+            ctx.fillStyle = charge.q > 0 ? accent : "#ff4f35";
+            ctx.fillRect(charge.x - 3, charge.y - 3, 6, 6);
+          });
+          ctx.globalAlpha = 1;
+        }
+
+        function draw(time = 0) {
+          if (time - lastDraw < 32 && !reducedMotion) {
+            frame = requestAnimationFrame(draw);
+            return;
+          }
+          lastDraw = time;
 
           drawBackground(time);
-          drawMemoryText();
+          drawWordMask();
 
-          ctx.lineWidth = 1;
-          for (let i = 0; i < particles.length; i += 9) {
-            const particle = particles[i];
-            const next = particles[(i + 53) % particles.length];
-            const distance = Math.hypot(next.x - particle.x, next.y - particle.y);
-            if (distance < 90 + pressure * 35) {
-              ctx.globalAlpha = Math.max(0, 0.2 - distance / 520);
-              ctx.strokeStyle = colors[particle.color];
-              ctx.beginPath();
-              ctx.moveTo(particle.x, particle.y);
-              ctx.lineTo(next.x, next.y);
-              ctx.stroke();
-            }
+          ctx.lineWidth = 1.1;
+          traces.forEach((trace, index) => {
+            drawStreamline(trace, time, 1);
+            if (index % 3 === 0) drawStreamline(trace, time, -1);
+          });
+
+          drawCharges(time);
+
+          if (!reducedMotion) {
+            charges.forEach((charge) => {
+              if (!charge.fixed) charge.life *= 0.986;
+            });
+            charges = charges.filter((charge) => charge.fixed || charge.life > 0.08);
+            pulseEnergy = Math.max(0.18, pulseEnergy * 0.982);
           }
 
-          particles.forEach((particle, index) => {
-            ctx.globalAlpha = index % 19 === 0 ? 0.96 : 0.72;
-            ctx.fillStyle = colors[particle.color];
-            ctx.beginPath();
-            if (index % 31 === 0) {
-              ctx.rect(particle.x - particle.size, particle.y - particle.size, particle.size * 2.2, particle.size * 2.2);
-            } else {
-              ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            }
-            ctx.fill();
-          });
-
-          shards.forEach((shard) => {
-            ctx.save();
-            ctx.globalAlpha = shard.life * 0.5;
-            ctx.translate(shard.x, shard.y);
-            ctx.rotate(shard.angle);
-            ctx.strokeStyle = shard.color;
-            ctx.lineWidth = 2;
-            ctx.strokeRect(-shard.size / 2, -shard.size / 3, shard.size, shard.size * 0.66);
-            ctx.restore();
-          });
-
-          ripples.forEach((ripple) => {
-            ctx.globalAlpha = Math.max(0, 0.28 - ripple.life * 0.22);
-            ctx.strokeStyle = colors[activeColor];
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(ripple.x, ripple.y, ripple.life * 620, 0, Math.PI * 2);
-            ctx.stroke();
-          });
-
-          if (printFlash > 0) {
-            ctx.globalAlpha = printFlash;
-            ctx.fillStyle = "#11110f";
-            ctx.fillRect(0, 0, width, height);
-            printFlash *= 0.86;
-          }
-
-          ctx.globalAlpha = 1;
-          pressureLabel.textContent = pressure.toFixed(2);
-          stateLabel.textContent = paused ? "still" : pointer.down ? "held" : ripples.length ? "open" : "awake";
-          if (!paused) readout.textContent = pressure > 0.7 ? "reforming" : "forming";
+          const probe = pointer.active ? fieldAt(pointer.x, pointer.y, time).mag : 0;
+          voltage.textContent = (probe * 2.4 + pulseEnergy * 1.3).toFixed(2);
+          frequency.textContent = (charges.length * 3.7 + pulseEnergy * 12).toFixed(1);
+          phase.textContent = pointer.down ? "inverted" : charges.length > 3 ? "charged" : "calm";
+          state.textContent = pulseEnergy > 0.55 ? "field disturbed" : "field coherent";
           frame = requestAnimationFrame(draw);
         }
 
-        sparkButton.addEventListener("click", () => ignite(width / 2, height * 0.47, 1.1));
-        pauseButton.addEventListener("click", () => {
-          paused = !paused;
-          readout.textContent = paused ? "still" : "forming";
-          pauseButton.setAttribute("aria-label", paused ? "Resume" : "Pause");
-          pauseButton.title = paused ? "Resume" : "Pause";
+        function addCharge(x, y, q = 1) {
+          charges.push({ x, y, q, life: 1, fixed: false });
+          while (charges.length > 9) {
+            const index = charges.findIndex((charge) => !charge.fixed);
+            if (index === -1) break;
+            charges.splice(index, 1);
+          }
+          pulseEnergy = 1.2;
+        }
+
+        pulse.addEventListener("click", () => {
+          addCharge(width * 0.5, height * 0.5, rand() > 0.5 ? 1.4 : -1.4);
         });
-        clearButton.addEventListener("click", () => rebuild(false));
-        printButton.addEventListener("click", () => {
-          printFlash = 0.12;
-          updateCopy();
-        });
+
+        reset.addEventListener("click", () => resetField(true));
+
+        seedInput.addEventListener("change", () => resetField(false));
         seedInput.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") rebuild(true);
+          if (event.key === "Enter") resetField(false);
         });
-        seedInput.addEventListener("change", () => rebuild(true));
 
         addEventListener("resize", resize, { passive: true });
         addEventListener("pointermove", (event) => {
@@ -891,7 +885,7 @@
         }, { passive: true });
         addEventListener("pointerdown", (event) => {
           pointer.down = true;
-          ignite(event.clientX, event.clientY, 0.75);
+          addCharge(event.clientX, event.clientY, -1.35);
         }, { passive: true });
         addEventListener("pointerup", () => {
           pointer.down = false;
