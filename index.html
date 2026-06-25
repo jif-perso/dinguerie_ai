@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="dinguerie is an impossible non-Euclidean observatory.">
+    <meta name="description" content="dinguerie is a 3D geodesic surface.">
     <meta name="theme-color" content="#f3eee4">
     <meta property="og:title" content="dinguerie">
-    <meta property="og:description" content="An impossible non-Euclidean observatory.">
+    <meta property="og:description" content="A 3D geodesic surface.">
     <meta property="og:type" content="website">
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Cpath d='M13 49V25Q13 13 25 13t12 12v24M32 49V25q0-12 10-12t10 12v24' fill='none' stroke='%23f3eee4' stroke-width='4'/%3E%3Cpath d='M12 38C24 23 39 52 52 31' fill='none' stroke='%23baff39' stroke-width='5'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23100f0c'/%3E%3Cpath d='M7 45C19 12 41 55 57 20' fill='none' stroke='%23f3eee4' stroke-width='5' stroke-linecap='square'/%3E%3Cpath d='M11 40C28 20 39 48 53 28' fill='none' stroke='%23baff39' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E"
     >
     <title>dinguerie</title>
     <style>
@@ -19,7 +19,7 @@
         --paper: #f3eee4;
         --paper-hot: #fffaf0;
         --ink: #100f0c;
-        --soft: #6d655a;
+        --soft: #6e665c;
         --line: rgba(16, 15, 12, 0.18);
         --line-strong: rgba(16, 15, 12, 0.42);
         --blue: #2454ff;
@@ -51,9 +51,15 @@
         text-rendering: optimizeLegibility;
       }
 
-      a {
+      a,
+      button {
         color: inherit;
         font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
       }
 
       ::selection {
@@ -66,7 +72,7 @@
         outline-offset: 4px;
       }
 
-      .observatory {
+      .surface-lab {
         position: fixed;
         inset: 0;
         isolation: isolate;
@@ -74,11 +80,11 @@
         background:
           linear-gradient(90deg, rgba(16, 15, 12, 0.038) 1px, transparent 1px),
           linear-gradient(0deg, rgba(16, 15, 12, 0.038) 1px, transparent 1px),
-          radial-gradient(circle at 50% 58%, var(--paper-hot), var(--paper) 58%, #d7ccbd 100%);
+          radial-gradient(circle at 50% 56%, var(--paper-hot), var(--paper) 58%, #d6cbbb 100%);
         background-size: 34px 34px, 34px 34px, 100% 100%;
       }
 
-      .stage {
+      #scene {
         position: absolute;
         inset: 0;
         z-index: 1;
@@ -88,128 +94,10 @@
         touch-action: none;
       }
 
-      .stage path,
-      .stage rect,
-      .stage circle,
-      .stage line,
-      .stage text {
-        vector-effect: non-scaling-stroke;
-      }
-
-      .wall {
-        fill: rgba(255, 250, 240, 0.38);
-        stroke: rgba(16, 15, 12, 0.2);
-        stroke-width: 1;
-      }
-
-      .floor-line,
-      .wall-line {
-        stroke: rgba(16, 15, 12, 0.14);
-        stroke-width: 1;
-      }
-
-      .wall-line-strong {
-        stroke: rgba(16, 15, 12, 0.28);
-        stroke-width: 1.35;
-      }
-
-      .portal-fill {
-        fill: rgba(255, 250, 240, 0.8);
-      }
-
-      .portal-skin {
-        stroke: rgba(16, 15, 12, 0.22);
-        stroke-width: 0.9;
-      }
-
-      .portal-depth {
-        fill: none;
-        stroke: rgba(16, 15, 12, 0.18);
-        stroke-width: 1;
-      }
-
-      .portal-frame {
-        fill: none;
-        stroke-linejoin: round;
-        stroke-width: 4;
-      }
-
-      .portal-active {
-        stroke-width: 7;
-      }
-
-      .beam-shadow {
-        fill: none;
-        stroke: var(--ink);
-        stroke-linecap: square;
-        stroke-linejoin: round;
-        stroke-width: 9;
-        stroke-opacity: 0.16;
-      }
-
-      .beam {
-        fill: none;
-        stroke-linecap: square;
-        stroke-linejoin: round;
-        stroke-width: 4;
-        stroke-dasharray: 10 10;
-        animation: pulse 1.2s linear infinite;
-      }
-
-      .beam-thin {
-        stroke-width: 2;
-        stroke-opacity: 0.55;
-      }
-
-      .gate-dot {
-        fill: var(--paper-hot);
-        stroke: var(--ink);
-        stroke-width: 2;
-      }
-
-      .you {
-        fill: var(--green);
-        stroke: var(--ink);
-        stroke-width: 2.2;
-      }
-
-      .you-ring {
-        fill: none;
-        stroke: var(--ink);
-        stroke-dasharray: 3 7;
-        stroke-width: 1.2;
-      }
-
-      .label {
-        fill: var(--ink);
-        font-family: var(--mono);
-        font-size: 13px;
-        font-weight: 900;
-        paint-order: stroke;
-        stroke: var(--paper);
-        stroke-width: 5px;
-        text-transform: uppercase;
-      }
-
-      .ghost-label {
-        fill: rgba(16, 15, 12, 0.28);
-        font-family: var(--serif);
-        font-size: 116px;
-        font-weight: 500;
-      }
-
-      .micro-label {
-        fill: rgba(16, 15, 12, 0.62);
-        font-family: var(--mono);
-        font-size: 11px;
-        font-weight: 900;
-        text-transform: uppercase;
-      }
-
       .chrome {
         position: fixed;
         inset: 0 0 auto;
-        z-index: 4;
+        z-index: 3;
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         gap: 1rem;
@@ -245,7 +133,7 @@
 
       .formula {
         justify-self: center;
-        min-width: 27rem;
+        min-width: 28rem;
         padding: 0.55rem 0.78rem;
         border: 1px solid var(--line);
         background: rgba(243, 238, 228, 0.9);
@@ -259,18 +147,55 @@
         text-transform: uppercase;
       }
 
-      .caption {
+      .panel {
         position: fixed;
         right: 1.25rem;
-        bottom: 1.05rem;
-        z-index: 4;
-        width: min(36rem, calc(100vw - 2.5rem));
-        color: rgba(16, 15, 12, 0.72);
+        bottom: 1.15rem;
+        z-index: 3;
+        display: grid;
+        width: min(30rem, calc(100vw - 2.5rem));
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        border: 1px solid var(--line);
+        background: var(--line);
+        box-shadow: 10px 10px 0 rgba(16, 15, 12, 0.08);
+      }
+
+      .cell {
+        min-height: 4.3rem;
+        padding: 0.72rem;
+        background: rgba(243, 238, 228, 0.92);
+      }
+
+      .cell span {
+        display: block;
+        color: var(--soft);
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .cell strong {
+        display: block;
+        margin-top: 0.58rem;
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.95rem;
+        font-weight: 900;
+      }
+
+      .caption {
+        position: fixed;
+        left: 1.25rem;
+        bottom: 1.18rem;
+        z-index: 3;
+        width: min(31rem, calc(100vw - 2.5rem));
+        color: rgba(16, 15, 12, 0.74);
         font-family: var(--mono);
         font-size: 0.66rem;
         font-weight: 850;
-        line-height: 1.35;
-        text-align: right;
+        line-height: 1.38;
         text-transform: uppercase;
         pointer-events: none;
       }
@@ -280,19 +205,31 @@
         color: var(--ink);
       }
 
-      @keyframes pulse {
-        to {
-          stroke-dashoffset: -20;
-        }
+      .actions {
+        position: fixed;
+        top: 4.75rem;
+        right: 1.25rem;
+        z-index: 3;
+        display: flex;
+        gap: 0.5rem;
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        .beam {
-          animation: none;
-        }
+      .action {
+        min-height: 2.45rem;
+        padding: 0.55rem 0.75rem;
+        border: 1px solid var(--line-strong);
+        background: rgba(243, 238, 228, 0.9);
+        font-family: var(--mono);
+        font-size: 0.64rem;
+        font-weight: 850;
+        text-transform: uppercase;
       }
 
-      @media (max-width: 820px) {
+      .action:hover {
+        background: var(--paper-hot);
+      }
+
+      @media (max-width: 920px) {
         .chrome {
           grid-template-columns: 1fr auto;
           padding: 0.85rem;
@@ -302,302 +239,529 @@
           display: none;
         }
 
-        .readout {
-          font-size: 0.66rem;
+        .panel {
+          right: 0.85rem;
+          bottom: 0.85rem;
+          width: min(22rem, calc(100vw - 1.7rem));
+          grid-template-columns: 1fr;
         }
 
         .caption {
-          right: 0.85rem;
-          bottom: 0.85rem;
+          left: 0.85rem;
+          bottom: 14rem;
           width: min(24rem, calc(100vw - 1.7rem));
           font-size: 0.6rem;
+        }
+
+        .actions {
+          top: auto;
+          right: 0.85rem;
+          bottom: 14.2rem;
         }
       }
 
       @media (max-width: 560px) {
-        .readout {
+        .readout,
+        .panel {
           display: none;
         }
 
         .caption {
-          right: auto;
+          bottom: 0.85rem;
+        }
+
+        .actions {
           left: 0.85rem;
-          text-align: left;
+          right: auto;
+          display: grid;
+          width: max-content;
+          bottom: auto;
+          top: 4.2rem;
+          justify-items: start;
         }
       }
     </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+        }
+      }
+    </script>
   </head>
   <body>
-    <main class="observatory" id="top" aria-label="dinguerie impossible observatory">
-      <svg class="stage" id="stage" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Non-Euclidean observatory with paired portals">
-        <defs id="defs"></defs>
-        <g id="architecture"></g>
-        <text class="ghost-label" x="600" y="520" text-anchor="middle">dinguerie</text>
-        <g id="portals"></g>
-        <g id="beams"></g>
-        <g id="markers"></g>
-      </svg>
+    <main class="surface-lab" id="top" aria-label="dinguerie geodesic surface">
+      <canvas id="scene" aria-label="A 3D surface where two clicked points are joined by a surface shortest path"></canvas>
 
       <header class="chrome">
         <a class="brand" href="#top">dinguerie</a>
-        <div class="formula">paired doorways make one continuous room impossible to flatten</div>
-        <div class="readout" id="readout">gate A to A'</div>
+        <div class="formula">click two points; green stays on the surface, red cuts through space</div>
+        <div class="readout" id="status">select two points</div>
       </header>
 
+      <div class="actions">
+        <button class="action" id="reset" type="button">reset</button>
+        <button class="action" id="newSurface" type="button">new surface</button>
+      </div>
+
+      <section class="panel" aria-label="Path measurements">
+        <div class="cell">
+          <span>surface path</span>
+          <strong id="surfaceLength">0.00</strong>
+        </div>
+        <div class="cell">
+          <span>straight chord</span>
+          <strong id="chordLength">0.00</strong>
+        </div>
+        <div class="cell">
+          <span>extra distance</span>
+          <strong id="extraLength">0%</strong>
+        </div>
+      </section>
+
       <p class="caption">
-        <strong>Move to aim the route.</strong>
-        A straight walk enters one doorway and exits its twin somewhere else. That tear in the floor plan is the non-Euclidean move.
+        <strong>Click any two points.</strong>
+        The green route is an A* geodesic over the surface mesh. The red line ignores the manifold.
       </p>
     </main>
 
-    <script>
-      (() => {
-        const NS = "http://www.w3.org/2000/svg";
-        const stage = document.querySelector("#stage");
-        const defs = document.querySelector("#defs");
-        const architecture = document.querySelector("#architecture");
-        const portalsGroup = document.querySelector("#portals");
-        const beamsGroup = document.querySelector("#beams");
-        const markersGroup = document.querySelector("#markers");
-        const readout = document.querySelector("#readout");
-        const observer = { x: 600, y: 720 };
-        const portals = [
-          { id: "a", label: "A", pair: 1, x: 95, y: 240, w: 205, h: 430, color: "#2454ff" },
-          { id: "ap", label: "A'", pair: 0, x: 880, y: 190, w: 235, h: 470, color: "#2454ff" },
-          { id: "b", label: "B", pair: 3, x: 445, y: 86, w: 310, h: 330, color: "#ff4f35" },
-          { id: "bp", label: "B'", pair: 2, x: 475, y: 535, w: 250, h: 310, color: "#ff4f35" },
-          { id: "c", label: "C", pair: 5, x: 330, y: 460, w: 165, h: 255, color: "#d4a321" },
-          { id: "cp", label: "C'", pair: 4, x: 742, y: 438, w: 165, h: 255, color: "#d4a321" }
-        ];
-        let target = { x: 930, y: 270 };
-        let activeIndex = 1;
-        let scheduled = false;
+    <script type="module">
+      import * as THREE from "three";
 
-        function createSvg(name, attrs = {}) {
-          const element = document.createElementNS(NS, name);
-          Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
-          return element;
-        }
+      const canvas = document.querySelector("#scene");
+      const statusLabel = document.querySelector("#status");
+      const surfaceLengthLabel = document.querySelector("#surfaceLength");
+      const chordLengthLabel = document.querySelector("#chordLength");
+      const extraLengthLabel = document.querySelector("#extraLength");
+      const resetButton = document.querySelector("#reset");
+      const newSurfaceButton = document.querySelector("#newSurface");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 120);
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      const surfaceSize = 13.5;
+      const grid = 88;
+      const spacing = surfaceSize / (grid - 1);
+      const nodeCount = grid * grid;
+      const up = new THREE.Vector3(0, 1, 0);
+      const selected = [];
+      const markers = [];
+      let terrainSeed = 4.9;
+      let heights = [];
+      let vertices = [];
+      let surfaceMesh;
+      let wireMesh;
+      let pathObject;
+      let chordObject;
+      let traveler;
+      let pathPoints = [];
+      let pathLength = 0;
+      let chordLength = 0;
+      let reveal = 1;
+      let last = 0;
+      let targetYaw = -0.52;
+      let yaw = -0.52;
+      let targetTilt = 0.78;
+      let tilt = 0.78;
 
-        function archPath(portal, inset = 0) {
-          const x = portal.x + inset;
-          const y = portal.y + inset;
-          const w = portal.w - inset * 2;
-          const h = portal.h - inset * 2;
-          const crown = y + w * 0.5;
-          return [
-            `M${x.toFixed(2)} ${portal.y + portal.h - inset}`,
-            `L${x.toFixed(2)} ${crown.toFixed(2)}`,
-            `Q${x.toFixed(2)} ${y.toFixed(2)} ${(x + w / 2).toFixed(2)} ${y.toFixed(2)}`,
-            `Q${(x + w).toFixed(2)} ${y.toFixed(2)} ${(x + w).toFixed(2)} ${crown.toFixed(2)}`,
-            `L${(x + w).toFixed(2)} ${(portal.y + portal.h - inset).toFixed(2)}Z`
-          ].join(" ");
-        }
+      scene.fog = new THREE.Fog(0xf3eee4, 16, 35);
+      camera.position.set(0, 6.2, 13.2);
 
-        function center(portal) {
-          return { x: portal.x + portal.w / 2, y: portal.y + portal.h * 0.56 };
-        }
+      const ambient = new THREE.HemisphereLight(0xfffaf0, 0x6c665b, 2.5);
+      scene.add(ambient);
+      const key = new THREE.DirectionalLight(0xffffff, 3.2);
+      key.position.set(-5, 7, 6);
+      scene.add(key);
+      const rim = new THREE.DirectionalLight(0xbaff39, 1.15);
+      rim.position.set(5, 3, -5);
+      scene.add(rim);
 
-        function distance(a, b) {
-          return Math.hypot(a.x - b.x, a.y - b.y);
-        }
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(60, 60, 1, 1),
+        new THREE.MeshBasicMaterial({ color: 0xf3eee4, transparent: true, opacity: 0.18 })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -2.4;
+      scene.add(floor);
 
-        function normalize(vector) {
-          const length = Math.hypot(vector.x, vector.y) || 1;
-          return { x: vector.x / length, y: vector.y / length };
-        }
+      function terrain(x, z) {
+        const s = terrainSeed;
+        const ridgeDistance = x + z * 0.22;
+        const ridgeEnvelope = Math.exp(-(ridgeDistance ** 2) * 1.55);
+        const edgePass = 0.18 + 0.82 * (1 - Math.exp(-((Math.abs(z) - 5.65) ** 2) * 0.82));
+        const wall = 5.4 * ridgeEnvelope * edgePass;
+        const westBowl = -1.05 * Math.exp(-((x + 3.8) ** 2 + (z + 0.2) ** 2) * 0.18);
+        const eastBowl = -0.85 * Math.exp(-((x - 3.9) ** 2 + (z - 0.1) ** 2) * 0.19);
+        const saddle = 0.82 * Math.sin(x * 0.62 + s) * Math.cos(z * 0.5 - s * 0.2);
+        const rib = 0.44 * Math.sin((x - z) * 1.18 + s * 1.4);
+        const cap = 1.25 * Math.exp(-((x - 1.3) ** 2 + (z + 3.4) ** 2) * 0.42);
+        return wall + westBowl + eastBowl + saddle + rib + cap - 0.85;
+      }
 
-        function curvePath(a, b, bend = 0) {
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const length = Math.hypot(dx, dy) || 1;
-          const nx = -dy / length;
-          const ny = dx / length;
-          const c1 = { x: a.x + dx * 0.34 + nx * bend, y: a.y + dy * 0.34 + ny * bend };
-          const c2 = { x: a.x + dx * 0.72 + nx * bend, y: a.y + dy * 0.72 + ny * bend };
-          return `M${a.x.toFixed(2)} ${a.y.toFixed(2)}C${c1.x.toFixed(2)} ${c1.y.toFixed(2)} ${c2.x.toFixed(2)} ${c2.y.toFixed(2)} ${b.x.toFixed(2)} ${b.y.toFixed(2)}`;
-        }
+      function index(i, j) {
+        return j * grid + i;
+      }
 
-        function drawArchitecture() {
-          const fragment = document.createDocumentFragment();
-          fragment.append(createSvg("path", {
-            class: "wall",
-            d: "M0 0H1200V900H0Z"
-          }));
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
 
-          for (let i = 0; i <= 14; i += 1) {
-            const y = 150 + i * 48;
-            fragment.append(createSvg("line", { class: i % 4 ? "floor-line" : "wall-line-strong", x1: 0, y1: y, x2: 1200, y2: y }));
+      function nodePosition(i, j) {
+        return vertices[index(i, j)];
+      }
+
+      function pointForIndex(id) {
+        return vertices[id].clone();
+      }
+
+      function makeSurface() {
+        heights = new Array(nodeCount);
+        vertices = new Array(nodeCount);
+        const positions = new Float32Array(nodeCount * 3);
+        const colors = new Float32Array(nodeCount * 3);
+        const color = new THREE.Color();
+
+        for (let j = 0; j < grid; j += 1) {
+          for (let i = 0; i < grid; i += 1) {
+            const x = -surfaceSize / 2 + i * spacing;
+            const z = -surfaceSize / 2 + j * spacing;
+            const y = terrain(x, z);
+            const id = index(i, j);
+            heights[id] = y;
+            vertices[id] = new THREE.Vector3(x, y, z);
+            positions[id * 3] = x;
+            positions[id * 3 + 1] = y;
+            positions[id * 3 + 2] = z;
+            const t = clamp((y + 1.85) / 7.2, 0, 1);
+            const hue = 0.55 - t * 0.28;
+            color.setHSL(hue, 0.56, 0.6 + t * 0.18);
+            colors[id * 3] = color.r;
+            colors[id * 3 + 1] = color.g;
+            colors[id * 3 + 2] = color.b;
           }
+        }
 
-          [90, 190, 300, 430, 600, 770, 900, 1010, 1110].forEach((x, index) => {
-            fragment.append(createSvg("path", {
-              class: index % 2 ? "floor-line" : "wall-line-strong",
-              d: `M${x} 900L${600 + (x - 600) * 0.28} 120`
-            }));
-          });
-
-          for (let i = 0; i < 9; i += 1) {
-            const y = 610 + i * 34;
-            fragment.append(createSvg("path", {
-              class: "floor-line",
-              d: `M${120 + i * 38} ${y}H${1080 - i * 38}`
-            }));
+        const indices = [];
+        for (let j = 0; j < grid - 1; j += 1) {
+          for (let i = 0; i < grid - 1; i += 1) {
+            const a = index(i, j);
+            const b = index(i + 1, j);
+            const c = index(i + 1, j + 1);
+            const d = index(i, j + 1);
+            indices.push(a, b, d, b, c, d);
           }
-
-          architecture.replaceChildren(fragment);
         }
 
-        function portalInterior(group, portal, active) {
-          const id = `clip-${portal.id}`;
-          defs.append(createSvg("clipPath", { id }));
-          defs.lastChild.append(createSvg("path", { d: archPath(portal, 8) }));
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        geometry.setIndex(indices);
+        geometry.computeVertexNormals();
+        const material = new THREE.MeshStandardMaterial({
+          vertexColors: true,
+          roughness: 0.78,
+          metalness: 0,
+          side: THREE.DoubleSide
+        });
 
-          const inside = createSvg("g", { "clip-path": `url(#${id})` });
-          inside.append(createSvg("path", { class: "portal-fill", d: archPath(portal, 8) }));
-          for (let i = 0; i < 7; i += 1) {
-            const inset = 18 + i * 17;
-            if (portal.w - inset * 2 <= 14 || portal.h - inset * 2 <= 26) continue;
-            inside.append(createSvg("path", {
-              class: "portal-depth",
-              d: archPath(portal, inset),
-              stroke: portal.color,
-              "stroke-opacity": active ? "0.42" : "0.2"
-            }));
-          }
-
-          for (let i = 0; i < 9; i += 1) {
-            const x = portal.x + 14 + i * portal.w / 8;
-            inside.append(createSvg("line", {
-              class: "portal-skin",
-              x1: x,
-              y1: portal.y + 8,
-              x2: portal.x + portal.w / 2,
-              y2: portal.y + portal.h - 8
-            }));
-          }
-
-          group.append(inside);
+        if (surfaceMesh) {
+          scene.remove(surfaceMesh);
+          surfaceMesh.geometry.dispose();
+          surfaceMesh.material.dispose();
         }
+        surfaceMesh = new THREE.Mesh(geometry, material);
+        surfaceMesh.userData.surface = true;
+        scene.add(surfaceMesh);
 
-        function drawPortals() {
-          defs.replaceChildren();
-          const fragment = document.createDocumentFragment();
-          portals.forEach((portal, index) => {
-            const active = index === activeIndex || index === portals[activeIndex].pair;
-            const group = createSvg("g", {});
-            portalInterior(group, portal, active);
-            group.append(createSvg("path", {
-              class: active ? "portal-frame portal-active" : "portal-frame",
-              d: archPath(portal),
-              stroke: portal.color
-            }));
-            group.append(createSvg("path", {
-              class: "portal-depth",
-              d: archPath(portal, 11),
-              stroke: "#100f0c",
-              "stroke-opacity": active ? "0.48" : "0.24"
-            }));
-            const c = center(portal);
-            group.append(createSvg("text", {
-              class: "label",
-              x: c.x - 12,
-              y: portal.y + portal.h + 24
-            }));
-            group.lastChild.textContent = portal.label;
-            fragment.append(group);
-          });
-          portalsGroup.replaceChildren(fragment);
+        if (wireMesh) {
+          scene.remove(wireMesh);
+          wireMesh.geometry.dispose();
+          wireMesh.material.dispose();
         }
+        wireMesh = new THREE.LineSegments(
+          new THREE.WireframeGeometry(geometry),
+          new THREE.LineBasicMaterial({ color: 0x100f0c, transparent: true, opacity: 0.12 })
+        );
+        scene.add(wireMesh);
+      }
 
-        function drawBeams() {
-          const active = portals[activeIndex];
-          const paired = portals[active.pair];
-          const entry = center(active);
-          const exit = center(paired);
-          const aim = normalize({ x: target.x - entry.x, y: target.y - entry.y });
-          const exitEnd = {
-            x: exit.x + aim.x * 310,
-            y: exit.y + aim.y * 310
-          };
-          const bounce = portals[(active.pair + 2) % portals.length];
-          const bounceTarget = center(bounce);
-          const routeOne = curvePath(observer, entry, -52);
-          const routeTwo = curvePath(exit, exitEnd, 42);
-          const routeThree = curvePath(exitEnd, bounceTarget, -36);
-          const color = active.color;
+      function nearestGridId(point) {
+        const i = clamp(Math.round((point.x + surfaceSize / 2) / spacing), 0, grid - 1);
+        const j = clamp(Math.round((point.z + surfaceSize / 2) / spacing), 0, grid - 1);
+        return index(i, j);
+      }
 
-          beamsGroup.replaceChildren(
-            createSvg("path", { class: "beam-shadow", d: routeOne }),
-            createSvg("path", { class: "beam-shadow", d: routeTwo }),
-            createSvg("path", { class: "beam-shadow", d: routeThree }),
-            createSvg("path", { class: "beam", d: routeOne, stroke: color }),
-            createSvg("path", { class: "beam", d: routeTwo, stroke: color }),
-            createSvg("path", { class: "beam beam-thin", d: routeThree, stroke: "#100f0c" })
-          );
+      function edgeWeight(a, b) {
+        const pa = vertices[a];
+        const pb = vertices[b];
+        return pa.distanceTo(pb);
+      }
 
-          markersGroup.replaceChildren(
-            createSvg("circle", { class: "you-ring", cx: observer.x, cy: observer.y, r: 29 }),
-            createSvg("circle", { class: "you", cx: observer.x, cy: observer.y, r: 9 }),
-            createSvg("text", { class: "label", x: observer.x + 18, y: observer.y - 16 }),
-            createSvg("circle", { class: "gate-dot", cx: entry.x, cy: entry.y, r: 8 }),
-            createSvg("circle", { class: "gate-dot", cx: exit.x, cy: exit.y, r: 8 }),
-            createSvg("text", { class: "micro-label", x: (entry.x + exit.x) / 2, y: Math.min(entry.y, exit.y) - 22, "text-anchor": "middle" })
-          );
-          markersGroup.children[2].textContent = "you";
-          markersGroup.lastChild.textContent = `${active.label} and ${paired.label} are the same doorway`;
-          readout.textContent = `gate ${active.label} to ${paired.label}`;
-        }
+      function heuristic(a, b) {
+        return vertices[a].distanceTo(vertices[b]);
+      }
 
-        function nearestPortal(point) {
-          let nearest = 0;
-          let best = Infinity;
-          portals.forEach((portal, index) => {
-            const d = distance(point, center(portal));
-            if (d < best) {
-              best = d;
-              nearest = index;
+      function shortestPath(start, goal) {
+        const open = [start];
+        const inOpen = new Uint8Array(nodeCount);
+        const closed = new Uint8Array(nodeCount);
+        const cameFrom = new Int32Array(nodeCount);
+        const g = new Float64Array(nodeCount);
+        const f = new Float64Array(nodeCount);
+        cameFrom.fill(-1);
+        g.fill(Infinity);
+        f.fill(Infinity);
+        g[start] = 0;
+        f[start] = heuristic(start, goal);
+        inOpen[start] = 1;
+
+        while (open.length) {
+          let bestIndex = 0;
+          let bestScore = f[open[0]];
+          for (let i = 1; i < open.length; i += 1) {
+            const score = f[open[i]];
+            if (score < bestScore) {
+              bestScore = score;
+              bestIndex = i;
             }
-          });
-          return nearest;
+          }
+
+          const current = open.splice(bestIndex, 1)[0];
+          inOpen[current] = 0;
+          if (current === goal) break;
+          closed[current] = 1;
+          const cx = current % grid;
+          const cy = Math.floor(current / grid);
+
+          for (let oy = -1; oy <= 1; oy += 1) {
+            for (let ox = -1; ox <= 1; ox += 1) {
+              if (!ox && !oy) continue;
+              const nx = cx + ox;
+              const ny = cy + oy;
+              if (nx < 0 || nx >= grid || ny < 0 || ny >= grid) continue;
+              const next = index(nx, ny);
+              if (closed[next]) continue;
+              const tentative = g[current] + edgeWeight(current, next);
+              if (tentative >= g[next]) continue;
+              cameFrom[next] = current;
+              g[next] = tentative;
+              f[next] = tentative + heuristic(next, goal);
+              if (!inOpen[next]) {
+                open.push(next);
+                inOpen[next] = 1;
+              }
+            }
+          }
         }
 
-        function render() {
-          activeIndex = nearestPortal(target);
-          drawPortals();
-          drawBeams();
-          scheduled = false;
+        const path = [];
+        let current = goal;
+        while (current !== -1) {
+          path.push(current);
+          if (current === start) break;
+          current = cameFrom[current];
+        }
+        return path.reverse();
+      }
+
+      function pathDistance(points) {
+        let total = 0;
+        for (let i = 1; i < points.length; i += 1) total += points[i - 1].distanceTo(points[i]);
+        return total;
+      }
+
+      function disposeObject(object) {
+        if (!object) return;
+        scene.remove(object);
+        object.traverse((child) => {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) {
+            if (Array.isArray(child.material)) child.material.forEach((material) => material.dispose());
+            else child.material.dispose();
+          }
+        });
+      }
+
+      function tube(points, color, radius, opacity = 1) {
+        const curve = points.length === 2
+          ? new THREE.LineCurve3(points[0], points[1])
+          : new THREE.CatmullRomCurve3(points, false, "centripetal", 0.35);
+        const geometry = new THREE.TubeGeometry(curve, Math.max(20, points.length * 2), radius, 8, false);
+        const material = new THREE.MeshStandardMaterial({
+          color,
+          emissive: color,
+          emissiveIntensity: 0.24,
+          roughness: 0.45,
+          transparent: opacity < 1,
+          opacity
+        });
+        return new THREE.Mesh(geometry, material);
+      }
+
+      function marker(point, color, label) {
+        const group = new THREE.Group();
+        const sphere = new THREE.Mesh(
+          new THREE.SphereGeometry(0.16, 24, 16),
+          new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.2, roughness: 0.35 })
+        );
+        sphere.position.copy(point).addScaledVector(up, 0.22);
+        group.add(sphere);
+
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(0.28, 0.018, 8, 48),
+          new THREE.MeshBasicMaterial({ color: 0x100f0c })
+        );
+        ring.rotation.x = Math.PI / 2;
+        ring.position.copy(point).addScaledVector(up, 0.08);
+        group.add(ring);
+        group.userData.label = label;
+        return group;
+      }
+
+      function updateMarkers() {
+        markers.forEach((item) => disposeObject(item));
+        markers.length = 0;
+        selected.forEach((id, index) => {
+          const item = marker(pointForIndex(id), index ? 0xff4f35 : 0xbaff39, index ? "B" : "A");
+          markers.push(item);
+          scene.add(item);
+        });
+      }
+
+      function computeAndDraw() {
+        disposeObject(pathObject);
+        disposeObject(chordObject);
+        pathObject = undefined;
+        chordObject = undefined;
+        pathPoints = [];
+
+        updateMarkers();
+        if (selected.length < 2) {
+          statusLabel.textContent = selected.length ? "select end point" : "select two points";
+          surfaceLengthLabel.textContent = "0.00";
+          chordLengthLabel.textContent = "0.00";
+          extraLengthLabel.textContent = "0%";
+          return;
         }
 
-        function scheduleRender() {
-          if (scheduled) return;
-          scheduled = true;
-          requestAnimationFrame(render);
+        const nodePath = shortestPath(selected[0], selected[1]);
+        pathPoints = nodePath.map((id) => pointForIndex(id).addScaledVector(up, 0.12));
+        pathLength = pathDistance(pathPoints);
+        chordLength = vertices[selected[0]].distanceTo(vertices[selected[1]]);
+        const extra = Math.max(0, (pathLength / Math.max(chordLength, 0.001) - 1) * 100);
+        const chordPoints = [
+          pointForIndex(selected[0]).addScaledVector(up, 0.22),
+          pointForIndex(selected[1]).addScaledVector(up, 0.22)
+        ];
+
+        chordObject = tube(chordPoints, 0xff4f35, 0.035, 0.62);
+        pathObject = tube(pathPoints, 0xbaff39, 0.065, 1);
+        scene.add(chordObject, pathObject);
+        reveal = 0;
+        statusLabel.textContent = `computed ${nodePath.length} mesh nodes`;
+        surfaceLengthLabel.textContent = pathLength.toFixed(2);
+        chordLengthLabel.textContent = chordLength.toFixed(2);
+        extraLengthLabel.textContent = `${extra.toFixed(0)}%`;
+      }
+
+      function placeDefaultPath() {
+        selected.length = 0;
+        selected.push(index(18, 44), index(70, 44));
+        computeAndDraw();
+      }
+
+      function clickSurface(event) {
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObject(surfaceMesh, false)[0];
+        if (!hit) return;
+        if (selected.length === 2) selected.length = 0;
+        selected.push(nearestGridId(hit.point));
+        computeAndDraw();
+      }
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        renderer.setPixelRatio(dpr);
+        renderer.setSize(rect.width, rect.height, false);
+        camera.aspect = rect.width / Math.max(rect.height, 1);
+        camera.updateProjectionMatrix();
+      }
+
+      function updateCamera() {
+        const radius = 15.6;
+        camera.position.set(
+          Math.sin(yaw) * radius,
+          6 + Math.sin(tilt) * 3.8,
+          Math.cos(yaw) * radius
+        );
+        camera.lookAt(0, 1, 0);
+      }
+
+      function animate(now = 0) {
+        const dt = Math.min(0.05, (now - last) / 1000 || 0.016);
+        last = now;
+        yaw += (targetYaw - yaw) * 0.05;
+        tilt += (targetTilt - tilt) * 0.05;
+        updateCamera();
+
+        if (pathObject) {
+          reveal = Math.min(1, reveal + dt * 0.9);
+          pathObject.material.emissiveIntensity = 0.22 + Math.sin(now * 0.004) * 0.08;
         }
-
-        function pointerToSvg(event) {
-          const matrix = stage.getScreenCTM();
-          if (!matrix) return target;
-          const point = stage.createSVGPoint();
-          point.x = event.clientX;
-          point.y = event.clientY;
-          return point.matrixTransform(matrix.inverse());
+        if (traveler && pathPoints.length) {
+          const t = (now * 0.00008) % 1;
+          const id = Math.min(pathPoints.length - 1, Math.floor(t * (pathPoints.length - 1)));
+          traveler.position.copy(pathPoints[id]).addScaledVector(up, 0.2);
         }
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
 
-        stage.addEventListener("pointermove", (event) => {
-          target = pointerToSvg(event);
-          scheduleRender();
-        }, { passive: true });
+      function addTraveler() {
+        traveler = new THREE.Mesh(
+          new THREE.SphereGeometry(0.12, 18, 12),
+          new THREE.MeshStandardMaterial({ color: 0x100f0c, emissive: 0xbaff39, emissiveIntensity: 0.35 })
+        );
+        scene.add(traveler);
+      }
 
-        stage.addEventListener("pointerdown", (event) => {
-          target = pointerToSvg(event);
-          scheduleRender();
-        }, { passive: true });
+      function reset() {
+        selected.length = 0;
+        placeDefaultPath();
+      }
 
-        window.addEventListener("resize", scheduleRender);
-        drawArchitecture();
-        render();
-      })();
+      function newSurface() {
+        terrainSeed += 2.37;
+        disposeObject(pathObject);
+        disposeObject(chordObject);
+        markers.forEach((item) => disposeObject(item));
+        selected.length = 0;
+        makeSurface();
+        placeDefaultPath();
+      }
+
+      canvas.addEventListener("click", clickSurface);
+      canvas.addEventListener("pointermove", (event) => {
+        const x = event.clientX / Math.max(window.innerWidth, 1) - 0.5;
+        const y = event.clientY / Math.max(window.innerHeight, 1) - 0.5;
+        targetYaw = -0.52 + x * 0.48;
+        targetTilt = 0.78 + y * 0.18;
+      }, { passive: true });
+      window.addEventListener("resize", resize);
+      resetButton.addEventListener("click", reset);
+      newSurfaceButton.addEventListener("click", newSurface);
+
+      makeSurface();
+      addTraveler();
+      placeDefaultPath();
+      resize();
+      updateCamera();
+      requestAnimationFrame(animate);
     </script>
   </body>
 </html>
