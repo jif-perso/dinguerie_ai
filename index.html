@@ -1,277 +1,2239 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinguerie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Dinguerie is an interactive showcase of what a coordinated team of AI agents can do."
+    >
+    <meta name="theme-color" content="#0b0b0c">
+    <meta property="og:title" content="Dinguerie — One prompt. A whole crew.">
+    <meta
+      property="og:description"
+      content="Research. Reason. Design. Build. Test. Ship. Watch AI agents turn one impossible brief into finished work."
+    >
+    <meta property="og:type" content="website">
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0b0c'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%23c8ff45'/%3E%3Ccircle cx='38' cy='26' r='7' fill='%23ff6240'/%3E%3C/svg%3E"
+    >
+    <title>Dinguerie — One prompt. A whole crew.</title>
+    <script>document.documentElement.classList.add("js");</script>
     <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      :root {
+        color-scheme: dark;
+        --ink: #0b0b0c;
+        --ink-soft: #171718;
+        --paper: #f1efe8;
+        --paper-dim: #d8d5cc;
+        --acid: #c8ff45;
+        --coral: #ff6240;
+        --blue: #6f7cff;
+        --lilac: #d6ceff;
+        --muted: rgba(241, 239, 232, 0.62);
+        --line: rgba(241, 239, 232, 0.18);
+        --display: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--ink);
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        overflow-x: hidden;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      button,
+      textarea,
+      a {
+        font: inherit;
+      }
+
+      button,
+      textarea {
+        color: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      ::selection {
+        background: var(--acid);
+        color: var(--ink);
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--coral);
+        outline-offset: 4px;
+      }
+
+      .skip-link {
+        position: fixed;
+        top: 0.75rem;
+        left: 0.75rem;
+        z-index: 100;
+        padding: 0.75rem 1rem;
+        translate: 0 -150%;
+        background: var(--acid);
+        color: var(--ink);
+        font-weight: 800;
+      }
+
+      .skip-link:focus {
+        translate: 0;
+      }
+
+      .site-header {
+        position: absolute;
+        inset: 0 0 auto;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.35rem clamp(1rem, 3vw, 3rem);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        flex: 1;
+        text-decoration: none;
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .brand::before {
+        display: inline-block;
+        width: 0.7rem;
+        height: 0.7rem;
+        margin-right: 0.65rem;
+        border-radius: 50%;
+        background: var(--acid);
+        box-shadow: 0 0 0.9rem rgba(200, 255, 69, 0.5);
+        content: "";
+      }
+
+      .header-nav {
+        display: flex;
+        gap: clamp(1rem, 2.5vw, 2.25rem);
+        margin-right: clamp(1rem, 3vw, 3rem);
+      }
+
+      .header-nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font: 750 0.67rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: color 180ms ease;
+      }
+
+      .header-nav a:hover {
+        color: var(--paper);
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        color: var(--muted);
+        font: 700 0.66rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 50%;
+        background: var(--coral);
+        animation: blink 1.8s ease-in-out infinite;
+      }
+
+      .hero {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        min-height: 100svh;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      #swarm-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: -3;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero::after {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          linear-gradient(90deg, transparent 49.9%, rgba(255, 255, 255, 0.045) 50%, transparent 50.1%),
+          linear-gradient(0deg, var(--ink), transparent 28%, transparent 72%, var(--ink));
+        pointer-events: none;
+        content: "";
+      }
+
+      .hero-radar {
+        position: absolute;
+        z-index: -2;
+        width: clamp(22rem, 49vw, 48rem);
+        aspect-ratio: 1;
+        border: 1px solid rgba(241, 239, 232, 0.1);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .hero-radar::before,
+      .hero-radar::after {
+        position: absolute;
+        border-radius: inherit;
+        content: "";
+      }
+
+      .hero-radar::before {
+        inset: 15%;
+        border: 1px dashed rgba(241, 239, 232, 0.13);
+      }
+
+      .hero-radar::after {
+        inset: -1px;
+        border-top: 2px solid var(--acid);
+        border-right: 2px solid transparent;
+        filter: drop-shadow(0 0 0.75rem rgba(200, 255, 69, 0.45));
+        animation: radar-spin 16s linear infinite;
+      }
+
+      .hero-signal {
+        position: absolute;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.3rem 0.7rem;
+        width: 11.5rem;
+        padding: 0.85rem;
+        border: 1px solid var(--line);
+        background: rgba(11, 11, 12, 0.88);
+        box-shadow: 0.5rem 0.5rem 0 rgba(0, 0, 0, 0.25);
+        pointer-events: none;
+        animation: signal-float 5s ease-in-out var(--signal-delay, 0s) infinite;
+      }
+
+      .hero-signal::before {
+        grid-row: span 2;
+        width: 0.52rem;
+        height: 0.52rem;
+        margin-top: 0.13rem;
+        border-radius: 50%;
+        background: var(--signal-color);
+        box-shadow: 0 0 0.9rem var(--signal-color);
+        content: "";
+      }
+
+      .hero-signal b {
+        font: 750 0.64rem/1 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .hero-signal small {
+        color: var(--muted);
+        font: 550 0.56rem/1.25 var(--mono);
+      }
+
+      .hero-signal--research {
+        top: 26%;
+        left: 4.5%;
+        --signal-color: var(--acid);
+      }
+
+      .hero-signal--build {
+        top: 31%;
+        right: 4.5%;
+        --signal-color: var(--blue);
+        --signal-delay: -1.7s;
+      }
+
+      .hero-signal--quality {
+        bottom: 19%;
+        left: 10%;
+        --signal-color: var(--coral);
+        --signal-delay: -3.2s;
+      }
+
+      .hero-inner {
+        width: min(100%, 100rem);
+        padding: 8rem clamp(1rem, 4vw, 4rem) 5rem;
+        text-align: center;
+      }
+
+      .eyebrow,
+      .section-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin: 0 0 1.2rem;
+        font: 800 clamp(0.68rem, 1vw, 0.8rem)/1 var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        color: var(--acid);
+      }
+
+      .eyebrow::before,
+      .eyebrow::after {
+        width: 1.8rem;
+        height: 1px;
+        background: currentColor;
+        content: "";
+      }
+
+      h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        font-family: var(--display);
+        font-size: clamp(4rem, 15.2vw, 14rem);
+        font-weight: 950;
+        letter-spacing: -0.095em;
+        line-height: 0.72;
+        text-transform: uppercase;
+      }
+
+      h1 span:first-child {
+        color: var(--paper);
+      }
+
+      h1 span:last-child {
+        color: transparent;
+        -webkit-text-stroke: clamp(1px, 0.12vw, 2px) var(--paper);
+      }
+
+      .hero-copy {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: clamp(1rem, 3vw, 3rem);
+        max-width: 72rem;
+        margin: clamp(2.2rem, 5vw, 4rem) auto 0;
+      }
+
+      .hero-copy::before,
+      .hero-copy::after {
+        height: 1px;
+        background: var(--line);
+        content: "";
+      }
+
+      .hero-copy p {
+        max-width: 33rem;
+        margin: 0;
+        font-size: clamp(1rem, 1.8vw, 1.35rem);
+        letter-spacing: -0.025em;
+        line-height: 1.45;
+      }
+
+      .hero-copy strong {
+        color: var(--acid);
+        font-weight: 650;
+      }
+
+      .hero-footer {
+        position: absolute;
+        right: clamp(1rem, 3vw, 3rem);
+        bottom: 1.5rem;
+        left: clamp(1rem, 3vw, 3rem);
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        color: var(--muted);
+        font: 700 0.63rem/1.5 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .scroll-cue {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+      }
+
+      .scroll-cue::after {
+        width: 2.5rem;
+        height: 1px;
+        background: currentColor;
+        content: "";
+        transform-origin: left;
+        animation: stretch 2s ease-in-out infinite;
+      }
+
+      .performance-note {
+        text-align: right;
+      }
+
+      .ticker {
+        overflow: hidden;
+        border-block: 1px solid var(--ink);
+        background: var(--acid);
+        color: var(--ink);
+      }
+
+      .ticker-track {
+        display: flex;
+        width: max-content;
+        animation: marquee 24s linear infinite;
+      }
+
+      .ticker-list {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .ticker-list li {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        padding: 1rem 1.2rem;
+        font-family: var(--display);
+        font-size: clamp(0.78rem, 1.3vw, 1rem);
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .ticker-list li::after {
+        width: 0.55rem;
+        height: 0.55rem;
+        border: 2px solid currentColor;
+        border-radius: 50%;
+        content: "";
+      }
+
+      .section {
+        padding: clamp(5rem, 10vw, 9rem) clamp(1rem, 4vw, 4rem);
+      }
+
+      .deferred-section {
+        content-visibility: auto;
+        contain-intrinsic-size: 900px;
+      }
+
+      .section-inner {
+        width: min(100%, 92rem);
+        margin-inline: auto;
+      }
+
+      .section-heading {
+        margin: 0;
+        font-family: var(--display);
+        font-size: clamp(3rem, 7.4vw, 7.5rem);
+        font-weight: 950;
+        letter-spacing: -0.075em;
+        line-height: 0.9;
+        text-wrap: balance;
+      }
+
+      .section-heading em {
+        font-family: Georgia, serif;
+        font-weight: 400;
+      }
+
+      .section-lede {
+        max-width: 36rem;
+        margin: 1.6rem 0 0 auto;
+        font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+        letter-spacing: -0.025em;
+        line-height: 1.55;
+      }
+
+      .mission-section {
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      .mission-section .section-kicker {
+        color: #4d4b45;
+      }
+
+      .mission-shell {
+        display: grid;
+        grid-template-columns: minmax(18rem, 0.78fr) minmax(32rem, 1.4fr);
+        min-height: 43rem;
+        margin-top: clamp(3rem, 7vw, 6rem);
+        border: 2px solid var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+        box-shadow: 16px 16px 0 var(--acid);
+      }
+
+      .mission-form {
+        display: flex;
+        flex-direction: column;
+        padding: clamp(1.3rem, 3vw, 2.5rem);
+        border-right: 1px solid var(--line);
+      }
+
+      .panel-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 0 2rem;
+        color: var(--muted);
+        font: 700 0.65rem/1 var(--mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .panel-label::after {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--acid);
+        content: "";
+      }
+
+      .mission-form label {
+        display: block;
+        margin-bottom: 0.75rem;
+        font: 750 0.72rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .mission-input {
+        width: 100%;
+        min-height: 10.5rem;
+        resize: vertical;
+        padding: 1rem;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        outline: 0;
+        background: #111112;
+        font-size: clamp(1.2rem, 2vw, 1.65rem);
+        font-weight: 650;
+        letter-spacing: -0.04em;
+        line-height: 1.2;
+        transition: border-color 180ms ease;
+      }
+
+      .mission-input:focus {
+        border-color: var(--acid);
+      }
+
+      .mission-input::placeholder {
+        color: rgba(241, 239, 232, 0.32);
+      }
+
+      .preset-label {
+        margin: 2rem 0 0.8rem;
+        color: var(--muted);
+        font: 700 0.65rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+      }
+
+      .preset {
+        min-height: 2.65rem;
+        padding: 0.7rem 0.85rem;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--muted);
+        font: 700 0.67rem/1.25 var(--mono);
+        text-align: left;
+        transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+      }
+
+      .preset:hover,
+      .preset[aria-pressed="true"] {
+        border-color: var(--paper);
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      .preset:disabled {
+        cursor: wait;
+        opacity: 0.45;
+      }
+
+      .mission-input:read-only {
+        cursor: wait;
+        opacity: 0.82;
+      }
+
+      .deploy-button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 4.25rem;
+        margin-top: auto;
+        padding: 1rem 1.2rem;
+        background: var(--acid);
+        color: var(--ink);
+        font-family: var(--display);
+        font-size: 0.9rem;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        transition: background 180ms ease, transform 180ms ease;
+      }
+
+      .deploy-button:hover:not(:disabled) {
+        background: var(--paper);
+        transform: translateY(-2px);
+      }
+
+      .deploy-button:disabled {
+        cursor: wait;
+        opacity: 0.68;
+      }
+
+      .deploy-button b {
+        font-size: 1.5rem;
+        font-weight: 400;
+      }
+
+      .simulation-note {
+        margin: 0.9rem 0 0;
+        color: rgba(241, 239, 232, 0.42);
+        font: 500 0.6rem/1.45 var(--mono);
+      }
+
+      .orchestrator {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(1.3rem, 3vw, 2.5rem);
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          #0e0e0f;
+        background-size: 2.5rem 2.5rem;
+      }
+
+      .orchestrator::before {
+        position: absolute;
+        top: -10rem;
+        right: -8rem;
+        width: 26rem;
+        height: 26rem;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--mission-color, var(--blue)) 25%, transparent);
+        filter: blur(80px);
+        opacity: 0.55;
+        pointer-events: none;
+        content: "";
+      }
+
+      .orchestrator::after {
+        position: absolute;
+        z-index: 3;
+        inset: 50% auto auto 50%;
+        width: 8rem;
+        aspect-ratio: 1;
+        border: 2px solid var(--acid);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        content: "";
+        translate: -50% -50%;
+      }
+
+      .orchestrator.is-complete::after {
+        animation: completion-pulse 900ms ease-out both;
+      }
+
+      .stage-topline {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font: 700 0.64rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .run-state {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--paper);
+      }
+
+      .run-state::before {
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 50%;
+        background: var(--acid);
+        content: "";
+      }
+
+      .is-running .run-state::before {
+        background: var(--coral);
+        box-shadow: 0 0 0.8rem var(--coral);
+        animation: blink 0.9s ease-in-out infinite;
+      }
+
+      .active-mission {
+        position: relative;
+        max-width: 44rem;
+        min-height: 3.8rem;
+        margin: 1.35rem 0 1.5rem;
+        font-family: var(--display);
+        font-size: clamp(1.35rem, 2.5vw, 2.2rem);
+        letter-spacing: -0.05em;
+        line-height: 1.05;
+      }
+
+      .agent-network {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.7rem;
+      }
+
+      .network-wiring {
+        position: absolute;
+        z-index: 0;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+      }
+
+      .network-wiring path {
+        fill: none;
+        stroke: rgba(241, 239, 232, 0.16);
+        stroke-dasharray: 4 9;
+        stroke-width: 1.25;
+        vector-effect: non-scaling-stroke;
+      }
+
+      .network-wiring circle {
+        fill: var(--mission-color);
+        filter: drop-shadow(0 0 0.65rem var(--mission-color));
+        opacity: 0.65;
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      .is-running .network-wiring path {
+        stroke: color-mix(in srgb, var(--mission-color) 70%, white);
+        animation: signal-flow 850ms linear infinite;
+      }
+
+      .is-running .network-wiring circle {
+        animation: core-pulse 900ms ease-in-out infinite alternate;
+      }
+
+      .agent-card {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        min-height: 9.2rem;
+        flex-direction: column;
+        padding: 0.9rem;
+        overflow: hidden;
+        border: 1px solid rgba(241, 239, 232, 0.12);
+        background: rgba(11, 11, 12, 0.86);
+        transition: border-color 220ms ease, transform 220ms ease, background 220ms ease;
+      }
+
+      .agent-card::before {
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 0;
+        height: 2px;
+        background: var(--agent-color);
+        box-shadow: 0 0 1rem var(--agent-color);
+        content: "";
+        transition: width 350ms ease;
+      }
+
+      .agent-card[data-state="working"] {
+        border-color: color-mix(in srgb, var(--agent-color) 75%, transparent);
+        background: rgba(20, 20, 21, 0.94);
+        transform: translateY(-3px);
+      }
+
+      .agent-card[data-state="working"]::before,
+      .agent-card[data-state="done"]::before {
+        width: 100%;
+      }
+
+      .agent-card[data-state="done"] {
+        border-color: rgba(200, 255, 69, 0.38);
+      }
+
+      .agent-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+
+      .agent-avatar {
+        display: grid;
+        width: 2.1rem;
+        height: 2.1rem;
+        flex: 0 0 auto;
+        border: 1px solid var(--agent-color);
+        border-radius: 50%;
+        color: var(--agent-color);
+        font: 800 0.62rem/1 var(--mono);
+        place-items: center;
+      }
+
+      .agent-card[data-state="working"] .agent-avatar {
+        background: var(--agent-color);
+        box-shadow: 0 0 1.25rem color-mix(in srgb, var(--agent-color) 55%, transparent);
+        color: var(--ink);
+      }
+
+      .agent-name {
+        flex: 1;
+        font-size: 0.76rem;
+        font-weight: 750;
+      }
+
+      .agent-status {
+        color: var(--muted);
+        font: 650 0.53rem/1 var(--mono);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .agent-card[data-state="working"] .agent-status {
+        color: var(--agent-color);
+      }
+
+      .agent-card[data-state="done"] .agent-status {
+        color: var(--acid);
+      }
+
+      .agent-output {
+        margin: 1rem 0 0;
+        color: var(--muted);
+        font-size: 0.68rem;
+        line-height: 1.4;
+      }
+
+      .agent-card[data-state="done"] .agent-output {
+        color: var(--paper-dim);
+      }
+
+      .agent-progress {
+        height: 2px;
+        margin-top: auto;
+        overflow: hidden;
+        background: rgba(241, 239, 232, 0.09);
+      }
+
+      .agent-progress span {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: var(--agent-color);
+        transform: scaleX(0);
+        transform-origin: left;
+      }
+
+      .is-complete .run-summary strong {
+        color: var(--acid);
+        text-shadow: 0 0 1rem rgba(200, 255, 69, 0.4);
+      }
+
+      .execution-log {
+        position: relative;
+        min-height: 8.3rem;
+        margin-top: 0.7rem;
+        padding: 0.85rem 1rem;
+        border: 1px solid rgba(241, 239, 232, 0.12);
+        background: #080809;
+        font: 500 0.62rem/1.45 var(--mono);
+      }
+
+      .log-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.65rem;
+        padding-bottom: 0.55rem;
+        border-bottom: 1px solid rgba(241, 239, 232, 0.09);
+        color: rgba(241, 239, 232, 0.38);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .window-dots {
+        display: flex;
+        gap: 0.3rem;
+      }
+
+      .window-dots i {
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 50%;
+        background: var(--coral);
+      }
+
+      .window-dots i:nth-child(2) { background: #ffd166; }
+      .window-dots i:nth-child(3) { background: var(--acid); }
+
+      .log-list {
+        display: grid;
+        gap: 0.35rem;
+        margin: 0;
+        padding: 0;
+        color: rgba(241, 239, 232, 0.68);
+        list-style: none;
+      }
+
+      .log-list li {
+        display: grid;
+        grid-template-columns: 3.5rem 1fr;
+        gap: 0.7rem;
+        animation: log-in 260ms ease both;
+      }
+
+      .log-list time {
+        color: var(--acid);
+      }
+
+      .run-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.7rem;
+        color: rgba(241, 239, 232, 0.42);
+        font: 650 0.58rem/1 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .run-summary strong {
+        color: var(--paper);
+        font-weight: 700;
+      }
+
+      .method-section {
+        background: var(--ink);
+      }
+
+      .method-intro {
+        display: grid;
+        grid-template-columns: 1.35fr 0.65fr;
+        gap: clamp(2rem, 8vw, 8rem);
+        align-items: end;
+      }
+
+      .method-intro .section-lede {
+        margin-left: 0;
+        color: var(--muted);
+      }
+
+      .role-list {
+        margin-top: clamp(4rem, 8vw, 7rem);
+        border-top: 1px solid var(--line);
+      }
+
+      .role {
+        display: grid;
+        grid-template-columns: 4rem minmax(10rem, 0.8fr) 1.2fr auto;
+        gap: clamp(1rem, 3vw, 3rem);
+        align-items: center;
+        min-height: 8rem;
+        padding: 1.3rem 0;
+        border-bottom: 1px solid var(--line);
+        transition: padding 220ms ease, color 220ms ease;
+      }
+
+      .role:hover {
+        padding-inline: 1rem;
+        color: var(--acid);
+      }
+
+      .role-index {
+        color: var(--muted);
+        font: 700 0.65rem/1 var(--mono);
+      }
+
+      .role h3 {
+        margin: 0;
+        font-family: var(--display);
+        font-size: clamp(1.35rem, 2.8vw, 2.8rem);
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+      }
+
+      .role p {
+        max-width: 34rem;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(0.88rem, 1.2vw, 1.05rem);
+        line-height: 1.5;
+      }
+
+      .role:hover p {
+        color: var(--paper);
+      }
+
+      .role-mark {
+        display: grid;
+        width: 2.75rem;
+        height: 2.75rem;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        place-items: center;
+        transition: rotate 300ms ease, background 300ms ease, color 300ms ease;
+      }
+
+      .role:hover .role-mark {
+        rotate: 45deg;
+        background: var(--acid);
+        color: var(--ink);
+      }
+
+      .artifacts-section {
+        background: var(--lilac);
+        color: var(--ink);
+      }
+
+      .artifacts-intro {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: end;
+      }
+
+      .artifacts-intro .section-lede {
+        margin-bottom: 0.35rem;
+      }
+
+      .artifact-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 1rem;
+        margin-top: clamp(3rem, 7vw, 6rem);
+        perspective: 1200px;
+      }
+
+      .artifact-card {
+        --rx: 0deg;
+        --ry: 0deg;
+        position: relative;
+        min-height: 27rem;
+        padding: clamp(1.2rem, 2.5vw, 2rem);
+        overflow: hidden;
+        border: 2px solid var(--ink);
+        background: var(--paper);
+        transform: rotateX(var(--rx)) rotateY(var(--ry));
+        transform-style: preserve-3d;
+        transition: transform 120ms ease-out, box-shadow 200ms ease;
+      }
+
+      .artifact-card:hover {
+        box-shadow: 12px 12px 0 var(--ink);
+      }
+
+      .artifact-card--wide {
+        grid-row: span 2;
+        min-height: 55rem;
+        background: var(--coral);
+      }
+
+      .artifact-card--dark {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      .artifact-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid currentColor;
+        font: 750 0.65rem/1 var(--mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .artifact-meta span:last-child {
+        opacity: 0.55;
+      }
+
+      .artifact-card h3 {
+        max-width: 36rem;
+        margin: 1.5rem 0 0;
+        font-family: var(--display);
+        font-size: clamp(2rem, 4vw, 4.6rem);
+        letter-spacing: -0.07em;
+        line-height: 0.95;
+      }
+
+      .artifact-card:not(.artifact-card--wide) h3 {
+        font-size: clamp(1.6rem, 2.5vw, 2.6rem);
+      }
+
+      .artifact-description {
+        max-width: 31rem;
+        margin: 1rem 0 0;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        opacity: 0.7;
+      }
+
+      .research-map {
+        position: absolute;
+        right: 2rem;
+        bottom: 2rem;
+        left: 2rem;
+        height: min(43%, 21rem);
+        border: 1px solid var(--ink);
+        background:
+          radial-gradient(circle at 15% 35%, var(--acid) 0 5px, transparent 6px),
+          radial-gradient(circle at 32% 70%, var(--paper) 0 8px, transparent 9px),
+          radial-gradient(circle at 52% 28%, var(--blue) 0 6px, transparent 7px),
+          radial-gradient(circle at 69% 63%, var(--acid) 0 10px, transparent 11px),
+          radial-gradient(circle at 85% 38%, var(--paper) 0 5px, transparent 6px),
+          rgba(11, 11, 12, 0.92);
+      }
+
+      .research-map svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .research-map path {
+        fill: none;
+        stroke: rgba(241, 239, 232, 0.38);
+        stroke-width: 1;
+        vector-effect: non-scaling-stroke;
+      }
+
+      .research-map path:nth-child(2) {
+        stroke: var(--acid);
+        stroke-dasharray: 5 7;
+        animation: dash 12s linear infinite;
+      }
+
+      .map-legend {
+        position: absolute;
+        top: 0.8rem;
+        left: 0.8rem;
+        color: var(--paper);
+        font: 650 0.55rem/1.4 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .prototype-window {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1.5rem;
+        left: 1.5rem;
+        height: 10.5rem;
+        overflow: hidden;
+        border: 1px solid var(--ink);
+        background: var(--acid);
+      }
+
+      .prototype-window::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 7rem;
+        height: 7rem;
+        border-radius: 1.5rem;
+        background: var(--blue);
+        box-shadow: -6rem 3rem 0 var(--coral), 6rem -3rem 0 var(--ink);
+        content: "";
+        rotate: 25deg;
+        translate: -50% -50%;
+      }
+
+      .prototype-bar {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        height: 1.8rem;
+        padding: 0 0.65rem;
+        border-bottom: 1px solid var(--ink);
+        background: var(--paper);
+      }
+
+      .prototype-bar i {
+        width: 0.35rem;
+        height: 0.35rem;
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+      }
+
+      .qa-matrix {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.45rem;
+        margin-top: 2.2rem;
+      }
+
+      .qa-matrix i {
+        aspect-ratio: 1;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .qa-matrix i:nth-child(3n + 1),
+      .qa-matrix i:nth-child(7n) {
+        background: var(--acid);
+        box-shadow: 0 0 1rem rgba(200, 255, 69, 0.2);
+      }
+
+      .qa-score {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1rem;
+        color: var(--acid);
+        font-family: var(--display);
+        font-size: clamp(3.5rem, 7vw, 6.5rem);
+        letter-spacing: -0.08em;
+        line-height: 1;
+      }
+
+      .performance-section {
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      .performance-layout {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: clamp(3rem, 8vw, 8rem);
+        align-items: start;
+      }
+
+      .performance-copy {
+        position: sticky;
+        top: 2rem;
+      }
+
+      .performance-copy p {
+        max-width: 30rem;
+        margin: 1.5rem 0 0;
+        color: #55524b;
+        font-size: 1.05rem;
+        line-height: 1.55;
+      }
+
+      .performance-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 2px solid var(--ink);
+        border-left: 2px solid var(--ink);
+      }
+
+      .metric {
+        min-height: 16rem;
+        padding: clamp(1.25rem, 3vw, 2.5rem);
+        border-right: 2px solid var(--ink);
+        border-bottom: 2px solid var(--ink);
+      }
+
+      .metric:nth-child(1) { background: var(--acid); }
+      .metric:nth-child(4) { background: var(--coral); }
+
+      .metric-index {
+        display: block;
+        font: 700 0.62rem/1 var(--mono);
+        letter-spacing: 0.08em;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 2.5rem;
+        font-family: var(--display);
+        font-size: clamp(2.6rem, 5vw, 5.2rem);
+        letter-spacing: -0.075em;
+        line-height: 0.85;
+      }
+
+      .metric p {
+        max-width: 16rem;
+        margin: 1rem 0 0;
+        font-size: 0.82rem;
+        line-height: 1.45;
+      }
+
+      .final-cta {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(6rem, 13vw, 13rem) clamp(1rem, 4vw, 4rem);
+        background: var(--acid);
+        color: var(--ink);
+        text-align: center;
+      }
+
+      .final-cta::before,
+      .final-cta::after {
+        position: absolute;
+        width: clamp(8rem, 18vw, 18rem);
+        aspect-ratio: 1;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        content: "";
+      }
+
+      .final-cta::before {
+        top: -4rem;
+        left: -4rem;
+        box-shadow: 2rem 2rem 0 var(--coral);
+      }
+
+      .final-cta::after {
+        right: -5rem;
+        bottom: -5rem;
+        background: var(--blue);
+        box-shadow: -2rem -2rem 0 var(--paper);
+      }
+
+      .final-cta .section-kicker,
+      .final-cta h2,
+      .final-cta button {
+        position: relative;
+        z-index: 1;
+      }
+
+      .final-cta h2 {
+        max-width: 80rem;
+        margin: 0 auto;
+        font-family: var(--display);
+        font-size: clamp(4rem, 11vw, 11rem);
+        letter-spacing: -0.09em;
+        line-height: 0.78;
+        text-transform: uppercase;
+      }
+
+      .final-cta button {
+        min-height: 4rem;
+        margin-top: clamp(2.5rem, 5vw, 4rem);
+        padding: 1rem 1.6rem;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: var(--display);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+      }
+
+      .final-cta button:hover {
+        background: var(--coral);
+        color: var(--ink);
+        transform: translateY(-3px);
+      }
+
+      .site-footer {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 2rem;
+        padding: 1.5rem clamp(1rem, 3vw, 3rem);
+        color: var(--muted);
+        font: 650 0.62rem/1.4 var(--mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .footer-mark {
+        color: var(--paper);
+        font-family: var(--display);
+        font-size: 0.9rem;
+        letter-spacing: -0.02em;
+      }
+
+      .site-footer span:last-child {
+        text-align: right;
+      }
+
+      .js .reveal {
+        opacity: 0;
+        transform: translateY(2.5rem);
+        transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .js .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      .noscript-note {
+        margin: 0;
+        padding: 1rem;
+        background: var(--coral);
+        color: var(--ink);
+        font-weight: 700;
+        text-align: center;
+      }
+
+      @keyframes blink {
+        50% { opacity: 0.35; }
+      }
+
+      @keyframes stretch {
+        50% { scale: 0.45 1; }
+      }
+
+      @keyframes marquee {
+        to { transform: translateX(-50%); }
+      }
+
+      @keyframes log-in {
+        from { opacity: 0; transform: translateY(0.4rem); }
+      }
+
+      @keyframes dash {
+        to { stroke-dashoffset: -120; }
+      }
+
+      @keyframes radar-spin {
+        to { rotate: 360deg; }
+      }
+
+      @keyframes signal-float {
+        50% { transform: translateY(-0.65rem); }
+      }
+
+      @keyframes signal-flow {
+        to { stroke-dashoffset: -26; }
+      }
+
+      @keyframes core-pulse {
+        to { opacity: 1; transform: scale(1.8); }
+      }
+
+      @keyframes completion-pulse {
+        0% { opacity: 0.9; scale: 0.2; }
+        100% { opacity: 0; scale: 5; }
+      }
+
+      @media (max-width: 1180px) {
+        .hero-signal {
+          display: none;
         }
-        body {
-            font-family: 'Arial', sans-serif;
-            color: #fff;
-            background: #000;
-            overflow-x: hidden;
+      }
+
+      @media (max-width: 980px) {
+        .header-nav {
+          display: none;
         }
 
-        /* Canvas for particle effects */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
+        .mission-shell {
+          grid-template-columns: 1fr;
         }
 
-        /* Hero section with neon text animation */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero h1 {
-            font-size: 10rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5rem;
-            color: #fff;
-            text-shadow: 
-                0 0 5px #fff,
-                0 0 10px #fff,
-                0 0 20px #0ff,
-                0 0 40px #0ff,
-                0 0 80px #0ff,
-                0 0 120px #0ff,
-                0 0 200px #0ff;
-            animation: neon-pulse 1.5s ease-in-out infinite alternate;
-        }
-        @keyframes neon-pulse {
-            from {
-                text-shadow: 
-                    0 0 5px #fff,
-                    0 0 10px #fff,
-                    0 0 20px #0ff,
-                    0 0 40px #0ff;
-            }
-            to {
-                text-shadow: 
-                    0 0 10px #fff,
-                    0 0 20px #fff,
-                    0 0 40px #0ff,
-                    0 0 80px #0ff,
-                    0 0 120px #0ff,
-                    0 0 200px #0ff,
-                    0 0 300px #0ff;
-            }
-        }
-        .hero p {
-            font-size: 2rem;
-            margin-top: 1rem;
-            opacity: 0.8;
-            animation: fade-in 2s ease-in;
-        }
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 0.8; }
+        .mission-form {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
         }
 
-        /* Parallax sections */
+        .deploy-button {
+          margin-top: 2rem;
+        }
+
+        .method-intro,
+        .artifacts-intro,
+        .performance-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .performance-copy {
+          position: static;
+        }
+
+        .role {
+          grid-template-columns: 3rem minmax(9rem, 0.7fr) 1.3fr auto;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .site-header {
+          padding-block: 1rem;
+        }
+
+        .status span:last-child {
+          display: none;
+        }
+
+        h1 {
+          flex-direction: column;
+          font-size: clamp(4.2rem, 24vw, 8rem);
+          line-height: 0.67;
+        }
+
+        .hero-copy {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-copy::before,
+        .hero-copy::after,
+        .performance-note {
+          display: none;
+        }
+
+        .mission-shell {
+          box-shadow: 8px 8px 0 var(--acid);
+        }
+
+        .agent-network {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .network-wiring {
+          display: none;
+        }
+
+        .role {
+          grid-template-columns: 2rem 1fr auto;
+          gap: 1rem;
+          min-height: 7rem;
+        }
+
+        .role p {
+          display: none;
+        }
+
+        .artifact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .artifact-card--wide {
+          grid-row: auto;
+          min-height: 38rem;
+        }
+
+        .performance-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .metric {
+          min-height: 12rem;
+        }
+
+        .site-footer {
+          grid-template-columns: 1fr auto;
+        }
+
+        .site-footer span:last-child {
+          display: none;
+        }
+      }
+
+      @media (max-width: 450px) {
         .section {
-            height: 100vh;
-            padding: 5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-        }
-        .about {
-            background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%230099ff" fill-opacity="0.2" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,245.3C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E') no-repeat center center;
-            background-attachment: fixed;
-            background-size: cover;
-        }
-        .contact {
-            background: linear-gradient(135deg, #ff00ff, #00ffff);
-            background-attachment: fixed;
-        }
-        .section h2 {
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            transform: translateY(50px);
-            opacity: 0;
-            transition: all 1s ease-out;
-        }
-        .section p {
-            font-size: 1.5rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .section.visible h2 {
-            transform: translateY(0);
-            opacity: 1;
+          padding-inline: 1rem;
         }
 
-        /* 3D Cube effect in contact section */
-        .cube-container {
-            perspective: 1000px;
-            margin: 2rem auto;
-            width: 200px;
-            height: 200px;
+        .agent-network {
+          grid-template-columns: 1fr;
         }
-        .cube {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: rotate-cube 10s infinite linear;
+
+        .agent-card {
+          min-height: 7.5rem;
         }
-        .cube-face {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            color: #000;
+
+        .run-summary span:first-child {
+          display: none;
         }
-        .front  { transform: translateZ(100px); }
-        .back   { transform: rotateY(180deg) translateZ(100px); }
-        .right  { transform: rotateY(90deg) translateZ(100px); }
-        .left   { transform: rotateY(-90deg) translateZ(100px); }
-        .top    { transform: rotateX(90deg) translateZ(100px); }
-        .bottom { transform: rotateX(-90deg) translateZ(100px); }
-        @keyframes rotate-cube {
-            0% { transform: rotateX(0) rotateY(0); }
-            100% { transform: rotateX(360deg) rotateY(360deg); }
+
+        .artifact-card {
+          min-height: 24rem;
         }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
     </style>
-</head>
-<body>
-    <canvas id="particle-canvas"></canvas>
+  </head>
+  <body>
+    <a class="skip-link" href="#experience">Skip to the experience</a>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Dinguerie, back to top">Dinguerie</a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="#experience">Mission control</a>
+        <a href="#method">The crew</a>
+        <a href="#performance">Performance</a>
+      </nav>
+      <div class="status" role="status" aria-label="Agent swarm status">
+        <i class="status-dot" aria-hidden="true"></i>
+        <span>Swarm ready</span>
+        <span>· zero dependencies</span>
+      </div>
+    </header>
 
-    <section class="hero">
-        <h1>Dinguerie</h1>
-        <p>Welcome to the world of madness and innovation.</p>
-    </section>
+    <noscript>
+      <p class="noscript-note">The agent simulation needs JavaScript. Everything else still works.</p>
+    </noscript>
 
-    <section class="section about">
-        <h2>About Us</h2>
-        <p>Dinguerie is all about pushing boundaries with crazy ideas and cutting-edge technology. Experience the thrill of the unexpected.</p>
-    </section>
-
-    <section class="section contact">
-        <h2>Contact</h2>
-        <p>Get in touch: contact@dinguerie.com</p>
-        <div class="cube-container">
-            <div class="cube">
-                <div class="cube-face front">Front</div>
-                <div class="cube-face back">Back</div>
-                <div class="cube-face right">Right</div>
-                <div class="cube-face left">Left</div>
-                <div class="cube-face top">Top</div>
-                <div class="cube-face bottom">Bottom</div>
-            </div>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas id="swarm-canvas" aria-hidden="true"></canvas>
+        <div class="hero-radar" aria-hidden="true"></div>
+        <div class="hero-signal hero-signal--research" aria-hidden="true">
+          <b>Researcher / R1</b><small>14 sources synthesized</small>
         </div>
-    </section>
+        <div class="hero-signal hero-signal--build" aria-hidden="true">
+          <b>Builder / B4</b><small>Prototype compiling</small>
+        </div>
+        <div class="hero-signal hero-signal--quality" aria-hidden="true">
+          <b>Critic / Q5</b><small>21 checks passing</small>
+        </div>
+        <div class="hero-inner">
+          <p class="eyebrow">One prompt / a whole crew</p>
+          <h1 id="hero-title"><span>Ding</span><span>uerie</span></h1>
+          <div class="hero-copy">
+            <p>
+              Give us one impossible brief. Watch a crew of AI agents
+              <strong>research, reason, build, test and ship it.</strong>
+            </p>
+          </div>
+        </div>
+        <div class="hero-footer">
+          <a class="scroll-cue" href="#experience">Enter the experiment</a>
+          <span class="performance-note">Artifact / 001<br>Designed + built by an agent</span>
+        </div>
+      </section>
+
+      <aside class="ticker" aria-label="Agent capabilities">
+        <div class="ticker-track">
+          <ul class="ticker-list">
+            <li>Research</li><li>Reason</li><li>Design</li><li>Code</li><li>Test</li><li>Ship</li>
+          </ul>
+          <ul class="ticker-list" aria-hidden="true">
+            <li>Research</li><li>Reason</li><li>Design</li><li>Code</li><li>Test</li><li>Ship</li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="section mission-section" id="experience" aria-labelledby="mission-title">
+        <div class="section-inner">
+          <p class="section-kicker reveal">01 / Mission control</p>
+          <h2 class="section-heading reveal" id="mission-title">
+            One prompt starts<br>a small <em>company.</em>
+          </h2>
+          <p class="section-lede reveal">
+            A lead agent breaks the goal into workstreams. Specialists run in parallel, challenge
+            one another and converge on something you can actually use.
+          </p>
+
+          <div class="mission-shell reveal">
+            <form class="mission-form" id="mission-form">
+              <p class="panel-label">Input / impossible brief</p>
+              <label for="mission-input">Give the crew a mission</label>
+              <textarea
+                class="mission-input"
+                id="mission-input"
+                maxlength="180"
+                spellcheck="true"
+              >Turn city noise into a living album.</textarea>
+
+              <p class="preset-label">Or steal a brief</p>
+              <div class="presets">
+                <button class="preset" type="button" data-preset="sound" aria-pressed="true">Living album</button>
+                <button class="preset" type="button" data-preset="code" aria-pressed="false">Codebase audit</button>
+                <button class="preset" type="button" data-preset="climate" aria-pressed="false">Climate startup</button>
+              </div>
+
+              <button class="deploy-button" id="deploy-button" type="submit">
+                <span>Deploy the agents</span><b aria-hidden="true">↗</b>
+              </button>
+              <p class="simulation-note">
+                Interactive browser simulation. No prompt or personal data leaves this page.
+              </p>
+            </form>
+
+            <div class="orchestrator" id="orchestrator" style="--mission-color: #ff6240">
+              <div class="stage-topline">
+                <span>orchestration / 0001</span>
+                <span class="run-state" id="run-state">Ready</span>
+              </div>
+              <h3 class="active-mission" id="active-mission">Turn city noise into a living album.</h3>
+
+              <div class="agent-network" role="group" aria-label="Six-agent execution graph">
+                <svg class="network-wiring" viewBox="0 0 600 320" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M100 80 C170 80 215 160 300 160" />
+                  <path d="M300 80 L300 160" />
+                  <path d="M500 80 C430 80 385 160 300 160" />
+                  <path d="M100 240 C170 240 215 160 300 160" />
+                  <path d="M300 240 L300 160" />
+                  <path d="M500 240 C430 240 385 160 300 160" />
+                  <circle cx="300" cy="160" r="5" />
+                </svg>
+                <article class="agent-card" data-agent="scout" data-state="idle" style="--agent-color: #c8ff45">
+                  <div class="agent-head">
+                    <span class="agent-avatar" aria-hidden="true">R1</span>
+                    <span class="agent-name">Researcher</span>
+                    <span class="agent-status">Queued</span>
+                  </div>
+                  <p class="agent-output">Awaiting the brief.</p>
+                  <div class="agent-progress" aria-hidden="true"><span></span></div>
+                </article>
+                <article class="agent-card" data-agent="strategist" data-state="idle" style="--agent-color: #6f7cff">
+                  <div class="agent-head">
+                    <span class="agent-avatar" aria-hidden="true">S2</span>
+                    <span class="agent-name">Strategist</span>
+                    <span class="agent-status">Queued</span>
+                  </div>
+                  <p class="agent-output">Awaiting the brief.</p>
+                  <div class="agent-progress" aria-hidden="true"><span></span></div>
+                </article>
+                <article class="agent-card" data-agent="designer" data-state="idle" style="--agent-color: #ff6240">
+                  <div class="agent-head">
+                    <span class="agent-avatar" aria-hidden="true">D3</span>
+                    <span class="agent-name">Designer</span>
+                    <span class="agent-status">Queued</span>
+                  </div>
+                  <p class="agent-output">Awaiting the brief.</p>
+                  <div class="agent-progress" aria-hidden="true"><span></span></div>
+                </article>
+                <article class="agent-card" data-agent="builder" data-state="idle" style="--agent-color: #f1efe8">
+                  <div class="agent-head">
+                    <span class="agent-avatar" aria-hidden="true">B4</span>
+                    <span class="agent-name">Builder</span>
+                    <span class="agent-status">Queued</span>
+                  </div>
+                  <p class="agent-output">Awaiting the brief.</p>
+                  <div class="agent-progress" aria-hidden="true"><span></span></div>
+                </article>
+                <article class="agent-card" data-agent="critic" data-state="idle" style="--agent-color: #ff9ec4">
+                  <div class="agent-head">
+                    <span class="agent-avatar" aria-hidden="true">Q5</span>
+                    <span class="agent-name">Critic</span>
+                    <span class="agent-status">Queued</span>
+                  </div>
+                  <p class="agent-output">Awaiting the brief.</p>
+                  <div class="agent-progress" aria-hidden="true"><span></span></div>
+                </article>
+                <article class="agent-card" data-agent="operator" data-state="idle" style="--agent-color: #ffd166">
+                  <div class="agent-head">
+                    <span class="agent-avatar" aria-hidden="true">O6</span>
+                    <span class="agent-name">Operator</span>
+                    <span class="agent-status">Queued</span>
+                  </div>
+                  <p class="agent-output">Awaiting the brief.</p>
+                  <div class="agent-progress" aria-hidden="true"><span></span></div>
+                </article>
+              </div>
+
+              <div class="execution-log">
+                <div class="log-header">
+                  <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <span>shared context stream</span>
+                </div>
+                <ol class="log-list" id="log-list" aria-live="polite">
+                  <li><time>00.00</time><span>System ready. Waiting for a mission.</span></li>
+                </ol>
+              </div>
+              <div class="run-summary">
+                <span>Shared context · automatic handoffs</span>
+                <strong id="completion-count">0 / 6 complete</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section method-section deferred-section" id="method" aria-labelledby="method-title">
+        <div class="section-inner">
+          <div class="method-intro">
+            <div>
+              <p class="section-kicker reveal">02 / Parallel intelligence</p>
+              <h2 class="section-heading reveal" id="method-title">Not one genius.<br><em>A great team.</em></h2>
+            </div>
+            <p class="section-lede reveal">
+              The impressive part is not a clever answer. It is the choreography: specialists
+              working simultaneously, preserving context and checking the work before it ships.
+            </p>
+          </div>
+
+          <div class="role-list">
+            <article class="role reveal">
+              <span class="role-index">01</span><h3>Explore</h3>
+              <p>Maps the unknowns, reads the sources and finds the useful signal before anyone commits to a direction.</p>
+              <span class="role-mark" aria-hidden="true">↗</span>
+            </article>
+            <article class="role reveal">
+              <span class="role-index">02</span><h3>Imagine</h3>
+              <p>Turns raw evidence into a point of view, a system and a set of bold options worth building.</p>
+              <span class="role-mark" aria-hidden="true">↗</span>
+            </article>
+            <article class="role reveal">
+              <span class="role-index">03</span><h3>Make</h3>
+              <p>Writes, designs, codes and packages the real artifact instead of stopping at a recommendation.</p>
+              <span class="role-mark" aria-hidden="true">↗</span>
+            </article>
+            <article class="role reveal">
+              <span class="role-index">04</span><h3>Challenge</h3>
+              <p>Tests assumptions, catches weak spots and sends precise feedback back through the shared context.</p>
+              <span class="role-mark" aria-hidden="true">↗</span>
+            </article>
+            <article class="role reveal">
+              <span class="role-index">05</span><h3>Deliver</h3>
+              <p>Runs the final checks and turns a pile of activity into one coherent, usable outcome.</p>
+              <span class="role-mark" aria-hidden="true">↗</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section artifacts-section deferred-section" aria-labelledby="artifacts-title">
+        <div class="section-inner">
+          <div class="artifacts-intro">
+            <div>
+              <p class="section-kicker reveal">03 / Evidence, not vibes</p>
+              <h2 class="section-heading reveal" id="artifacts-title">Agents leave<br><em>artifacts.</em></h2>
+            </div>
+            <p class="section-lede reveal">
+              Every workstream has a concrete output. Sources can be traced, prototypes can be
+              opened, and tests can fail loudly. That is how a wild idea becomes trustworthy.
+            </p>
+          </div>
+
+          <div class="artifact-grid">
+            <article class="artifact-card artifact-card--wide reveal" data-tilt>
+              <div class="artifact-meta"><span>Research atlas</span><span>14 sources · 37 signals</span></div>
+              <h3>A map of the problem, not a wall of links.</h3>
+              <p class="artifact-description">
+                Contradictions, opportunities and open questions connected in one navigable evidence graph.
+              </p>
+              <div class="research-map" aria-hidden="true">
+                <span class="map-legend">Live synthesis graph<br>Confidence / 94%</span>
+                <svg viewBox="0 0 800 300" preserveAspectRatio="none">
+                  <path d="M70 110 C180 20 250 250 380 90 S620 40 735 120 M130 230 C250 90 380 280 520 140 S690 120 760 220" />
+                  <path d="M50 245 C180 180 250 30 410 170 S650 280 770 70 M160 30 C260 180 470 10 610 190" />
+                </svg>
+              </div>
+            </article>
+
+            <article class="artifact-card reveal" data-tilt>
+              <div class="artifact-meta"><span>Working prototype</span><span>Build / 0084</span></div>
+              <h3>Ideas you can touch.</h3>
+              <p class="artifact-description">Responsive, accessible and ready to put in front of a real person.</p>
+              <div class="prototype-window" aria-hidden="true">
+                <div class="prototype-bar"><i></i><i></i><i></i></div>
+              </div>
+            </article>
+
+            <article class="artifact-card artifact-card--dark reveal" data-tilt>
+              <div class="artifact-meta"><span>Adversarial QA</span><span>21 / 21 passed</span></div>
+              <h3>No polite rubber stamp.</h3>
+              <div class="qa-matrix" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+              <strong class="qa-score">A+</strong>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section performance-section deferred-section" id="performance" aria-labelledby="performance-title">
+        <div class="section-inner performance-layout">
+          <div class="performance-copy">
+            <p class="section-kicker reveal">04 / Fast by design</p>
+            <h2 class="section-heading reveal" id="performance-title">All spectacle.<br><em>No drag.</em></h2>
+            <p class="reveal">
+              The website practices what it preaches: small surface area, deliberate work and no
+              machinery that does not earn its place.
+            </p>
+          </div>
+
+          <div class="performance-grid reveal">
+            <article class="metric">
+              <span class="metric-index">01 / Payload</span>
+              <strong>≈ 15KB</strong>
+              <p>One cacheable source file after standard gzip compression.</p>
+            </article>
+            <article class="metric">
+              <span class="metric-index">02 / Runtime</span>
+              <strong>0 deps</strong>
+              <p>No framework, font, image, analytics or third-party request.</p>
+            </article>
+            <article class="metric">
+              <span class="metric-index">03 / Motion</span>
+              <strong>Adaptive</strong>
+              <p>The canvas caps pixel density, pauses off-screen and respects reduced motion.</p>
+            </article>
+            <article class="metric">
+              <span class="metric-index">04 / Hosting</span>
+              <strong>Static</strong>
+              <p>Ready for the edge. No server, database or build step required.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta deferred-section" aria-labelledby="cta-title">
+        <p class="section-kicker">Your turn</p>
+        <h2 id="cta-title">Make something unreasonable.</h2>
+        <button type="button" id="return-to-mission">Give the crew a mission ↗</button>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Made by agents, for curious humans.</span>
+      <span class="footer-mark">Dinguerie</span>
+      <span>One static file · zero tracking</span>
+    </footer>
 
     <script>
-        // Particle system on canvas
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const numParticles = 200;
+      (() => {
+        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        const canvas = document.querySelector("#swarm-canvas");
+        const hero = document.querySelector(".hero");
+        const context = canvas.getContext("2d", { alpha: false });
+        const colors = ["#c8ff45", "#ff6240", "#6f7cff", "#f1efe8"];
+        let width = 0;
+        let height = 0;
+        let frame = 0;
+        let canvasActive = true;
+        let agents = [];
+        let pointer = { x: 0, y: 0, active: false };
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 2 - 1;
-                this.speedY = Math.random() * 2 - 1;
+        const resizeCanvas = () => {
+          const ratio = Math.min(devicePixelRatio || 1, 1.5);
+          const hardwareCap = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4 ? 26 : 42;
+          width = hero.clientWidth;
+          height = hero.clientHeight;
+          canvas.width = Math.round(width * ratio);
+          canvas.height = Math.round(height * ratio);
+          context.setTransform(ratio, 0, 0, ratio, 0, 0);
+          agents = Array.from({ length: Math.min(hardwareCap, Math.max(18, Math.floor(width / 34))) }, (_, index) => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            radius: index % 9 === 0 ? 4 : 1.5,
+            color: colors[index % colors.length],
+            phase: Math.random() * Math.PI * 2,
+          }));
+        };
+
+        const drawSwarm = (time = 0) => {
+          context.fillStyle = "#0b0b0c";
+          context.fillRect(0, 0, width, height);
+
+          agents.forEach((agent, index) => {
+            const next = agents[(index + 7) % agents.length];
+            const distance = Math.hypot(next.x - agent.x, next.y - agent.y);
+            if (distance < Math.min(width * 0.32, 360)) {
+              context.globalAlpha = Math.max(0, 0.18 - distance / 2200);
+              context.strokeStyle = agent.color;
+              context.beginPath();
+              context.moveTo(agent.x, agent.y);
+              context.lineTo(next.x, next.y);
+              context.stroke();
             }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+
+            context.globalAlpha = agent.radius > 2 ? 0.95 : 0.48;
+            context.fillStyle = agent.color;
+            context.beginPath();
+            context.arc(agent.x, agent.y, agent.radius, 0, Math.PI * 2);
+            context.fill();
+
+            if (!reducedMotion) {
+              if (pointer.active) {
+                const dx = pointer.x - agent.x;
+                const dy = pointer.y - agent.y;
+                const pull = Math.max(0, 1 - Math.hypot(dx, dy) / 260) * 0.0015;
+                agent.vx += dx * pull;
+                agent.vy += dy * pull;
+              }
+              agent.vx = agent.vx * 0.988 + Math.cos(time * 0.00025 + agent.phase) * 0.004;
+              agent.vy = agent.vy * 0.988 + Math.sin(time * 0.0002 + agent.phase) * 0.004;
+              agent.x = (agent.x + agent.vx + width) % width;
+              agent.y = (agent.y + agent.vy + height) % height;
             }
-            draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+          });
 
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < numParticles; i++) {
-                particles.push(new Particle());
-            }
-        }
-        initParticles();
+          context.globalAlpha = 1;
+          if (!reducedMotion && canvasActive && !document.hidden) {
+            frame = requestAnimationFrame(drawSwarm);
+          }
+        };
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            // Connect particles
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 100) {
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - dist / 100})`;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        // Scroll animations for sections
-        const sections = document.querySelectorAll('.section');
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.3 });
-
-        sections.forEach(section => observer.observe(section));
-
-        // Mouse interaction for particles
-        canvas.addEventListener('mousemove', e => {
-            particles.push(new Particle(e.clientX, e.clientY));
-            if (particles.length > numParticles + 50) particles.shift();
+        addEventListener("resize", resizeCanvas, { passive: true });
+        hero.addEventListener("pointermove", (event) => {
+          pointer = { x: event.clientX, y: event.clientY, active: true };
+        }, { passive: true });
+        hero.addEventListener("pointerleave", () => { pointer.active = false; }, { passive: true });
+        document.addEventListener("visibilitychange", () => {
+          cancelAnimationFrame(frame);
+          if (!document.hidden && canvasActive && !reducedMotion) frame = requestAnimationFrame(drawSwarm);
         });
+
+        new IntersectionObserver(([entry]) => {
+          canvasActive = entry.isIntersecting;
+          cancelAnimationFrame(frame);
+          if (canvasActive && !reducedMotion) frame = requestAnimationFrame(drawSwarm);
+        }).observe(hero);
+
+        resizeCanvas();
+        drawSwarm();
+
+        const missions = {
+          sound: {
+            goal: "Turn city noise into a living album.",
+            color: "#ff6240",
+            outputs: [
+              "Mapped 14 urban sound archives and three licensing paths.",
+              "Framed a participatory album that changes with each city.",
+              "Built a tactile visual language from transit-map geometry.",
+              "Assembled the interactive player and contribution flow.",
+              "Caught motion, consent and low-bandwidth edge cases.",
+              "Packaged the prototype, credits and launch runbook.",
+            ],
+          },
+          code: {
+            goal: "Audit a million-line codebase before lunch.",
+            color: "#6f7cff",
+            outputs: [
+              "Mapped ownership, hot paths and the twelve riskiest seams.",
+              "Prioritized findings by blast radius and repair cost.",
+              "Turned architecture drift into one readable system map.",
+              "Reproduced two bugs and prepared minimal patches.",
+              "Challenged every finding against tests and call sites.",
+              "Delivered an evidence-linked audit and staged fix plan.",
+            ],
+          },
+          climate: {
+            goal: "Launch a climate startup in one afternoon.",
+            color: "#c8ff45",
+            outputs: [
+              "Synthesized policy, market and buyer signals across four sectors.",
+              "Found a wedge: compliance evidence for small suppliers.",
+              "Named the product and shaped a credible visual system.",
+              "Built the landing page, intake flow and working demo.",
+              "Pressure-tested claims, accessibility and conversion paths.",
+              "Prepared the launch kit, metrics and first-customer list.",
+            ],
+          },
+        };
+
+        const customOutputs = [
+          "Mapped the domain, constraints and strongest source material.",
+          "Turned the brief into a focused strategy and execution plan.",
+          "Created a distinct, usable system around the core idea.",
+          "Built the smallest complete version of the final artifact.",
+          "Tested assumptions, accessibility and likely failure modes.",
+          "Packaged the work with evidence and a clear next move.",
+        ];
+        const execution = [
+          { id: "scout", delay: 100, duration: 1450, verb: "Researcher mapped the territory" },
+          { id: "strategist", delay: 420, duration: 1750, verb: "Strategist chose the sharpest path" },
+          { id: "designer", delay: 760, duration: 1900, verb: "Designer made the system tangible" },
+          { id: "builder", delay: 980, duration: 2250, verb: "Builder produced the working artifact" },
+          { id: "critic", delay: 1350, duration: 2050, verb: "Critic closed the dangerous gaps" },
+          { id: "operator", delay: 1750, duration: 1950, verb: "Operator prepared the delivery" },
+        ];
+        const missionForm = document.querySelector("#mission-form");
+        const missionInput = document.querySelector("#mission-input");
+        const presets = [...document.querySelectorAll(".preset")];
+        const deployButton = document.querySelector("#deploy-button");
+        const orchestrator = document.querySelector("#orchestrator");
+        const activeMission = document.querySelector("#active-mission");
+        const runState = document.querySelector("#run-state");
+        const logList = document.querySelector("#log-list");
+        const completionCount = document.querySelector("#completion-count");
+        let selectedMission = "sound";
+        let timers = [];
+
+        const selectPreset = (name) => {
+          selectedMission = name;
+          missionInput.value = missions[name].goal;
+          presets.forEach((preset) => {
+            preset.setAttribute("aria-pressed", String(preset.dataset.preset === name));
+          });
+        };
+
+        presets.forEach((preset) => {
+          preset.addEventListener("click", () => selectPreset(preset.dataset.preset));
+        });
+
+        missionInput.addEventListener("input", () => {
+          const matchingPreset = Object.entries(missions).find(([, mission]) => mission.goal === missionInput.value.trim());
+          selectedMission = matchingPreset ? matchingPreset[0] : "custom";
+          presets.forEach((preset) => {
+            preset.setAttribute("aria-pressed", String(preset.dataset.preset === selectedMission));
+          });
+        });
+
+        const addLog = (seconds, message) => {
+          const item = document.createElement("li");
+          const timestamp = document.createElement("time");
+          const text = document.createElement("span");
+          timestamp.textContent = seconds.toFixed(2).padStart(5, "0");
+          text.textContent = message;
+          item.append(timestamp, text);
+          logList.append(item);
+          while (logList.children.length > 6) logList.firstElementChild.remove();
+        };
+
+        const resetAgents = () => {
+          timers.forEach(clearTimeout);
+          timers = [];
+          orchestrator.classList.remove("is-complete");
+          document.querySelectorAll(".agent-card").forEach((card) => {
+            card.dataset.state = "idle";
+            card.querySelector(".agent-status").textContent = "Queued";
+            card.querySelector(".agent-output").textContent = "Awaiting the brief.";
+            const bar = card.querySelector(".agent-progress span");
+            bar.style.transition = "none";
+            bar.style.transform = "scaleX(0)";
+          });
+        };
+
+        const runMission = () => {
+          const goal = missionInput.value.trim() || "Make something nobody has seen before.";
+          const mission = missions[selectedMission] || {
+            goal,
+            color: "#ff6240",
+            outputs: customOutputs,
+          };
+          resetAgents();
+          activeMission.textContent = goal;
+          orchestrator.style.setProperty("--mission-color", mission.color);
+          orchestrator.classList.add("is-running");
+          runState.textContent = "Agents working";
+          completionCount.textContent = "0 / 6 complete";
+          deployButton.disabled = true;
+          deployButton.querySelector("span").textContent = "Agents at work";
+          missionInput.readOnly = true;
+          presets.forEach((preset) => { preset.disabled = true; });
+          logList.replaceChildren();
+          addLog(0, "Lead agent decomposed the mission into six workstreams.");
+          let completed = 0;
+
+          execution.forEach((step, index) => {
+            const card = document.querySelector(`[data-agent="${step.id}"]`);
+            const status = card.querySelector(".agent-status");
+            const output = card.querySelector(".agent-output");
+            const bar = card.querySelector(".agent-progress span");
+
+            timers.push(setTimeout(() => {
+              card.dataset.state = "working";
+              status.textContent = "Working";
+              output.textContent = index === 0 ? "Searching and synthesizing…" : "Reading shared context…";
+              bar.style.transition = `transform ${reducedMotion ? 1 : step.duration}ms linear`;
+              requestAnimationFrame(() => { bar.style.transform = "scaleX(1)"; });
+            }, reducedMotion ? index * 15 : step.delay));
+
+            timers.push(setTimeout(() => {
+              card.dataset.state = "done";
+              status.textContent = "Complete";
+              output.textContent = mission.outputs[index];
+              completed += 1;
+              completionCount.textContent = `${completed} / 6 complete`;
+              addLog((step.delay + step.duration) / 1000, `${step.verb}.`);
+              if (completed === execution.length) {
+                orchestrator.classList.remove("is-running");
+                orchestrator.classList.add("is-complete");
+                runState.textContent = "Artifact ready";
+                deployButton.disabled = false;
+                deployButton.querySelector("span").textContent = "Run it again";
+                missionInput.readOnly = false;
+                presets.forEach((preset) => { preset.disabled = false; });
+                addLog(4.1, "All outputs reconciled. Final artifact is ready to ship.");
+              }
+            }, reducedMotion ? 120 + index * 20 : step.delay + step.duration));
+          });
+        };
+
+        missionForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          runMission();
+        });
+
+        document.querySelector("#return-to-mission").addEventListener("click", () => {
+          document.querySelector("#experience").scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
+          timers.push(setTimeout(() => missionInput.focus({ preventScroll: true }), reducedMotion ? 0 : 650));
+        });
+
+        const reveals = document.querySelectorAll(".reveal");
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: "0px 0px -8%", threshold: 0.08 });
+        reveals.forEach((element) => revealObserver.observe(element));
+
+        if (!reducedMotion) {
+          document.querySelectorAll("[data-tilt]").forEach((card) => {
+            card.addEventListener("pointermove", (event) => {
+              const bounds = card.getBoundingClientRect();
+              const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+              const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+              card.style.setProperty("--rx", `${y * -2.5}deg`);
+              card.style.setProperty("--ry", `${x * 2.5}deg`);
+            }, { passive: true });
+            card.addEventListener("pointerleave", () => {
+              card.style.setProperty("--rx", "0deg");
+              card.style.setProperty("--ry", "0deg");
+            }, { passive: true });
+          });
+        }
+      })();
     </script>
-</body>
+  </body>
 </html>
